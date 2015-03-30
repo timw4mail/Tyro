@@ -50,15 +50,18 @@ END_EVENT_TABLE()
 TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
     : wxFrame(frame, -1, title)
 {
-// create a menu bar
+    // create a menu bar
     wxMenuBar* mbar = new wxMenuBar();
     wxMenu* fileMenu = new wxMenu(_T(""));
+    wxMenu* editMenu = new wxMenu(_T(""));
+
 
     fileMenu->Append(wxID_EXIT, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
 
     wxMenu* helpMenu = new wxMenu(_T(""));
     helpMenu->Append(wxID_ABOUT, _("&About\tF1"), _("Show info about this application"));
+    mbar->Append(editMenu, _("&Edit"));
     mbar->Append(helpMenu, _("&Help"));
 
 #ifdef __WXMAC__
