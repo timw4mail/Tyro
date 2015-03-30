@@ -14,8 +14,10 @@
 
 class TyroApp : public wxApp
 {
+    friend class TyroFrame;
     public:
         virtual bool OnInit();
+        virtual int OnExit(wxCommandEvent &WXUNUSED(event));
 };
 
 #endif // TYROAPP_H

@@ -20,7 +20,13 @@ bool TyroApp::OnInit()
 {
     TyroFrame* frame = new TyroFrame(0L, _("wxWidgets Application Template"));
 
-    frame->Show();
+    frame->Show(true);
 
     return true;
+}
+
+int TyroApp::OnExit(wxCommandEvent &WXUNUSED(event))
+{
+    close(true);
+    return 1;
 }

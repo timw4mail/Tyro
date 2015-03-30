@@ -14,6 +14,7 @@
     #include <wx/wx.h>
 #endif
 
+#include <wx/string.h>
 #include "TyroApp.h"
 
 class TyroFrame: public wxFrame

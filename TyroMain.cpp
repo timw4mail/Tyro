@@ -43,34 +43,33 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 
 BEGIN_EVENT_TABLE(TyroFrame, wxFrame)
     EVT_CLOSE(TyroFrame::OnClose)
-    EVT_MENU(idMenuQuit, TyroFrame::OnQuit)
-    EVT_MENU(idMenuAbout, TyroFrame::OnAbout)
+    EVT_MENU(wxID_EXIT, TyroFrame::OnQuit)
+    EVT_MENU(wxID_ABOUT, TyroFrame::OnAbout)
 END_EVENT_TABLE()
 
 TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
     : wxFrame(frame, -1, title)
 {
-#if wxUSE_MENUS
-    // create a menu bar
+// create a menu bar
     wxMenuBar* mbar = new wxMenuBar();
     wxMenu* fileMenu = new wxMenu(_T(""));
-    fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
+
+    fileMenu->Append(wxID_EXIT, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
 
     wxMenu* helpMenu = new wxMenu(_T(""));
-    helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
+    helpMenu->Append(wxID_ABOUT, _("&About\tF1"), _("Show info about this application"));
     mbar->Append(helpMenu, _("&Help"));
 
-    SetMenuBar(mbar);
-#endif // wxUSE_MENUS
+#ifdef __WXMAC__
+    wxMenuBar::MacSetCommonMenuBar(mbar);
+#endif // __WXMAC__
+SetMenuBar(mbar);
 
-#if wxUSE_STATUSBAR
     // create a status bar with some information about the used wxWidgets version
     CreateStatusBar(2);
-    SetStatusText(_("Hello Code::Blocks user!"),0);
+    SetStatusText(_(""),0);
     SetStatusText(wxbuildinfo(short_f), 1);
-#endif // wxUSE_STATUSBAR
-
 }
 
 
