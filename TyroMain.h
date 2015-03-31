@@ -14,7 +14,6 @@
     #include <wx/wx.h>
 #endif
 
-#include <wx/string.h>
 #include "TyroApp.h"
 
 class TyroFrame: public wxFrame
@@ -31,6 +30,7 @@ class TyroFrame: public wxFrame
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
+        wxAuiNotebook* CreateNotebook();
         DECLARE_EVENT_TABLE()
 };
 

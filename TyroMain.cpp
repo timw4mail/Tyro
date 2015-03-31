@@ -80,6 +80,13 @@ TyroFrame::~TyroFrame()
 {
 }
 
+wxAuiNotebook *TyroFrame::CreateNotebook()
+{
+wxAuiNotebook *ctrl = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE);
+
+return ctrl;
+}
+
 void TyroFrame::OnClose(wxCloseEvent &event)
 {
     Destroy();

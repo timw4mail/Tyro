@@ -18,7 +18,7 @@ IMPLEMENT_APP(TyroApp);
 
 bool TyroApp::OnInit()
 {
-    TyroFrame* frame = new TyroFrame(0L, _("wxWidgets Application Template"));
+    TyroFrame* frame = new TyroFrame(0L, _("Tyro"));
 
     frame->Show(true);
 
