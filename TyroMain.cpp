@@ -56,11 +56,11 @@ TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
     wxMenu* editMenu = new wxMenu(_T(""));
 
 
-    fileMenu->Append(wxID_EXIT, _("&Quit\tAlt-F4"), _("Quit the application"));
+    fileMenu->Append(wxID_EXIT, _("&Quit"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
 
     wxMenu* helpMenu = new wxMenu(_T(""));
-    helpMenu->Append(wxID_ABOUT, _("&About\tF1"), _("Show info about this application"));
+    helpMenu->Append(wxID_ABOUT, _("&About"), _("Show info about this application"));
     mbar->Append(editMenu, _("&Edit"));
     mbar->Append(helpMenu, _("&Help"));
 
@@ -76,9 +76,7 @@ SetMenuBar(mbar);
 }
 
 
-TyroFrame::~TyroFrame()
-{
-}
+TyroFrame::~TyroFrame() {}
 
 wxAuiNotebook *TyroFrame::CreateNotebook()
 {
