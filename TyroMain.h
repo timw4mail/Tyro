@@ -27,6 +27,7 @@ class TyroFrame: public wxFrame
             idMenuQuit = 1000,
             idMenuAbout
         };
+        wxAuiManager m_mgr;
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);

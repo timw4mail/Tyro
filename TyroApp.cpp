@@ -21,6 +21,7 @@ bool TyroApp::OnInit()
     TyroFrame* frame = new TyroFrame(0L, _("Tyro"));
 
     frame->Show(true);
+    SetTopWindow(frame);
 
     return true;
 }

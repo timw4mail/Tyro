@@ -52,15 +52,22 @@ TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
 {
     // create a menu bar
     wxMenuBar* mbar = new wxMenuBar();
+
+    // Create Base menus
     wxMenu* fileMenu = new wxMenu(_T(""));
     wxMenu* editMenu = new wxMenu(_T(""));
-
-
-    fileMenu->Append(wxID_EXIT, _("&Quit"), _("Quit the application"));
-    mbar->Append(fileMenu, _("&File"));
-
     wxMenu* helpMenu = new wxMenu(_T(""));
+
+    // Add items to top-level menus
+    fileMenu->Append(wxID_OPEN, _T("&Open"), _T("Opens an existing file"));
+    fileMenu->Append(wxID_SAVE, _T("&Save"), _T("Save the content"));
+    fileMenu->AppendSeparator();
+    fileMenu->Append(wxID_EXIT, _("&Quit"), _("Quit the application"));
+
     helpMenu->Append(wxID_ABOUT, _("&About"), _("Show info about this application"));
+
+    // Add the menus to the menubar
+    mbar->Append(fileMenu, _("&File"));
     mbar->Append(editMenu, _("&Edit"));
     mbar->Append(helpMenu, _("&Help"));
 
@@ -73,6 +80,21 @@ SetMenuBar(mbar);
     CreateStatusBar(2);
     SetStatusText(_(""),0);
     SetStatusText(wxbuildinfo(short_f), 1);
+
+    // Set up control layout
+    wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
+
+    base_sizer->Add(
+        CreateNotebook(),
+        1,
+        wxEXPAND | wxALL,
+        5
+    );
+
+    base_sizer->SetContainingWindow(this);
+    base_sizer->SetMinSize(800,600);
+
+    SetSizerAndFit(base_sizer);
 }
 
 
@@ -80,9 +102,11 @@ TyroFrame::~TyroFrame() {}
 
 wxAuiNotebook *TyroFrame::CreateNotebook()
 {
-wxAuiNotebook *ctrl = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE);
+    wxAuiNotebook *ctrl = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE);
 
-return ctrl;
+
+
+    return ctrl;
 }
 
 void TyroFrame::OnClose(wxCloseEvent &event)
