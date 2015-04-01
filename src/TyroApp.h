@@ -11,10 +11,7 @@
 #define TYROAPP_H
 
 #include <wx/app.h>
-#include <wx/string.h>
-#include <wx/notebook.h>
 #include <wx/aui/aui.h>
-#include <wx/stc/stc.h>
 
 class TyroApp : public wxApp
 {
