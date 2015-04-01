@@ -1,5 +1,5 @@
 /***************************************************************
- * Name:	  TyroMain.cpp
+ * Name:	  Main.cpp
  * Purpose:   Code for Application Frame
  * Author:	Timothy J Warren (tim@timshomepage.net)
  * Created:   2015-03-30
@@ -11,11 +11,13 @@
 #include "wx_pch.h"
 #endif
 
-#include "TyroMain.h"
+#include "Main.h"
 
 
 BEGIN_EVENT_TABLE(TyroFrame, wxFrame)
 	EVT_CLOSE(TyroFrame::OnClose)
+	EVT_MENU(wxID_OPEN, TyroFrame::OnMenuFileOpen)
+	EVT_MENU(wxID_SAVE, TyroFrame::OnMenuFileSave)
 	EVT_MENU(wxID_EXIT, TyroFrame::OnQuit)
 	EVT_MENU(wxID_ABOUT, TyroFrame::OnAbout)
 END_EVENT_TABLE()
@@ -23,41 +25,7 @@ END_EVENT_TABLE()
 TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
 	: wxFrame(frame, -1, title)
 {
-	// create a menu bar
-	wxMenuBar* mbar = new wxMenuBar();
-
-	// Create Base menus
-	wxMenu* fileMenu = new wxMenu(_T(""));
-	wxMenu* editMenu = new wxMenu(_T(""));
-	wxMenu* helpMenu = new wxMenu(_T(""));
-
-	// Add items to top-level menus
-	fileMenu->Append(wxID_NEW, _T("&New\tCtrl+N"), _T("Create a new file"));
-	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_OPEN, _T("&Open\tCtrl+0"), _T("Opens an existing file"));
-	fileMenu->Append(wxID_CLOSE, _T("&Close\tCtrl+W"), _T("Close the current document"));
-	fileMenu->Append(wxID_SAVE, _T("&Save\tCtrl+S"), _T("Save the content"));
-	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_EXIT, _T("&Quit\tCtrl+Q"), _T("Quit the application"));
-
-	editMenu->Append(wxID_UNDO, _T("&Undo\tCtrl+Z"), _T("Undo last action"));
-	editMenu->Append(wxID_REDO, _T("&Redo\tCtrl+Y"), _T("Redo last action"));
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_CUT, _T("Cu&t\tCtrl+X"), _T("Cut selected text"));
-	editMenu->Append(wxID_COPY, _T("&Copy\tCtrl+C"), _T("Copy selected text"));
-	editMenu->Append(wxID_PASTE, _T("&Paste\tCtrl+V"), _T("Paste contents of clipboard"));
-
-	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
-
-	// Add the menus to the menubar
-	mbar->Append(fileMenu, _("&File"));
-	mbar->Append(editMenu, _("&Edit"));
-	mbar->Append(helpMenu, _("&Help"));
-
-#ifdef __WXMAC__
-	wxMenuBar::MacSetCommonMenuBar(mbar);
-#endif // __WXMAC__
-SetMenuBar(mbar);
+	this->SetupMenu();	
 
 	// create a status bar with some information about the used wxWidgets version
 	CreateStatusBar(2);
@@ -83,6 +51,45 @@ SetMenuBar(mbar);
 
 TyroFrame::~TyroFrame() {}
 
+void TyroFrame::SetupMenu()
+{
+	// create a menu bar
+	wxMenuBar* mbar = new wxMenuBar();
+
+	// Create Base menus
+	wxMenu* fileMenu = new wxMenu(_T(""));
+	wxMenu* editMenu = new wxMenu(_T(""));
+	wxMenu* helpMenu = new wxMenu(_T(""));
+
+	// Add items to top-level menus
+	fileMenu->Append(wxID_NEW, _T("&New\tCtrl+N"), _T("Create a new file"));
+	fileMenu->AppendSeparator();
+	fileMenu->Append(wxID_OPEN, _T("&Open\tCtrl+O"), _T("Opens an existing file"));
+	fileMenu->Append(wxID_CLOSE, _T("&Close\tCtrl+W"), _T("Close the current document"));
+	fileMenu->Append(wxID_SAVE, _T("&Save\tCtrl+S"), _T("Save the content"));
+	fileMenu->AppendSeparator();
+	fileMenu->Append(wxID_EXIT, _T("&Quit\tCtrl+Q"), _T("Quit the application"));
+
+	editMenu->Append(wxID_UNDO, _T("&Undo\tCtrl+Z"), _T("Undo last action"));
+	editMenu->Append(wxID_REDO, _T("&Redo\tCtrl+Y"), _T("Redo last action"));
+	editMenu->AppendSeparator();
+	editMenu->Append(wxID_CUT, _T("Cu&t\tCtrl+X"), _T("Cut selected text"));
+	editMenu->Append(wxID_COPY, _T("&Copy\tCtrl+C"), _T("Copy selected text"));
+	editMenu->Append(wxID_PASTE, _T("&Paste\tCtrl+V"), _T("Paste contents of clipboard"));
+
+	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
+
+	// Add the menus to the menubar
+	mbar->Append(fileMenu, _("&File"));
+	mbar->Append(editMenu, _("&Edit"));
+	mbar->Append(helpMenu, _("&Help"));
+
+#ifdef __WXMAC__
+	wxMenuBar::MacSetCommonMenuBar(mbar);
+#endif // __WXMAC__
+	SetMenuBar(mbar);
+}
+
 wxAuiNotebook *TyroFrame::CreateNotebook()
 {
 	wxAuiNotebook *ctrl = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE);
@@ -99,7 +106,13 @@ void TyroFrame::OnClose(wxCloseEvent &event)
 
 void TyroFrame::OnMenuFileOpen(wxCommandEvent &event)
 {
-
+	wxFileDialog *OpenDialog = new wxFileDialog(this, _T("Choose a file"), _(""), _(""), _("*.*"), wxFD_OPEN);
+	
+	if (OpenDialog->ShowModal() == wxID_OK)
+	{
+		// Load the file into a new notebook tab and styled text control
+	}
+	OpenDialog->Close();
 }
 
 void TyroFrame::OnMenuFileSave(wxCommandEvent &event)

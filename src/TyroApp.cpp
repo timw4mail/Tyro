@@ -12,7 +12,7 @@
 #endif
 
 #include "TyroApp.h"
-#include "TyroMain.h"
+#include "Main.h"
 
 IMPLEMENT_APP(TyroApp);
 

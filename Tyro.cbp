@@ -35,8 +35,8 @@
 		</Linker>
 		<Unit filename="src/TyroApp.cpp" />
 		<Unit filename="src/TyroApp.h" />
-		<Unit filename="src/TyroMain.cpp" />
-		<Unit filename="src/TyroMain.h" />
+		<Unit filename="src/Main.cpp" />
+		<Unit filename="src/Main.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

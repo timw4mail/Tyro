@@ -1,5 +1,5 @@
 /***************************************************************
- * Name:	  TyroMain.h
+ * Name:	  Main.h
  * Purpose:   Defines Application Frame
  * Author:	Timothy J Warren (tim@timshomepage.net)
  * Created:   2015-03-30
@@ -15,6 +15,7 @@
 #endif
 
 #include "TyroApp.h"
+#include "DocFrame.h"
 
 class TyroFrame: public wxFrame
 {
@@ -27,8 +28,9 @@ class TyroFrame: public wxFrame
 			idMenuQuit = 1000,
 			idMenuAbout
 		};
-void OnMenuFileOpen(wxCommandEvent &event);
-void OnMenuFileSave(wxCommandEvent &event);
+		void SetupMenu();
+		void OnMenuFileOpen(wxCommandEvent &event);
+		void OnMenuFileSave(wxCommandEvent &event);
 		void OnClose(wxCloseEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
