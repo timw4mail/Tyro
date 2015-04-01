@@ -1,7 +1,7 @@
 /***************************************************************
- * Name:      TyroApp.cpp
+ * Name:	  TyroApp.cpp
  * Purpose:   Code for Application Class
- * Author:    Timothy J Warren (tim@timshomepage.net)
+ * Author:	Timothy J Warren (tim@timshomepage.net)
  * Created:   2015-03-30
  * Copyright: Timothy J Warren (https://timshomepage.net)
  * License:
@@ -18,16 +18,17 @@ IMPLEMENT_APP(TyroApp);
 
 bool TyroApp::OnInit()
 {
-    TyroFrame* frame = new TyroFrame(0L, _("Tyro"));
+	TyroFrame* frame = new TyroFrame(0L, _("Tyro"));
 
-    frame->Show(true);
-    SetTopWindow(frame);
+	frame->CenterOnScreen();
+	frame->Show(true);
+	SetTopWindow(frame);
 
-    return true;
+	return true;
 }
 
 int TyroApp::OnExit(wxCommandEvent &WXUNUSED(event))
 {
-    close(true);
-    return 1;
+	close(true);
+	return 1;
 }
