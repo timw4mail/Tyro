@@ -1,5 +1,13 @@
 #include "DocFrame.h"
 
-void DocFrame::OnFileChanged(wxStyledTextEvent &event)
+BEGIN_EVENT_TABLE(DocFrame, wxWindow)
+END_EVENT_TABLE()
+
+DocFrame::DocFrame(wxWindow *parent, wxWindowID id)
+{
+	//editor = new wxStyledTextCtrl(this);
+}
+
+DocFrame::~DocFrame()
 {
 }

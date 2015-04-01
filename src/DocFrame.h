@@ -7,11 +7,13 @@
 
 #include <wx/stc/stc.h>
 
-class DocFrame: public wxFrame
+class DocFrame: public wxWindow
 {
 public:
+	DocFrame(wxWindow *parent, wxWindowID id);
+	~DocFrame();
 private:
-	void OnFileChanged(wxStyledTextEvent &event);
+	//wxStyledTextCtrl *editor;
 	DECLARE_EVENT_TABLE()
 };
 

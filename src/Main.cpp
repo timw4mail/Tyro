@@ -92,19 +92,22 @@ void TyroFrame::SetupMenu()
 
 wxAuiNotebook *TyroFrame::CreateNotebook()
 {
-	wxAuiNotebook *ctrl = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE);
 
+	wxAuiNotebook *ctrl = new wxAuiNotebook(this);
 
-
+	//DocFrame *editor = new DocFrame(ctrl, wxID_ANY);
+	wxWindow *editor = new wxWindow(ctrl, wxID_ANY);
+	
+	ctrl->AddPage(editor, "Untitled");
 	return ctrl;
 }
 
-void TyroFrame::OnClose(wxCloseEvent &event)
+void TyroFrame::OnClose(wxCloseEvent &WXUNUSED(event))
 {
 	Destroy();
 }
 
-void TyroFrame::OnMenuFileOpen(wxCommandEvent &event)
+void TyroFrame::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
 {
 	wxFileDialog *OpenDialog = new wxFileDialog(this, _T("Choose a file"), _(""), _(""), _("*.*"), wxFD_OPEN);
 	
@@ -115,16 +118,16 @@ void TyroFrame::OnMenuFileOpen(wxCommandEvent &event)
 	OpenDialog->Close();
 }
 
-void TyroFrame::OnMenuFileSave(wxCommandEvent &event)
+void TyroFrame::OnMenuFileSave(wxCommandEvent &WXUNUSED(event))
 {
 }
 
-void TyroFrame::OnQuit(wxCommandEvent &event)
+void TyroFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
 	Destroy();
 }
 
-void TyroFrame::OnAbout(wxCommandEvent &event)
+void TyroFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
 	wxMessageBox(_T("Tyro, a text editor for all development\n Copyright 2015, Timothy J. Warren"), wxT("About Tyro"), wxOK| wxICON_INFORMATION, this);
 }
