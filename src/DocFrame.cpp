@@ -5,7 +5,7 @@ END_EVENT_TABLE()
 
 DocFrame::DocFrame(wxWindow *parent, wxWindowID id)
 {
-	//editor = new wxStyledTextCtrl(this);
+	editor = new wxStyledTextCtrl(parent);
 }
 
 DocFrame::~DocFrame()

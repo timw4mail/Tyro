@@ -11,6 +11,7 @@
 #define TYROAPP_H
 
 #include <wx/app.h>
+#include <wx/debug.h>
 #include <wx/aui/aui.h>
 
 class TyroApp : public wxApp

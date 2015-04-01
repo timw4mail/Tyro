@@ -25,12 +25,10 @@ END_EVENT_TABLE()
 TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
 	: wxFrame(frame, -1, title)
 {
-	this->SetupMenu();	
+	this->SetupMenu();
 
 	// create a status bar with some information about the used wxWidgets version
-	CreateStatusBar(2);
-	SetStatusText(_(""), 0);
-	SetStatusText(_(""), 1);
+
 
 	// Set up control layout
 	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
@@ -50,6 +48,17 @@ TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
 
 
 TyroFrame::~TyroFrame() {}
+
+void TyroFrame::SetupStatusBar()
+{
+CreateStatusBar(2);
+	SetStatusText(_(""), 0);
+	SetStatusText(_(""), 1);
+}
+
+void TyroFrame::SetupToolbar()
+{
+}
 
 void TyroFrame::SetupMenu()
 {
@@ -95,10 +104,10 @@ wxAuiNotebook *TyroFrame::CreateNotebook()
 
 	wxAuiNotebook *ctrl = new wxAuiNotebook(this);
 
-	//DocFrame *editor = new DocFrame(ctrl, wxID_ANY);
-	wxWindow *editor = new wxWindow(ctrl, wxID_ANY);
-	
-	ctrl->AddPage(editor, "Untitled");
+	DocFrame *editor = new DocFrame(ctrl, wxID_ANY);
+	//wxWindow *editor = new wxWindow(ctrl, wxID_ANY);
+
+	//ctrl->AddPage(editor, "Untitled");
 	return ctrl;
 }
 
@@ -110,7 +119,7 @@ void TyroFrame::OnClose(wxCloseEvent &WXUNUSED(event))
 void TyroFrame::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
 {
 	wxFileDialog *OpenDialog = new wxFileDialog(this, _T("Choose a file"), _(""), _(""), _("*.*"), wxFD_OPEN);
-	
+
 	if (OpenDialog->ShowModal() == wxID_OK)
 	{
 		// Load the file into a new notebook tab and styled text control

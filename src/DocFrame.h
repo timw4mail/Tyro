@@ -13,7 +13,7 @@ public:
 	DocFrame(wxWindow *parent, wxWindowID id);
 	~DocFrame();
 private:
-	//wxStyledTextCtrl *editor;
+	wxStyledTextCtrl *editor;
 	DECLARE_EVENT_TABLE()
 };
 

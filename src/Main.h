@@ -29,6 +29,8 @@ class TyroFrame: public wxFrame
 			idMenuAbout
 		};
 		void SetupMenu();
+void SetupToolbar();
+void SetupStatusBar();
 		void OnMenuFileOpen(wxCommandEvent &event);
 		void OnMenuFileSave(wxCommandEvent &event);
 		void OnClose(wxCloseEvent &event);
