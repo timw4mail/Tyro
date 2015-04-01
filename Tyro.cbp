@@ -33,10 +33,12 @@
 		<Linker>
 			<Add option="`wx-config --libs all`" />
 		</Linker>
-		<Unit filename="src/TyroApp.cpp" />
-		<Unit filename="src/TyroApp.h" />
+		<Unit filename="src/DocFrame.cpp" />
+		<Unit filename="src/DocFrame.h" />
 		<Unit filename="src/Main.cpp" />
 		<Unit filename="src/Main.h" />
+		<Unit filename="src/TyroApp.cpp" />
+		<Unit filename="src/TyroApp.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
