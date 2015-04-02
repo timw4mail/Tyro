@@ -10,18 +10,21 @@
 #ifndef TYROMAIN_H
 #define TYROMAIN_H
 
+#ifdef WX_PRECOMP
+    #include "wx_pch.h"
+#endif
 #ifndef WX_PRECOMP
-	#include <wx/wx.h>
+    #include <wx/wx.h>
 #endif
 
 #include "TyroApp.h"
 #include "DocFrame.h"
 
-class TyroFrame: public wxFrame
+class MainFrame: public wxFrame
 {
 	public:
-		TyroFrame(wxFrame *frame, const wxString& title);
-		~TyroFrame();
+		MainFrame(wxFrame *frame, const wxString& title);
+		~MainFrame();
 	private:
 		enum
 		{
@@ -29,8 +32,8 @@ class TyroFrame: public wxFrame
 			idMenuAbout
 		};
 		void SetupMenu();
-void SetupToolbar();
-void SetupStatusBar();
+		void SetupToolbar();
+		void SetupStatusBar();
 		void OnMenuFileOpen(wxCommandEvent &event);
 		void OnMenuFileSave(wxCommandEvent &event);
 		void OnClose(wxCloseEvent &event);

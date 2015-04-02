@@ -14,15 +14,15 @@
 #include "Main.h"
 
 
-BEGIN_EVENT_TABLE(TyroFrame, wxFrame)
-	EVT_CLOSE(TyroFrame::OnClose)
-	EVT_MENU(wxID_OPEN, TyroFrame::OnMenuFileOpen)
-	EVT_MENU(wxID_SAVE, TyroFrame::OnMenuFileSave)
-	EVT_MENU(wxID_EXIT, TyroFrame::OnQuit)
-	EVT_MENU(wxID_ABOUT, TyroFrame::OnAbout)
+BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_CLOSE(MainFrame::OnClose)
+	EVT_MENU(wxID_OPEN, MainFrame::OnMenuFileOpen)
+	EVT_MENU(wxID_SAVE, MainFrame::OnMenuFileSave)
+	EVT_MENU(wxID_EXIT, MainFrame::OnQuit)
+	EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
 END_EVENT_TABLE()
 
-TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
+MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	: wxFrame(frame, -1, title)
 {
 	this->SetupMenu();
@@ -33,12 +33,7 @@ TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
 	// Set up control layout
 	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
 
-	base_sizer->Add(
-		CreateNotebook(),
-		1,
-		wxEXPAND | wxALL,
-		5
-	);
+	base_sizer->Add(CreateNotebook(), 1, wxEXPAND | wxALL, 5);
 
 	base_sizer->SetContainingWindow(this);
 	base_sizer->SetMinSize(800,600);
@@ -47,20 +42,21 @@ TyroFrame::TyroFrame(wxFrame *frame, const wxString& title)
 }
 
 
-TyroFrame::~TyroFrame() {}
+MainFrame::~MainFrame() {}
 
-void TyroFrame::SetupStatusBar()
+void MainFrame::SetupStatusBar()
 {
-CreateStatusBar(2);
+	CreateStatusBar(2);
 	SetStatusText(_(""), 0);
 	SetStatusText(_(""), 1);
 }
 
-void TyroFrame::SetupToolbar()
+void MainFrame::SetupToolbar()
 {
+
 }
 
-void TyroFrame::SetupMenu()
+void MainFrame::SetupMenu()
 {
 	// create a menu bar
 	wxMenuBar* mbar = new wxMenuBar();
@@ -99,24 +95,24 @@ void TyroFrame::SetupMenu()
 	SetMenuBar(mbar);
 }
 
-wxAuiNotebook *TyroFrame::CreateNotebook()
+wxAuiNotebook *MainFrame::CreateNotebook()
 {
 
 	wxAuiNotebook *ctrl = new wxAuiNotebook(this);
 
-	DocFrame *editor = new DocFrame(ctrl, wxID_ANY);
-	//wxWindow *editor = new wxWindow(ctrl, wxID_ANY);
+	//DocFrame *editor = new DocFrame(ctrl, wxID_ANY);
+	wxWindow *editor = new wxWindow(ctrl, wxID_ANY);
 
-	//ctrl->AddPage(editor, "Untitled");
+	ctrl->AddPage(editor, "Untitled");
 	return ctrl;
 }
 
-void TyroFrame::OnClose(wxCloseEvent &WXUNUSED(event))
+void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
 {
 	Destroy();
 }
 
-void TyroFrame::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
 {
 	wxFileDialog *OpenDialog = new wxFileDialog(this, _T("Choose a file"), _(""), _(""), _("*.*"), wxFD_OPEN);
 
@@ -127,16 +123,16 @@ void TyroFrame::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
 	OpenDialog->Close();
 }
 
-void TyroFrame::OnMenuFileSave(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnMenuFileSave(wxCommandEvent &WXUNUSED(event))
 {
 }
 
-void TyroFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
 	Destroy();
 }
 
-void TyroFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
 	wxMessageBox(_T("Tyro, a text editor for all development\n Copyright 2015, Timothy J. Warren"), wxT("About Tyro"), wxOK| wxICON_INFORMATION, this);
 }

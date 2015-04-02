@@ -1,6 +1,7 @@
 #ifndef TYRODOC_FRAME_H
 #define TYRODOC_FRAME_H
 
+#include "wx/wxprec.h"
 #ifndef WX_PRECOMP
 	#include <wx/wx.h>
 #endif
@@ -11,10 +12,9 @@ class DocFrame: public wxWindow
 {
 public:
 	DocFrame(wxWindow *parent, wxWindowID id);
-	~DocFrame();
 private:
 	wxStyledTextCtrl *editor;
 	DECLARE_EVENT_TABLE()
 };
 
-#endif // TYRODOC_FRAM_H
+#endif // TYRODOC_FRAME_H

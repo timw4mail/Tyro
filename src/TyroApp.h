@@ -10,13 +10,17 @@
 #ifndef TYROAPP_H
 #define TYROAPP_H
 
+#include "wx/wxprec.h"
+
 #include <wx/app.h>
+#include <wx/toolbar.h>
+#include <wx/menu.h>
 #include <wx/debug.h>
 #include <wx/aui/aui.h>
 
 class TyroApp : public wxApp
 {
-	friend class TyroFrame;
+	friend class MainFrame;
 	public:
 		virtual bool OnInit();
 		virtual int OnExit(wxCommandEvent &WXUNUSED(event));

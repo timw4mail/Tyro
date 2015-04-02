@@ -18,7 +18,7 @@ IMPLEMENT_APP(TyroApp);
 
 bool TyroApp::OnInit()
 {
-	TyroFrame* frame = new TyroFrame(0L, _("Tyro"));
+	MainFrame* frame = new MainFrame(0L, _("Tyro"));
 
 	frame->CenterOnScreen();
 	frame->Show(true);

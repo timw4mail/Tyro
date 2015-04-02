@@ -7,7 +7,3 @@ DocFrame::DocFrame(wxWindow *parent, wxWindowID id)
 {
 	editor = new wxStyledTextCtrl(parent);
 }
-
-DocFrame::~DocFrame()
-{
-}
