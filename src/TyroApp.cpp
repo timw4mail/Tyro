@@ -7,10 +7,7 @@
  * License:
  **************************************************************/
 
-#ifdef WX_PRECOMP
-#include "wx_pch.h"
-#endif
-
+#include "common.h"
 #include "TyroApp.h"
 #include "Main.h"
 
@@ -27,7 +24,7 @@ bool TyroApp::OnInit()
 	return true;
 }
 
-int TyroApp::OnExit(wxCommandEvent &WXUNUSED(event))
+int TyroApp::OnExit()
 {
 	close(true);
 	return 1;

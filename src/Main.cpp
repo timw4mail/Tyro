@@ -1,11 +1,6 @@
-/***************************************************************
- * Name:	  Main.cpp
- * Purpose:   Code for Application Frame
- * Author:	Timothy J Warren (tim@timshomepage.net)
- * Created:   2015-03-30
- * Copyright: Timothy J Warren (https://timshomepage.net)
- * License:
- **************************************************************/
+/**
+ * Main Application Frame
+ */
 
 #ifdef WX_PRECOMP
 #include "wx_pch.h"
@@ -16,6 +11,7 @@
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_CLOSE(MainFrame::OnClose)
+	EVT_MENU(wxID_NEW, MainFrame::OnMenuFileNew)
 	EVT_MENU(wxID_OPEN, MainFrame::OnMenuFileOpen)
 	EVT_MENU(wxID_SAVE, MainFrame::OnMenuFileSave)
 	EVT_MENU(wxID_EXIT, MainFrame::OnQuit)
@@ -35,8 +31,10 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 
 	// Set up control layout
 	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
+	
+	notebook = this->CreateTabContainer();
 
-	base_sizer->Add(CreateNotebook(), 1, wxEXPAND | wxALL, 5);
+	base_sizer->Add(notebook, 1, wxEXPAND | wxALL, 5);
 
 	base_sizer->SetContainingWindow(this);
 	base_sizer->SetMinSize(800,600);
@@ -120,21 +118,21 @@ void MainFrame::SetupMenu()
 	SetMenuBar(mbar);
 }
 
-wxAuiNotebook *MainFrame::CreateNotebook()
+TabContainer *MainFrame::CreateTabContainer()
 {
-
-	wxAuiNotebook *ctrl = new wxAuiNotebook(this);
-
-	//DocFrame *editor = new DocFrame(ctrl, wxID_ANY);
-	wxWindow *editor = new wxWindow(ctrl, wxID_ANY);
-
-	ctrl->AddPage(editor, "Untitled");
-	return ctrl;
+	TabContainer *notebook = new TabContainer(this);
+	
+	return notebook;
 }
 
 void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
 {
 	Destroy();
+}
+
+void MainFrame::OnMenuFileNew(wxCommandEvent &WXUNUSED(event))
+{
+	notebook->AddTab();
 }
 
 void MainFrame::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
