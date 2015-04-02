@@ -1,9 +1,11 @@
 #ifndef TYRODOC_FRAME_H
 #define TYRODOC_FRAME_H
 
-#include "wx/wxprec.h"
+#ifdef WX_PRECOMP
+    #include "wx_pch.h"
+#endif
 #ifndef WX_PRECOMP
-	#include <wx/wx.h>
+    #include <wx/wx.h>
 #endif
 
 #include <wx/stc/stc.h>

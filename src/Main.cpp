@@ -28,7 +28,10 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	this->SetupMenu();
 
 	// create a status bar with some information about the used wxWidgets version
+	this->SetupStatusBar();
 
+	// create the main toolbar
+	this->SetupToolbar();
 
 	// Set up control layout
 	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
@@ -53,7 +56,29 @@ void MainFrame::SetupStatusBar()
 
 void MainFrame::SetupToolbar()
 {
+	// Icon files
+	#include "../resources/xpm/48/file-empty.xpm"
+	#include "../resources/xpm/48/folder.xpm"
+	#include "../resources/xpm/48/floppy.xpm"
+	#include "../resources/xpm/48/wrench-screwdriver.xpm"
 
+	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
+
+	wxToolBar *toolBar = GetToolBar();
+
+	wxBitmap bitmaps[4];
+
+	bitmaps[0] = wxBitmap(file_empty);
+	bitmaps[1] = wxBitmap(folder);
+	bitmaps[2] = wxBitmap(floppy);
+	bitmaps[3] = wxBitmap(wrench_screwdriver);
+
+	toolBar->AddTool(wxID_NEW, "New", bitmaps[0], "New file");
+	toolBar->AddTool(wxID_OPEN, "Open", bitmaps[1], "Open file");
+	toolBar->AddTool(wxID_SAVE, "Save", bitmaps[2], "Save file");
+	toolBar->AddSeparator();
+	toolBar->AddTool(wxID_ANY, "Settings", bitmaps[3], "Change Settings");
+	toolBar->Realize();
 }
 
 void MainFrame::SetupMenu()

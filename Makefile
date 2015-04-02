@@ -1,4 +1,4 @@
-CXX = $(shell wx-config --cxx)
+CXX = $(shell wx-config --cxx) -Wno-c++11-compat-deprecated-writable-strings
 TARGET = build/Tyro
 LDLIBS = $(shell wx-config --libs all)
 WX_CXXFLAGS = -I./src -static $(shell wx-config --cxxflags)
@@ -32,7 +32,7 @@ Tyro.app: all platform/osx/Info.plist
 	cp platform/osx/Info.plist Tyro.app/Contents/
 	echo -n 'APPL????' > Tyro.app/Contents/PkgInfo
 	cp build/Tyro Tyro.app/Contents/MacOS/Tyro
-#	cp YourAppMacIcons.icns AnotherResource.txt Tyro.app/Contents/Resources/
+	cp platform/osx/tyro.icns Tyro.app/Contents/Resources/
 
 clean:
 	rm -f *.o
