@@ -1,5 +1,5 @@
 /* XPM */
-static char *sun[] = {
+static const char *sun[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 11 1 ",
 "  c #F39B12",

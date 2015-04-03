@@ -1,5 +1,5 @@
 /* XPM */
-static char *device_tv[] = {
+static const char *device_tv[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 251 2 ",
 "   c #2B3F51",

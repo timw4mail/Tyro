@@ -1,5 +1,5 @@
 /* XPM */
-static char *dashboard[] = {
+static const char *dashboard[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 136 2 ",
 "   c #7E624E",

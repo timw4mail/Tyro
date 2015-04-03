@@ -1,5 +1,5 @@
 /* XPM */
-static char *social_youtube[] = {
+static const char *social_youtube[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 96 2 ",
 "   c gray12",

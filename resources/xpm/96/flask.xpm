@@ -1,5 +1,5 @@
 /* XPM */
-static char *flask[] = {
+static const char *flask[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 55 1 ",
 "  c #27AE60",

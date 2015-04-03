@@ -1,5 +1,5 @@
 /* XPM */
-static char *post_it[] = {
+static const char *post_it[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 7 1 ",
 "  c #F39C12",

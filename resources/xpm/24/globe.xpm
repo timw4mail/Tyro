@@ -1,5 +1,5 @@
 /* XPM */
-static char *globe[] = {
+static const char *globe[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 113 2 ",
 "   c #289E7F",

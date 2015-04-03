@@ -1,5 +1,5 @@
 /* XPM */
-static char *window[] = {
+static const char *window[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 27 1 ",
 "  c #C0392B",

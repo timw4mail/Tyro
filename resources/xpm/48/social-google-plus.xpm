@@ -1,5 +1,5 @@
 /* XPM */
-static char *social_google_plus[] = {
+static const char *social_google_plus[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 189 2 ",
 "   c #C0382B",

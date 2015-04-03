@@ -1,5 +1,5 @@
 /* XPM */
-static char *paper_plane[] = {
+static const char *paper_plane[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 84 1 ",
 "  c #7F8C8D",

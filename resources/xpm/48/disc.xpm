@@ -1,5 +1,5 @@
 /* XPM */
-static char *disc[] = {
+static const char *disc[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 72 1 ",
 "  c #BDC2C7",

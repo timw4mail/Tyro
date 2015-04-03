@@ -1,5 +1,5 @@
 /* XPM */
-static char *funnel[] = {
+static const char *funnel[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 12 1 ",
 "  c #7F8C8D",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *trashcan_full[] = {
+static const char *trashcan_full[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 72 1 ",
 "  c #27AE60",

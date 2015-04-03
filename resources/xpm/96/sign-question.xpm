@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_question[] = {
+static const char *sign_question[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 188 2 ",
 "   c #2980B9",

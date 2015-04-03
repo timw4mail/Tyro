@@ -1,5 +1,5 @@
 /* XPM */
-static char *rss[] = {
+static const char *rss[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 185 2 ",
 "   c #D35400",

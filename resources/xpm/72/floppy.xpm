@@ -1,5 +1,5 @@
 /* XPM */
-static char *floppy[] = {
+static const char *floppy[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 17 1 ",
 "  c #2980B9",

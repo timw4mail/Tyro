@@ -1,5 +1,5 @@
 /* XPM */
-static char *flower[] = {
+static const char *flower[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 76 1 ",
 "  c #C0392B",

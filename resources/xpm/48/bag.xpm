@@ -1,5 +1,5 @@
 /* XPM */
-static char *bag[] = {
+static const char *bag[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 46 1 ",
 "  c #E67E22",

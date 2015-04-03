@@ -1,5 +1,5 @@
 /* XPM */
-static char *gift[] = {
+static const char *gift[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 22 1 ",
 "  c #BF382B",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *beer[] = {
+static const char *beer[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 53 1 ",
 "  c #F39C12",

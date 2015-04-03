@@ -1,5 +1,5 @@
 /* XPM */
-static char *calendar_clock[] = {
+static const char *calendar_clock[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 142 2 ",
 "   c #2C3E50",

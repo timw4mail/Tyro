@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_down[] = {
+static const char *sign_down[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 69 1 ",
 "  c #2980B8",

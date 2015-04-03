@@ -1,5 +1,5 @@
 /* XPM */
-static char *user_id[] = {
+static const char *user_id[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 113 2 ",
 "   c #34495E",

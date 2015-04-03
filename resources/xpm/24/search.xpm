@@ -1,5 +1,5 @@
 /* XPM */
-static char *search[] = {
+static const char *search[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 43 1 ",
 "  c #869293",

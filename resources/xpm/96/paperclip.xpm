@@ -1,5 +1,5 @@
 /* XPM */
-static char *paperclip[] = {
+static const char *paperclip[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 2 1 ",
 "  c #95A5A6",

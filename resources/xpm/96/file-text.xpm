@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_text[] = {
+static const char *file_text[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 16 1 ",
 "  c #95A5A6",

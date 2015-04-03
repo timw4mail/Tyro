@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_excel[] = {
+static const char *file_excel[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 20 1 ",
 "  c #16A085",

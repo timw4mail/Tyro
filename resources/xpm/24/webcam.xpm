@@ -1,5 +1,5 @@
 /* XPM */
-static char *webcam[] = {
+static const char *webcam[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 74 1 ",
 "  c #2E4053",

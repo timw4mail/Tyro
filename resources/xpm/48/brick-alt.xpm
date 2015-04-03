@@ -1,5 +1,5 @@
 /* XPM */
-static char *brick_alt[] = {
+static const char *brick_alt[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 80 1 ",
 "  c #E67E22",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_delete[] = {
+static const char *sign_delete[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 25 1 ",
 "  c #BF3A2C",

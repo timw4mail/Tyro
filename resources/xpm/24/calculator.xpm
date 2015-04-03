@@ -1,5 +1,5 @@
 /* XPM */
-static char *calculator[] = {
+static const char *calculator[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 17 1 ",
 "  c #2C3E50",

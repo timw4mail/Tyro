@@ -1,5 +1,5 @@
 /* XPM */
-static char *shield[] = {
+static const char *shield[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 158 2 ",
 "   c #2980B9",

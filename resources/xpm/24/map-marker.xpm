@@ -1,5 +1,5 @@
 /* XPM */
-static char *map_marker[] = {
+static const char *map_marker[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 15 1 ",
 "  c #C0392B",

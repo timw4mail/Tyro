@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_warning[] = {
+static const char *sign_warning[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 35 1 ",
 "  c #7E793F",

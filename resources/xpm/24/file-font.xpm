@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_font[] = {
+static const char *file_font[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 41 1 ",
 "  c #34495E",

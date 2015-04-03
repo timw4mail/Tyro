@@ -1,5 +1,5 @@
 /* XPM */
-static char *wine[] = {
+static const char *wine[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 50 1 ",
 "  c #C0392B",

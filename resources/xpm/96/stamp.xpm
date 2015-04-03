@@ -1,5 +1,5 @@
 /* XPM */
-static char *stamp[] = {
+static const char *stamp[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 108 2 ",
 "   c #2980B9",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *shield_error[] = {
+static const char *shield_error[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 88 1 ",
 "  c #C0392B",

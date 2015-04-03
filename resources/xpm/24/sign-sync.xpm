@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_sync[] = {
+static const char *sign_sync[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 92 1 ",
 "  c #2980B9",

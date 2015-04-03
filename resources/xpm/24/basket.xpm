@@ -1,5 +1,5 @@
 /* XPM */
-static char *basket[] = {
+static const char *basket[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 23 1 ",
 "  c #C43A2D",

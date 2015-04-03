@@ -1,5 +1,5 @@
 /* XPM */
-static char *radio[] = {
+static const char *radio[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 77 1 ",
 "  c #E27D08",

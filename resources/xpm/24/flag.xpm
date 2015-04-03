@@ -1,5 +1,5 @@
 /* XPM */
-static char *flag[] = {
+static const char *flag[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 21 1 ",
 "  c #16A186",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *bubbles[] = {
+static const char *bubbles[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 54 1 ",
 "  c #95A4A6",

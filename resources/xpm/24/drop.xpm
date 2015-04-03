@@ -1,5 +1,5 @@
 /* XPM */
-static char *drop[] = {
+static const char *drop[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 38 1 ",
 "  c #2980B8",

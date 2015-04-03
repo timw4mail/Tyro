@@ -1,5 +1,5 @@
 /* XPM */
-static char *shop[] = {
+static const char *shop[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 56 1 ",
 "  c #C0392B",

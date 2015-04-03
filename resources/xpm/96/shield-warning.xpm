@@ -1,5 +1,5 @@
 /* XPM */
-static char *shield_warning[] = {
+static const char *shield_warning[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 224 2 ",
 "   c #7F793F",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *switch_on[] = {
+static const char *switch_on[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 160 2 ",
 "   c #27AE60",

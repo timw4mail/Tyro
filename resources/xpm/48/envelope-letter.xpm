@@ -1,5 +1,5 @@
 /* XPM */
-static char *envelope_letter[] = {
+static const char *envelope_letter[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 32 1 ",
 "  c #F39C12",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_premiere[] = {
+static const char *file_premiere[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 26 1 ",
 "  c #8E44AD",

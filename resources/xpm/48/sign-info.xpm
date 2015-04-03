@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_info[] = {
+static const char *sign_info[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 40 1 ",
 "  c #2980B8",

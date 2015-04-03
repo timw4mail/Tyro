@@ -1,5 +1,5 @@
 /* XPM */
-static char *book[] = {
+static const char *book[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 49 1 ",
 "  c #16A085",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_ban[] = {
+static const char *sign_ban[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 55 1 ",
 "  c #C0392B",

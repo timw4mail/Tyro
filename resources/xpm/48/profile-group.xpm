@@ -1,5 +1,5 @@
 /* XPM */
-static char *profile_group[] = {
+static const char *profile_group[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 23 1 ",
 "  c #2B3E4F",

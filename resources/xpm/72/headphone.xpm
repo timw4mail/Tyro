@@ -1,5 +1,5 @@
 /* XPM */
-static char *headphone[] = {
+static const char *headphone[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 59 1 ",
 "  c #2D3D4F",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *user_male_alt[] = {
+static const char *user_male_alt[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 111 2 ",
 "   c #C0392B",

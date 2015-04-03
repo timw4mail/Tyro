@@ -1,5 +1,5 @@
 /* XPM */
-static char *folder_house[] = {
+static const char *folder_house[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 23 1 ",
 "  c #2980B9",

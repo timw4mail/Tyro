@@ -1,5 +1,5 @@
 /* XPM */
-static char *social_facebook[] = {
+static const char *social_facebook[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 55 1 ",
 "  c #30497B",

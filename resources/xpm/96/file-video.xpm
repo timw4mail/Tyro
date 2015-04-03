@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_video[] = {
+static const char *file_video[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 25 1 ",
 "  c #C0392B",

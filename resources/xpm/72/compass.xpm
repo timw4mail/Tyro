@@ -1,5 +1,5 @@
 /* XPM */
-static char *compass[] = {
+static const char *compass[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 197 2 ",
 "   c #C0392B",

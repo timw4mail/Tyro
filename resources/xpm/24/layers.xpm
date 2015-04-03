@@ -1,5 +1,5 @@
 /* XPM */
-static char *layers[] = {
+static const char *layers[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 16 1 ",
 "  c #CA3E2F",

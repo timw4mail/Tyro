@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_zip[] = {
+static const char *file_zip[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 58 1 ",
 "  c #7F8C8D",

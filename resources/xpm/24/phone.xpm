@@ -1,5 +1,5 @@
 /* XPM */
-static char *phone[] = {
+static const char *phone[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 47 1 ",
 "  c #C0392B",

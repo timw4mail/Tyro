@@ -1,5 +1,5 @@
 /* XPM */
-static char *tag_alt[] = {
+static const char *tag_alt[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 28 1 ",
 "  c #8E44AD",

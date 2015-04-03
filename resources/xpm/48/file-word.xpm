@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_word[] = {
+static const char *file_word[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 71 1 ",
 "  c #3498DB",

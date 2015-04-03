@@ -1,5 +1,5 @@
 /* XPM */
-static char *cat[] = {
+static const char *cat[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 191 2 ",
 "   c #2C3E50",

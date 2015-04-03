@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_check[] = {
+static const char *sign_check[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 58 1 ",
 "  c #26AD5F",

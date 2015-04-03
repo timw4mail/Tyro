@@ -1,5 +1,5 @@
 /* XPM */
-static char *star_alt[] = {
+static const char *star_alt[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 49 1 ",
 "  c #F39C12",

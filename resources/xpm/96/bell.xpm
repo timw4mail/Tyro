@@ -1,5 +1,5 @@
 /* XPM */
-static char *bell[] = {
+static const char *bell[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 56 1 ",
 "  c #E67F21",

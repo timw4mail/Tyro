@@ -1,5 +1,5 @@
 /* XPM */
-static char *folder_music[] = {
+static const char *folder_music[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 67 1 ",
 "  c #2980B9",

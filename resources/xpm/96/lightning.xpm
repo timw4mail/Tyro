@@ -1,5 +1,5 @@
 /* XPM */
-static char *lightning[] = {
+static const char *lightning[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 46 1 ",
 "  c #E67E22",

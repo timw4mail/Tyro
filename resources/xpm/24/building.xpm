@@ -1,5 +1,5 @@
 /* XPM */
-static char *building[] = {
+static const char *building[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 8 1 ",
 "  c #D35400",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *snow_flake[] = {
+static const char *snow_flake[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 2 1 ",
 "  c #3498DB",

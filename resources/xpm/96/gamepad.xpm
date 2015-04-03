@@ -1,5 +1,5 @@
 /* XPM */
-static char *gamepad[] = {
+static const char *gamepad[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 89 1 ",
 "  c #C0392B",

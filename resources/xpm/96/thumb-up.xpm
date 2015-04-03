@@ -1,5 +1,5 @@
 /* XPM */
-static char *thumb_up[] = {
+static const char *thumb_up[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 99 2 ",
 "   c #2980B9",

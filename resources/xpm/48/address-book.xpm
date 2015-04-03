@@ -1,5 +1,5 @@
 /* XPM */
-static char *address_book[] = {
+static const char *address_book[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 97 2 ",
 "   c #DC543F",

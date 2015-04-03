@@ -1,5 +1,5 @@
 /* XPM */
-static char *dashboard_alt[] = {
+static const char *dashboard_alt[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 97 2 ",
 "   c #63583F",

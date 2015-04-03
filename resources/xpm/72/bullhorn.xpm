@@ -1,5 +1,5 @@
 /* XPM */
-static char *bullhorn[] = {
+static const char *bullhorn[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 42 1 ",
 "  c #C0392B",

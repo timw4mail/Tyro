@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_illustrator[] = {
+static const char *file_illustrator[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 86 1 ",
 "  c #E67D21",

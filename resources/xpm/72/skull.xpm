@@ -1,5 +1,5 @@
 /* XPM */
-static char *skull[] = {
+static const char *skull[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 90 1 ",
 "  c #7F8C8D",

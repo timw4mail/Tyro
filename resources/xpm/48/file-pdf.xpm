@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_pdf[] = {
+static const char *file_pdf[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 120 2 ",
 "   c #C0382B",

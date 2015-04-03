@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_error[] = {
+static const char *sign_error[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 42 1 ",
 "  c #BF3A2B",

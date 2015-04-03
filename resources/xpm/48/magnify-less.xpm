@@ -1,5 +1,5 @@
 /* XPM */
-static char *magnify_less[] = {
+static const char *magnify_less[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 50 1 ",
 "  c #7F8C8D",

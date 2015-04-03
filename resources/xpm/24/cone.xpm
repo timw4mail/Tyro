@@ -1,5 +1,5 @@
 /* XPM */
-static char *cone[] = {
+static const char *cone[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 37 1 ",
 "  c #D35400",

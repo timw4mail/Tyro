@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_bookmark[] = {
+static const char *file_bookmark[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 16 1 ",
 "  c #C0392B",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *life_buoy[] = {
+static const char *life_buoy[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 83 1 ",
 "  c #C0392B",

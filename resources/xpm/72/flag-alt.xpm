@@ -1,5 +1,5 @@
 /* XPM */
-static char *flag_alt[] = {
+static const char *flag_alt[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 99 2 ",
 "   c #2C3E50",

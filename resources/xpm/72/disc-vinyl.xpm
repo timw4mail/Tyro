@@ -1,5 +1,5 @@
 /* XPM */
-static char *disc_vinyl[] = {
+static const char *disc_vinyl[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 73 1 ",
 "  c #66663C",

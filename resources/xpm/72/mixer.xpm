@@ -1,5 +1,5 @@
 /* XPM */
-static char *mixer[] = {
+static const char *mixer[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 24 1 ",
 "  c #2C3E50",

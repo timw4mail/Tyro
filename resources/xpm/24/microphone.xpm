@@ -1,5 +1,5 @@
 /* XPM */
-static char *microphone[] = {
+static const char *microphone[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 13 1 ",
 "  c #7F8C8D",

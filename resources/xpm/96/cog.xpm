@@ -1,5 +1,5 @@
 /* XPM */
-static char *cog[] = {
+static const char *cog[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 56 1 ",
 "  c #7F8B8D",

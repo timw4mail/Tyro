@@ -1,5 +1,5 @@
 /* XPM */
-static char *device_mobile_phone[] = {
+static const char *device_mobile_phone[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 55 1 ",
 "  c #2C3E50",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *puzzle[] = {
+static const char *puzzle[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 59 1 ",
 "  c #169F85",

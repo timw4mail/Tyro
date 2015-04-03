@@ -1,5 +1,5 @@
 /* XPM */
-static char *social_twitter[] = {
+static const char *social_twitter[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 220 2 ",
 "   c #1498CA",

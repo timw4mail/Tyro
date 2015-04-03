@@ -1,5 +1,5 @@
 /* XPM */
-static char *device_laptop[] = {
+static const char *device_laptop[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 48 1 ",
 "  c #2C3E50",

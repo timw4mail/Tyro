@@ -1,5 +1,5 @@
 /* XPM */
-static char *notepad[] = {
+static const char *notepad[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 80 1 ",
 "  c #2C3E50",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *user_female[] = {
+static const char *user_female[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 174 2 ",
 "   c #2C3E4F",

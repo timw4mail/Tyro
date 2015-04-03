@@ -1,5 +1,5 @@
 /* XPM */
-static char *heart[] = {
+static const char *heart[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 6 1 ",
 "  c #E74C3B",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *pin[] = {
+static const char *pin[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 36 1 ",
 "  c #BF382C",

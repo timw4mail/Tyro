@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_note[] = {
+static const char *file_note[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 31 1 ",
 "  c #95A4A6",

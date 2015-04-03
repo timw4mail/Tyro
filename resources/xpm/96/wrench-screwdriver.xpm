@@ -1,5 +1,5 @@
 /* XPM */
-static char *wrench_screwdriver[] = {
+static const char *wrench_screwdriver[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 118 2 ",
 "   c #E67E22",

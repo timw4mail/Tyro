@@ -1,5 +1,5 @@
 /* XPM */
-static char *keyring[] = {
+static const char *keyring[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 94 2 ",
 "   c #F39C12",

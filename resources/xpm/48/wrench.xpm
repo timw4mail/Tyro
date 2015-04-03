@@ -1,5 +1,5 @@
 /* XPM */
-static char *wrench[] = {
+static const char *wrench[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 48 1 ",
 "  c #7F8C8C",

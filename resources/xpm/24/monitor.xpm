@@ -1,5 +1,5 @@
 /* XPM */
-static char *monitor[] = {
+static const char *monitor[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 35 1 ",
 "  c #16A085",

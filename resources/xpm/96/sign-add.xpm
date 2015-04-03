@@ -1,5 +1,5 @@
 /* XPM */
-static char *sign_add[] = {
+static const char *sign_add[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 34 1 ",
 "  c #27AE60",

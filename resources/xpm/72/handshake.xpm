@@ -1,5 +1,5 @@
 /* XPM */
-static char *handshake[] = {
+static const char *handshake[] = {
 /* columns rows colors chars-per-pixel */
 "72 72 166 2 ",
 "   c #2980B9",

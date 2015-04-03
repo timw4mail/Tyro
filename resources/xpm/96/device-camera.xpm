@@ -1,5 +1,5 @@
 /* XPM */
-static char *device_camera[] = {
+static const char *device_camera[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 139 2 ",
 "   c #2C3E50",

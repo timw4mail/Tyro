@@ -1,5 +1,5 @@
 /* XPM */
-static char *tag[] = {
+static const char *tag[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 27 1 ",
 "  c #27AE60",

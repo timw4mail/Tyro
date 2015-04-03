@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_sound[] = {
+static const char *file_sound[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 64 1 ",
 "  c #74A1B8",

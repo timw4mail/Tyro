@@ -1,5 +1,5 @@
 /* XPM */
-static char *file_powerpoint[] = {
+static const char *file_powerpoint[] = {
 /* columns rows colors chars-per-pixel */
 "48 48 31 1 ",
 "  c #D35400",

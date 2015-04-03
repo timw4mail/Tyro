@@ -1,5 +1,5 @@
 /* XPM */
-static char *brick[] = {
+static const char *brick[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 67 1 ",
 "  c #E67F21",

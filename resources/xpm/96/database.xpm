@@ -1,5 +1,5 @@
 /* XPM */
-static char *database[] = {
+static const char *database[] = {
 /* columns rows colors chars-per-pixel */
 "96 96 246 2 ",
 "   c #7F8C8D",
