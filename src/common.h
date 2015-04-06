@@ -13,6 +13,7 @@
 
 using namespace std;
 
+#include <iostream>
 #include <string>
 
 #endif	// TYRO_COMMON_H

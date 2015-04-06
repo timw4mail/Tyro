@@ -25,3 +25,18 @@ EditPane::EditPane(
 }
 
 EditPane::~EditPane() {}
+
+void EditPane::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
+{
+	wxFileDialog *OpenDialog = new wxFileDialog(this, _T("Choose a file"), _(""), _(""), _("*.*"), wxFD_OPEN);
+
+	if (OpenDialog->ShowModal() == wxID_OK)
+	{
+		// Load the file into a new notebook tab and styled text control
+	}
+	OpenDialog->Close();
+}
+
+void EditPane::OnMenuFileSave(wxCommandEvent &WXUNUSED(event))
+{
+}

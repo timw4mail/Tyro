@@ -1,6 +1,6 @@
 CXX = $(shell wx-config --cxx) -Wno-c++11-compat-deprecated-writable-strings
 TARGET = build/Tyro
-LDLIBS = $(shell wx-config --libs all)
+LDLIBS = $(shell wx-config --libs all) -lssh2
 WX_CXXFLAGS = -I./src -I./include -static $(shell wx-config --cxxflags)
 DEV_CXXFLAGS = -g -Wall -Wextra $(WX_CXXFLAGS)
 CXXFLAGS = -Os -s $(WX_CXXFLAGS)

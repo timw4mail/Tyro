@@ -12,8 +12,8 @@
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_CLOSE(MainFrame::OnClose)
 	EVT_MENU(wxID_NEW, MainFrame::OnMenuFileNew)
-	EVT_MENU(wxID_OPEN, MainFrame::OnMenuFileOpen)
-	EVT_MENU(wxID_SAVE, MainFrame::OnMenuFileSave)
+	EVT_MENU(wxID_OPEN, EditPane::OnMenuFileOpen)
+	EVT_MENU(wxID_SAVE, EditPane::OnMenuFileSave)
 	EVT_MENU(wxID_EXIT, MainFrame::OnQuit)
 	EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
 END_EVENT_TABLE()
@@ -108,9 +108,9 @@ void MainFrame::SetupMenu()
 	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
 
 	// Add the menus to the menubar
-	mbar->Append(fileMenu, _("&File"));
-	mbar->Append(editMenu, _("&Edit"));
-	mbar->Append(helpMenu, _("&Help"));
+	mbar->Append(fileMenu, _T("&File"));
+	mbar->Append(editMenu, _T("&Edit"));
+	mbar->Append(helpMenu, _T("&Help"));
 
 #ifdef __WXMAC__
 	wxMenuBar::MacSetCommonMenuBar(mbar);
@@ -133,21 +133,6 @@ void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
 void MainFrame::OnMenuFileNew(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->AddTab();
-}
-
-void MainFrame::OnMenuFileOpen(wxCommandEvent &WXUNUSED(event))
-{
-	wxFileDialog *OpenDialog = new wxFileDialog(this, _T("Choose a file"), _(""), _(""), _("*.*"), wxFD_OPEN);
-
-	if (OpenDialog->ShowModal() == wxID_OK)
-	{
-		// Load the file into a new notebook tab and styled text control
-	}
-	OpenDialog->Close();
-}
-
-void MainFrame::OnMenuFileSave(wxCommandEvent &WXUNUSED(event))
-{
 }
 
 void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))

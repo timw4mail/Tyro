@@ -25,8 +25,6 @@ class MainFrame: public wxFrame
 		void SetupToolbar();
 		void SetupStatusBar();
 		void OnMenuFileNew(wxCommandEvent &event);
-		void OnMenuFileOpen(wxCommandEvent &event);
-		void OnMenuFileSave(wxCommandEvent &event);
 		void OnClose(wxCloseEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
