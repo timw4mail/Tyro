@@ -9,7 +9,7 @@
 #define	SFTP_H
 
 #define LIBSSH_STATIC 1
-#include "common.h"
+#include "../common.h"
 
 // libssh2 includes
 #include <libssh2.h>

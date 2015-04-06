@@ -7,7 +7,7 @@
 
 #include "common.h"
 #include "TyroApp.h"
-#include "TabContainer.h"
+#include "widgets/TabContainer.h"
 
 class MainFrame: public wxFrame
 {
