@@ -31,7 +31,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 
 	// Set up control layout
 	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
-	
+
 	notebook = this->CreateTabContainer();
 
 	base_sizer->Add(notebook, 1, wxEXPAND | wxALL, 5);
@@ -55,10 +55,18 @@ void MainFrame::SetupStatusBar()
 void MainFrame::SetupToolbar()
 {
 	// Icon files
+#ifndef __WXGTK__
 	#include "../resources/xpm/48/file-empty.xpm"
 	#include "../resources/xpm/48/folder.xpm"
 	#include "../resources/xpm/48/floppy.xpm"
 	#include "../resources/xpm/48/wrench-screwdriver.xpm"
+#endif // __WXGTK__
+#ifdef __WXGTK__
+	#include "../resources/xpm/24/file-empty.xpm"
+	#include "../resources/xpm/24/folder.xpm"
+	#include "../resources/xpm/24/floppy.xpm"
+	#include "../resources/xpm/24/wrench-screwdriver.xpm"
+#endif
 
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
 
@@ -121,7 +129,7 @@ void MainFrame::SetupMenu()
 TabContainer *MainFrame::CreateTabContainer()
 {
 	TabContainer *notebook = new TabContainer(this);
-	
+
 	return notebook;
 }
 
