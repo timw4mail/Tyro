@@ -1,7 +1,7 @@
 #ifndef TYROEDIT_PANE_H
 #define TYROEDIT_PANE_H
 
-#include "../common.h"
+#include "../wx_common.h"
 #include <wx/stc/stc.h>
 
 class EditPane: public wxStyledTextCtrl

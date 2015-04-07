@@ -5,7 +5,7 @@
 #ifndef TABCONTAINER_H
 #define	TABCONTAINER_H
 
-#include "../common.h"
+#include "../wx_common.h"
 
 #include <wx/aui/aui.h>
 #include "EditPane.h"

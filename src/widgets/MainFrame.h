@@ -5,9 +5,9 @@
 #ifndef TYROMAIN_H
 #define TYROMAIN_H
 
-#include "common.h"
-#include "TyroApp.h"
-#include "widgets/TabContainer.h"
+#include "../wx_common.h"
+#include "../TyroApp.h"
+#include "TabContainer.h"
 
 class MainFrame: public wxFrame
 {

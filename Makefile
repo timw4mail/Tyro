@@ -1,14 +1,22 @@
-CXX = $(shell wx-config --cxx) -Wno-c++11-compat-deprecated-writable-strings
-TARGET = build/Tyro
-LDLIBS = $(shell wx-config --libs all) -lssh2
-WX_CXXFLAGS = -I./src -I./include -static $(shell wx-config --cxxflags)
-DEV_CXXFLAGS = -g -Wall -Wextra $(WX_CXXFLAGS)
-CXXFLAGS = -Os -s $(WX_CXXFLAGS)
+CXX = $(shell wx-config --cxx)
 
-SOURCES = $(wildcard src/**/*.cpp src/*.cpp include/**/*.cpp include/*.cpp)
+SOURCES = $(wildcard src/network/*.cpp include/**/*.cpp include/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
+TARGET = build/Tyro.a
 
-all: build $(SOURCES) $(TARGET)
+PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
+PROGRAM = build/Tyro
+PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
+
+LDLIBS = -ldl $(TARGET) $(shell wx-config --libs all) -lssh2
+WX_CXXFLAGS =  $(shell wx-config --cxxflags)
+DEV_CXXFLAGS = -g -Wall -Wextra
+CXXFLAGS = -Os -I./src -I./include
+
+TEST_SRC= $(wildcard tests/*.cpp)
+TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
+
+all: build $(TARGET) $(PROGRAM)
 
 dev: CXXFLAGS= $(DEV_CXXFLAGS)
 dev: all
@@ -16,8 +24,18 @@ dev: all
 build:
 	@mkdir -p build
 
+$(TARGET): CXXFLAGS += -fPIC
 $(TARGET): $(OBJECTS)
-	$(CXX) $(LDLIBS) $(OBJECTS) -o $@
+	ar rcs $@ $(OBJECTS)
+	ranlib $@
+
+
+$(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS) $(TARGET)
+$(PROGRAM): $(PROGRAM_OBJECTS) 
+	$(CXX) $(LDLIBS) $(PROGRAM_OBJECTS) -o $(PROGRAM)
+	
+$(PROGRAM_OBJECTS):
+	$(CXX) $(WX_CXXFLAGS) $(PROGRAM_SRC)
 
 run:
 	./build/Tyro
@@ -34,9 +52,14 @@ Tyro.app: all resources/platform/osx/Info.plist
 	cp build/Tyro Tyro.app/Contents/MacOS/Tyro
 	cp resources/platform/osx/tyro.icns Tyro.app/Contents/Resources/
 
+.PHONY: tests	
+tests: LDLIBS = $(TARGET) -lssh2
+tests: $(TESTS)
+	sh ./tests/runtests.sh
+
 clean:
 	rm -f *.o
 	rm -rf Tyro.app
-	rm -rf build $(OBJECTS) $(PROGRAM)
+	rm -rf build $(OBJECTS) $(PROGRAM) $(TARGET) $(TESTS)
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`

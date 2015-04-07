@@ -10,7 +10,7 @@
 #ifndef TYROAPP_H
 #define TYROAPP_H
 
-#include "common.h"
+#include "wx_common.h"
 
 #include <wx/app.h>
 #include <wx/debug.h>

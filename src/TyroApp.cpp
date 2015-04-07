@@ -9,7 +9,7 @@
 
 #include "common.h"
 #include "TyroApp.h"
-#include "Main.h"
+#include "widgets/MainFrame.h"
 
 IMPLEMENT_APP(TyroApp);
 

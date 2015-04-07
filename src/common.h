@@ -4,17 +4,10 @@
 #ifndef TYRO_COMMON_H
 #define	TYRO_COMMON_H
 
-#ifdef WX_PRECOMP
-	#include "wx_pch.h"
-#endif
-#ifndef WX_PRECOMP
-	#include <wx/wx.h>
-#endif
-
-using namespace std;
-
 #include <iostream>
 #include <string>
+
+using namespace std;
 
 #endif	// TYRO_COMMON_H
 

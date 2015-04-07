@@ -6,7 +6,7 @@
 #include "wx_pch.h"
 #endif
 
-#include "Main.h"
+#include "MainFrame.h"
 
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
@@ -56,16 +56,16 @@ void MainFrame::SetupToolbar()
 {
 	// Icon files
 #ifndef __WXGTK__
-	#include "../resources/xpm/48/file-empty.xpm"
-	#include "../resources/xpm/48/folder.xpm"
-	#include "../resources/xpm/48/floppy.xpm"
-	#include "../resources/xpm/48/wrench-screwdriver.xpm"
+	#include "../../resources/xpm/48/file-empty.xpm"
+	#include "../../resources/xpm/48/folder.xpm"
+	#include "../../resources/xpm/48/floppy.xpm"
+	#include "../../resources/xpm/48/wrench-screwdriver.xpm"
 #endif // __WXGTK__
 #ifdef __WXGTK__
-	#include "../resources/xpm/24/file-empty.xpm"
-	#include "../resources/xpm/24/folder.xpm"
-	#include "../resources/xpm/24/floppy.xpm"
-	#include "../resources/xpm/24/wrench-screwdriver.xpm"
+	#include "../../resources/xpm/24/file-empty.xpm"
+	#include "../../resources/xpm/24/folder.xpm"
+	#include "../../resources/xpm/24/floppy.xpm"
+	#include "../../"
 #endif
 
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
