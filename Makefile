@@ -22,17 +22,17 @@ $(TARGET): $(OBJECTS)
 run:
 	./build/Tyro
 
-Tyro.app: all platform/osx/Info.plist
+Tyro.app: all resources/platform/osx/Info.plist
 	SetFile -t APPL $(TARGET)
 	-mkdir Tyro.app
 	-mkdir Tyro.app/Contents
 	-mkdir Tyro.app/Contents/MacOS
 	-mkdir Tyro.app/Contents/Resources
 	-mkdir Tyro.app/Contents/Resources/English.lproj
-	cp platform/osx/Info.plist Tyro.app/Contents/
+	cp resources/platform/osx/Info.plist Tyro.app/Contents/
 	echo -n 'APPL????' > Tyro.app/Contents/PkgInfo
 	cp build/Tyro Tyro.app/Contents/MacOS/Tyro
-	cp platform/osx/tyro.icns Tyro.app/Contents/Resources/
+	cp resources/platform/osx/tyro.icns Tyro.app/Contents/Resources/
 
 clean:
 	rm -f *.o
