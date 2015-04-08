@@ -12,7 +12,13 @@
 
 // Socket includes
 #include <cstring>
-#include <sys/socket.h>
+
+#ifdef __WXWIN__
+	#include <winsock2.h>
+#else
+	#include <sys/socket.h>
+#endif
+
 #include <netdb.h>
 #include <stdio.h>
 

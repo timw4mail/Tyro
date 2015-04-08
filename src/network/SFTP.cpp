@@ -10,7 +10,11 @@ SFTP::~SFTP() {
 	libssh2_sftp_shutdown(sftp_session);
 	libssh2_session_disconnect(session, "Normal Shutdown, Thank you for playing");
 	libssh2_session_free(session);
+#ifdef __WXWIN__
+	closesocket(sock);
+#else
 	close(sock);
+#endif
 	libssh2_exit();
 	freeaddrinfo(host_info_list);
 	freeaddrinfo(&host_info);
@@ -73,6 +77,18 @@ string SFTP::getFile(const char *path)
 
 void SFTP::ssh_connect(const char *host, const char *user, const char *pass, const char *port)
 {
+#ifdef __WXWIN__
+	WSADATA wsadata;
+	int err;
+	
+	err = WSAStartup(MAKEWORD(2,0), &wsadata);
+	if (err != 0)
+	{
+		cerr << "WSAStartup failed with error:" << err << endl;
+		return;
+	}
+#endif
+	
 	// Clear out memory in addr structure
 	memset(&host_info, 0, sizeof host_info);
 	
