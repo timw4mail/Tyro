@@ -12,9 +12,8 @@ A Cross-platform Code Editor
 ### Building
 * Make sure wxWidgets is installed, version 2.8 or 3
 
-#### Mac
-* run `make clean Tyro.app`
+#### Mac and Linux
+Use either the Netbeans project, or the makefile. 
 
-#### Linux
-* use the Code::Blocks project to compile
+On OS X, `make Tyro.app` will create the app bundle.
  
