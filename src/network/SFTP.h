@@ -13,13 +13,13 @@
 // Socket includes
 #include <cstring>
 
-#ifdef __WXWIN__
+#ifdef WIN32
 	#include <winsock2.h>
 #else
 	#include <sys/socket.h>
+	#include <netdb.h>
 #endif
 
-#include <netdb.h>
 #include <stdio.h>
 
 // libssh2 includes

@@ -10,7 +10,7 @@ SFTP::~SFTP() {
 	libssh2_sftp_shutdown(sftp_session);
 	libssh2_session_disconnect(session, "Normal Shutdown, Thank you for playing");
 	libssh2_session_free(session);
-#ifdef __WXWIN__
+#ifdef WIN32
 	closesocket(sock);
 #else
 	close(sock);
