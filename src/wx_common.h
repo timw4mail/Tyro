@@ -1,8 +1,5 @@
-/* 
- * File:   wx_common.h
- * Author: twarren
- *
- * Created on April 7, 2015, 2:29 PM
+/**
+ * Common header for widget classes
  */
 
 #ifndef WX_COMMON_H

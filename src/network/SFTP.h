@@ -12,14 +12,15 @@
 
 #define LIBSSH_STATIC 1
 
-// libssh2 includes
-#include <libssh2.h>
-#include <libssh2_sftp.h>
-
 // Socket includes
 #include <cstring>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <stdio.h>
+
+// libssh2 includes
+#include <libssh2.h>
+#include <libssh2_sftp.h>
 
 class SFTP {
 public:

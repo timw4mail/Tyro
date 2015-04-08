@@ -65,7 +65,7 @@ void MainFrame::SetupToolbar()
 	#include "../../resources/xpm/24/file-empty.xpm"
 	#include "../../resources/xpm/24/folder.xpm"
 	#include "../../resources/xpm/24/floppy.xpm"
-	#include "../../"
+	#include "../../resources/xpm/24/wrench-screwdriver.xpm"
 #endif
 
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);

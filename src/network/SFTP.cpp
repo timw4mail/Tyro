@@ -19,7 +19,6 @@ SFTP::~SFTP() {
 string SFTP::getFile(const char *path)
 {
 	string output = "";
-	fprintf(stderr, "libssh2_sftp_open()!\n");
 	
 	LIBSSH2_SFTP_HANDLE *sftp_handle;
 	sftp_handle = libssh2_sftp_open(sftp_session, path, LIBSSH2_FXF_READ, 0);
@@ -29,8 +28,6 @@ string SFTP::getFile(const char *path)
 		fprintf(stderr, "Unable to open file with SFTP: %ld\n", libssh2_sftp_last_error(sftp_session));
 		return output;
 	}
-	
-	fprintf(stderr, "libssh2_sftp_open() is done, now receive data!\n");
 	
 	do {
 		char mem[1024];
@@ -119,7 +116,6 @@ void SFTP::ssh_connect(const char *host, const char *user, const char *pass, con
 
 void SFTP::sftp_connect()
 {
-	fprintf(stderr, "libssh2_sftp_init()!\n");
 	sftp_session = libssh2_sftp_init(session);
 	
 	if ( ! sftp_session)
