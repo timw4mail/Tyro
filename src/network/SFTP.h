@@ -24,6 +24,7 @@ class SFTP {
 public:
 	SFTP(const char *host, const char *user, const char *pass, const char *port="22");
 	~SFTP();
+	string getFingerprint();
 	string getFile(const char *path);
 private:
 	struct addrinfo host_info;

@@ -4,17 +4,18 @@
 
 
 TEST_CASE("ssh connections work", "[SFTP]") {
-	SFTP *sftp = new SFTP("timshomepage.net", "test", "testpassword");
+	SFTP *sftp = new SFTP("shell.xshellz.com", "twarren", "of0fmk2dsj");
+	sftp->getFingerprint();
 	
 	SECTION("sftp object is not null") {
 		REQUIRE(sftp != NULL);
 	}
-	/*SECTION("can retreive a file") {
+	SECTION("can retreive a file") {
 		string file;
-		file = sftp->getFile("~/test.txt");
+		file = sftp->getFile("test.txt");
 		REQUIRE(file != "");
-		REQUIRE(file == "SFTP works!");
-	}*/
+		REQUIRE(file == "SFTP works!\n");
+	}
 }
 
 

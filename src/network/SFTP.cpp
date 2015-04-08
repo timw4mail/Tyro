@@ -16,8 +16,30 @@ SFTP::~SFTP() {
 	freeaddrinfo(&host_info);
 };
 
+string SFTP::getFingerprint()
+{
+	// Get the host fingerprint to check against known hosts
+	fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
+
+	cerr << "Fingerprint: ";
+
+	for (int i = 0; i < 20; i++)
+	{
+		fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
+	}
+	cerr << endl;
+
+	return (string)fingerprint;
+}
+
 string SFTP::getFile(const char *path)
 {
+	if ( ! fingerprint)
+	{
+		cerr << "Check fingerprint before grabbing files!" << endl;
+		return "";
+	}
+
 	string output = "";
 	
 	LIBSSH2_SFTP_HANDLE *sftp_handle;
@@ -25,7 +47,8 @@ string SFTP::getFile(const char *path)
 	
 	if ( ! sftp_handle)
 	{
-		fprintf(stderr, "Unable to open file with SFTP: %ld\n", libssh2_sftp_last_error(sftp_session));
+		cerr << "Unable to open file with SFTP: ";
+		cerr << libssh2_sftp_last_error(sftp_session) << endl;
 		return output;
 	}
 	
@@ -60,7 +83,7 @@ void SFTP::ssh_connect(const char *host, const char *user, const char *pass, con
 	
 	if (status != 0)
 	{
-		cout << "getaddrinfo error" << gai_strerror(status) << endl;
+		cerr << "getaddrinfo error" << gai_strerror(status) << endl;
 	}
 	
 	// Start libssh2
@@ -68,7 +91,7 @@ void SFTP::ssh_connect(const char *host, const char *user, const char *pass, con
 	
 	if (rc != 0)
 	{
-		cout << "Libssh2 initialization failed " << "(" << rc << ")" << endl;
+		cerr << "Libssh2 initialization failed " << "(" << rc << ")" << endl;
 		return;
 	}
 	
@@ -76,7 +99,7 @@ void SFTP::ssh_connect(const char *host, const char *user, const char *pass, con
 	
 	if (connect(sock, host_info_list->ai_addr, host_info_list->ai_addrlen) != 0)
 	{
-		cout << "Failed to connect to socket." << endl;
+		cerr << "Failed to connect to socket." << endl;
 		return;
 	}
 	
@@ -94,22 +117,12 @@ void SFTP::ssh_connect(const char *host, const char *user, const char *pass, con
 		return;
 	}
 	
-	// Get the host fingerprint to check against known hosts
-	fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
-	
-	fprintf(stderr, "Fingerprint: ");
-	for (int i = 0; i < 20; i++)
-	{
-		fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
-	}
-	fprintf(stderr, "\n");
-	
 	//@TODO do something with the handling of known hosts
 	
 	// Authenticate (by password)
 	if (libssh2_userauth_password(session, user, pass))
 	{
-		fprintf(stderr, "Authentication by password failed.\n");
+		cerr << "Authentication by password failed." << endl;
 		return;
 	}
 }
@@ -120,7 +133,7 @@ void SFTP::sftp_connect()
 	
 	if ( ! sftp_session)
 	{
-		fprintf(stderr, "Unable to start SFTP session \n");
+		cerr << "Unable to start SFTP session" << endl;
 		return;
 	}
 }
