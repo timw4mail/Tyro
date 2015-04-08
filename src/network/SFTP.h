@@ -10,8 +10,6 @@
 
 #include "../common.h"
 
-#define LIBSSH_STATIC 1
-
 // Socket includes
 #include <cstring>
 #include <sys/socket.h>

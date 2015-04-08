@@ -1,0 +1,12 @@
+make: wx-config: Command not found
+Os -I./src -I./include -fPIC   -c -o src/network/SFTP.o src/network/SFTP.cpp
+make: Os: No such file or directory
+make: [src/network/SFTP.o] Error 1 (ignored)
+make: wx-config: Command not found
+Os -I./src -I./include -fPIC   -c -o include/jsoncpp.o include/jsoncpp.cpp
+make: Os: No such file or directory
+make: [include/jsoncpp.o] Error 1 (ignored)
+ar rcs build/Tyro.a src/network/SFTP.o include/jsoncpp.o
+ar: src/network/SFTP.o: No such file or directory
+ar: include/jsoncpp.o: No such file or directory
+make: *** [build/Tyro.a] Error 1
