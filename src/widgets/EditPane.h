@@ -2,7 +2,8 @@
 #define TYROEDIT_PANE_H
 
 #include "../wx_common.h"
-#include <wx/stc/stc.h>
+#include "../../include/json/json.h"
+#include "EditPaneDefinitions.h"
 
 class EditPane: public wxStyledTextCtrl
 {

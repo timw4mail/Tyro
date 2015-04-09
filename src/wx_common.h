@@ -14,5 +14,7 @@
 	#include <wx/wx.h>
 #endif
 
+#include "definitions.h"
+
 #endif	/* WX_COMMON_H */
 

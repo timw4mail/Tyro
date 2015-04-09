@@ -7,6 +7,9 @@
 
 #include "../wx_common.h"
 #include "../TyroApp.h"
+
+#include <wx/aboutdlg.h>
+
 #include "TabContainer.h"
 
 class MainFrame: public wxFrame
@@ -27,6 +30,10 @@ class MainFrame: public wxFrame
 		void SetupStatusBar();
 		void BindEvents();
 		void OnNew(wxCommandEvent &event);
+		void OnOpen(wxCommandEvent &event);
+		void OnFileClose(wxCommandEvent &event);
+		void OnSave(wxCommandEvent &event);
+		void OnSaveAs(wxCommandEvent &event);
 		void OnEditCut(wxCommandEvent &event);
 		void OnEditCopy(wxCommandEvent &event);
 		void OnEditPaste(wxCommandEvent &event);

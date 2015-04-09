@@ -126,6 +126,8 @@ void MainFrame::SetupMenu()
 void MainFrame::BindEvents()
 {
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnNew, this, wxID_NEW);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnOpen, this, wxID_OPEN);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnFileClose, this, wxID_CLOSE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCut, this, wxID_CUT);
@@ -136,14 +138,38 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditRedo, this, wxID_REDO);
 }
 
-void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
-{
-	Destroy();
-}
-
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->AddTab();
+}
+
+void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
+{
+	wxString filename;
+	
+	wxFileDialog dlg (this, _T("Open file"), wxEmptyString, wxEmptyString,
+		TYRO_FILE_OPEN_WILDCARDS, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
+
+	if (dlg.ShowModal() != wxID_OK) return;
+	
+	filename = dlg.GetPath();
+	
+	notebook->AddTab(filename);
+}
+
+void MainFrame::OnFileClose(wxCommandEvent &WXUNUSED(event))
+{
+
+}
+
+void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
+{
+	
+}
+
+void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
+{
+	
 }
 
 void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
@@ -192,5 +218,15 @@ void MainFrame::OnEditRedo(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
-	wxMessageBox(_T("Tyro, a text editor for all development\n Copyright 2015, Timothy J. Warren"), wxT("About Tyro"), wxOK| wxICON_INFORMATION, this);
+	wxAboutDialogInfo info;
+	
+	info.SetName("Tyro");
+	info.SetVersion("0.0.1", "Prerelease");
+	
+	info.AddDeveloper("Tim Warren, Programmer");
+	
+	info.SetDescription("Tyro, a text editor for all development");
+	info.SetCopyright(_T(" (C) 2015, Timothy J Warren"));
+	
+	wxAboutBox(info, this);
 }

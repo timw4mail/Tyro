@@ -33,8 +33,10 @@ void TabContainer::AddTab()
 
 void TabContainer::AddTab(wxString filePath)
 {
-	wxString caption="";
+	wxString caption=filePath;
 	EditPane *editor = new EditPane(this, wxID_ANY);
+	
+	editor->LoadFile(filePath);
 	
 	this->AddPage(editor, caption);
 }
