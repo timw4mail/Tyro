@@ -14,8 +14,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_NEW, MainFrame::OnMenuFileNew)
 	EVT_MENU(wxID_OPEN, EditPane::OnMenuFileOpen)
 	EVT_MENU(wxID_SAVE, EditPane::OnMenuFileSave)
-	EVT_MENU(wxID_EXIT, MainFrame::OnQuit)
 	EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+	EVT_MENU(wxID_EXIT, MainFrame::OnQuit)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame(wxFrame *frame, const wxString& title)
@@ -55,16 +55,17 @@ void MainFrame::SetupStatusBar()
 void MainFrame::SetupToolbar()
 {
 	// Icon files
-#ifndef __WXGTK__
+#ifdef __WXMAC__
 	#include "../../resources/xpm/48/file-empty.xpm"
 	#include "../../resources/xpm/48/folder.xpm"
 	#include "../../resources/xpm/48/floppy.xpm"
+	#include "../../resources/xpm/48/sign-error.xpm"
 	#include "../../resources/xpm/48/wrench-screwdriver.xpm"
-#endif // __WXGTK__
-#ifdef __WXGTK__
+#else
 	#include "../../resources/xpm/24/file-empty.xpm"
 	#include "../../resources/xpm/24/folder.xpm"
 	#include "../../resources/xpm/24/floppy.xpm"
+	#include "../../resources/xpm/24/sign-error.xpm"
 	#include "../../resources/xpm/24/wrench-screwdriver.xpm"
 #endif
 
@@ -72,18 +73,20 @@ void MainFrame::SetupToolbar()
 
 	wxToolBar *toolBar = GetToolBar();
 
-	wxBitmap bitmaps[4];
+	vector<wxBitmap> bitmaps;
 
-	bitmaps[0] = wxBitmap(file_empty);
-	bitmaps[1] = wxBitmap(folder);
-	bitmaps[2] = wxBitmap(floppy);
-	bitmaps[3] = wxBitmap(wrench_screwdriver);
+	bitmaps.push_back(wxBitmap(file_empty));
+	bitmaps.push_back(wxBitmap(folder));
+	bitmaps.push_back(wxBitmap(floppy));
+	bitmaps.push_back(wxBitmap(sign_error));
+	bitmaps.push_back(wxBitmap(wrench_screwdriver));
 
 	toolBar->AddTool(wxID_NEW, "New", bitmaps[0], "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", bitmaps[1], "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", bitmaps[2], "Save file");
+	toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
 	toolBar->AddSeparator();
-	toolBar->AddTool(wxID_ANY, "Settings", bitmaps[3], "Change Settings");
+	toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
 	toolBar->Realize();
 }
 
@@ -101,9 +104,10 @@ void MainFrame::SetupMenu()
 	fileMenu->Append(wxID_NEW, _T("&New\tCtrl+N"), _T("Create a new file"));
 	fileMenu->AppendSeparator();
 	fileMenu->Append(wxID_OPEN, _T("&Open\tCtrl+O"), _T("Opens an existing file"));
-	fileMenu->Append(wxID_CLOSE, _T("&Close\tCtrl+W"), _T("Close the current document"));
 	fileMenu->Append(wxID_SAVE, _T("&Save\tCtrl+S"), _T("Save the content"));
+	fileMenu->Append(wxID_SAVEAS, _T("Save &As...\tShift+Ctrl+S"), _T("Save current file as..."));
 	fileMenu->AppendSeparator();
+	fileMenu->Append(wxID_CLOSE, _T("&Close\tCtrl+W"), _T("Close the current document"));
 	fileMenu->Append(wxID_EXIT, _T("&Quit\tCtrl+Q"), _T("Quit the application"));
 
 	editMenu->Append(wxID_UNDO, _T("&Undo\tCtrl+Z"), _T("Undo last action"));
@@ -112,6 +116,8 @@ void MainFrame::SetupMenu()
 	editMenu->Append(wxID_CUT, _T("Cu&t\tCtrl+X"), _T("Cut selected text"));
 	editMenu->Append(wxID_COPY, _T("&Copy\tCtrl+C"), _T("Copy selected text"));
 	editMenu->Append(wxID_PASTE, _T("&Paste\tCtrl+V"), _T("Paste contents of clipboard"));
+	editMenu->AppendSeparator();
+	editMenu->Append(wxID_SELECTALL, _T("Select All\tCtrl+A"), _T("Select all the text in the current document"));
 
 	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
 
