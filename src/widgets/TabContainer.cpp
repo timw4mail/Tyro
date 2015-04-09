@@ -39,9 +39,7 @@ void TabContainer::AddTab(wxString filePath)
 	this->AddPage(editor, caption);
 }
 
-void TabContainer::OnEditSelectAll(wxCommandEvent &WXUNUSED(event))
+EditPane *TabContainer::GetCurrentEditor()
 {
-	cout << "Edit select all event called.";
-	//EditPane *editor = (EditPane *) this->GetCurrentPage();
-	//editor->SelectAll();
+	return (EditPane *) this->GetCurrentPage();
 }

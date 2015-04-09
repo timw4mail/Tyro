@@ -28,7 +28,7 @@ public:
 	void AddTab();
 	void AddTab(wxString filePath);
 	void OnEditSelectAll(wxCommandEvent &event);
-	
+	EditPane *GetCurrentEditor();
 private:
 };
 

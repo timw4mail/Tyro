@@ -25,7 +25,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	base_sizer->Add(notebook, 1, wxEXPAND | wxALL, 5);
 
 	base_sizer->SetContainingWindow(this);
-	base_sizer->SetMinSize(800,600);
+	base_sizer->SetMinSize(600,400);
 
 	SetSizerAndFit(base_sizer);
 	
@@ -128,7 +128,10 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnNew, this, wxID_NEW);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &TabContainer::OnEditSelectAll, notebook, wxID_SELECTALL);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCut, this, wxID_CUT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCopy, this, wxID_COPY);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditPaste, this, wxID_PASTE);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditSelectAll, this, wxID_SELECTALL);
 }
 
 void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
@@ -144,6 +147,26 @@ void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
 	Destroy();
+}
+
+void MainFrame::OnEditCut(wxCommandEvent &WXUNUSED(event))
+{
+	notebook->GetCurrentEditor()->Cut();
+}
+
+void MainFrame::OnEditCopy(wxCommandEvent &WXUNUSED(event))
+{
+	notebook->GetCurrentEditor()->Copy();
+}
+
+void MainFrame::OnEditPaste(wxCommandEvent &WXUNUSED(event))
+{
+	notebook->GetCurrentEditor()->Paste();
+}
+
+void MainFrame::OnEditSelectAll(wxCommandEvent &WXUNUSED(event))
+{
+	notebook->GetCurrentEditor()->SelectAll();
 }
 
 void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))

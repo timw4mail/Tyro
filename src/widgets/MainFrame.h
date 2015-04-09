@@ -27,6 +27,10 @@ class MainFrame: public wxFrame
 		void SetupStatusBar();
 		void BindEvents();
 		void OnNew(wxCommandEvent &event);
+		void OnEditCut(wxCommandEvent &event);
+		void OnEditCopy(wxCommandEvent &event);
+		void OnEditPaste(wxCommandEvent &event);
+		void OnEditSelectAll(wxCommandEvent &event);
 		void OnClose(wxCloseEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
