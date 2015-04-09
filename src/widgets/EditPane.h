@@ -19,10 +19,7 @@ public:
 		wxVSCROLL
 	);
 	~EditPane();
-	void OnMenuFileOpen(wxCommandEvent &event);
-	void OnMenuFileSave(wxCommandEvent &event);
 private:
-	DECLARE_EVENT_TABLE()
 };
 
 #endif // TYRODOC_FRAME_H

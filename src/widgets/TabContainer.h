@@ -27,9 +27,9 @@ public:
 	~TabContainer();
 	void AddTab();
 	void AddTab(wxString filePath);
+	void OnEditSelectAll(wxCommandEvent &event);
+	
 private:
-	EditPane *CreateEditor();
-	DECLARE_EVENT_TABLE()
 };
 
 #endif	/* TABCONTAINER_H */

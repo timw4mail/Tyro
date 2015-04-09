@@ -11,6 +11,7 @@
 
 class MainFrame: public wxFrame
 {
+	friend class TabContainer;
 	public:
 		MainFrame(wxFrame *frame, const wxString &title);
 		~MainFrame();
@@ -24,12 +25,11 @@ class MainFrame: public wxFrame
 		void SetupMenu();
 		void SetupToolbar();
 		void SetupStatusBar();
-		void OnMenuFileNew(wxCommandEvent &event);
+		void BindEvents();
+		void OnNew(wxCommandEvent &event);
 		void OnClose(wxCloseEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
-		TabContainer* CreateTabContainer();
-		DECLARE_EVENT_TABLE()
 };
 
 

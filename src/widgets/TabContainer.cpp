@@ -4,9 +4,6 @@
 
 #include "TabContainer.h"
 
-BEGIN_EVENT_TABLE(TabContainer, wxAuiNotebook)
-END_EVENT_TABLE()
-
 static unsigned long untitled_document_count = 0;
 
 TabContainer::TabContainer(
@@ -22,11 +19,6 @@ TabContainer::TabContainer(
 
 TabContainer::~TabContainer() {}
 
-EditPane *TabContainer::CreateEditor()
-{
-	return new EditPane(this, wxID_ANY);
-}
-
 void TabContainer::AddTab()
 {
 	untitled_document_count++;
@@ -34,10 +26,22 @@ void TabContainer::AddTab()
 	
 	caption.Printf("Untitled %lu", untitled_document_count);
 	
-	this->AddPage(CreateEditor(), caption);
+	EditPane *editor = new EditPane(this, wxID_ANY);
+	
+	this->AddPage(editor, caption);
 }
 
 void TabContainer::AddTab(wxString filePath)
 {
+	wxString caption="";
+	EditPane *editor = new EditPane(this, wxID_ANY);
 	
+	this->AddPage(editor, caption);
+}
+
+void TabContainer::OnEditSelectAll(wxCommandEvent &WXUNUSED(event))
+{
+	cout << "Edit select all event called.";
+	//EditPane *editor = (EditPane *) this->GetCurrentPage();
+	//editor->SelectAll();
 }

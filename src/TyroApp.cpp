@@ -17,6 +17,7 @@ bool TyroApp::OnInit()
 {
 	MainFrame* frame = new MainFrame(0L, _("Tyro"));
 
+	frame->Layout();
 	frame->CenterOnScreen();
 	frame->Show(true);
 	SetTopWindow(frame);

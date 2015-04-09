@@ -8,7 +8,7 @@ PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
 PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
 
-LDLIBS = -ldl $(TARGET) $(shell wx-config --libs all) -lssh2
+LDLIBS = -ldl $(TARGET) $(shell wx-config --libs base core aui stc) -lssh2
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 DEV_CXXFLAGS = -g -Wall -Wextra
 CXXFLAGS = -Os -I./src -I./include

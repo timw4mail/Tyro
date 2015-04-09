@@ -8,31 +8,19 @@
 
 #include "MainFrame.h"
 
-
-BEGIN_EVENT_TABLE(MainFrame, wxFrame)
-	EVT_CLOSE(MainFrame::OnClose)
-	EVT_MENU(wxID_NEW, MainFrame::OnMenuFileNew)
-	EVT_MENU(wxID_OPEN, EditPane::OnMenuFileOpen)
-	EVT_MENU(wxID_SAVE, EditPane::OnMenuFileSave)
-	EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
-	EVT_MENU(wxID_EXIT, MainFrame::OnQuit)
-END_EVENT_TABLE()
-
 MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	: wxFrame(frame, -1, title)
 {
+	// Create menus and bars
 	this->SetupMenu();
-
-	// create a status bar with some information about the used wxWidgets version
 	this->SetupStatusBar();
-
-	// create the main toolbar
 	this->SetupToolbar();
+	
+	// Create the tab container
+	notebook = new TabContainer(this);
 
 	// Set up control layout
 	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
-
-	notebook = this->CreateTabContainer();
 
 	base_sizer->Add(notebook, 1, wxEXPAND | wxALL, 5);
 
@@ -40,6 +28,9 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	base_sizer->SetMinSize(800,600);
 
 	SetSizerAndFit(base_sizer);
+	
+	// Finally, bind events
+	this->BindEvents();
 }
 
 
@@ -85,8 +76,8 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_OPEN, "Open", bitmaps[1], "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", bitmaps[2], "Save file");
 	toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
-	toolBar->AddSeparator();
-	toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
+	//toolBar->AddSeparator();
+	//toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
 	toolBar->Realize();
 }
 
@@ -132,11 +123,12 @@ void MainFrame::SetupMenu()
 	SetMenuBar(mbar);
 }
 
-TabContainer *MainFrame::CreateTabContainer()
+void MainFrame::BindEvents()
 {
-	TabContainer *notebook = new TabContainer(this);
-
-	return notebook;
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnNew, this, wxID_NEW);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &TabContainer::OnEditSelectAll, notebook, wxID_SELECTALL);
 }
 
 void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
@@ -144,7 +136,7 @@ void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
 	Destroy();
 }
 
-void MainFrame::OnMenuFileNew(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->AddTab();
 }
