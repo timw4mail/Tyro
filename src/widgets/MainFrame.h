@@ -31,6 +31,8 @@ class MainFrame: public wxFrame
 		void OnEditCopy(wxCommandEvent &event);
 		void OnEditPaste(wxCommandEvent &event);
 		void OnEditSelectAll(wxCommandEvent &event);
+		void OnEditUndo(wxCommandEvent &event);
+		void OnEditRedo(wxCommandEvent &event);
 		void OnClose(wxCloseEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);

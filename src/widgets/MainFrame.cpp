@@ -75,7 +75,7 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", bitmaps[0], "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", bitmaps[1], "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", bitmaps[2], "Save file");
-	toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
+	//toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
 	//toolBar->AddSeparator();
 	//toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
 	toolBar->Realize();
@@ -132,6 +132,8 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCopy, this, wxID_COPY);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditPaste, this, wxID_PASTE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditSelectAll, this, wxID_SELECTALL);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditUndo, this, wxID_UNDO);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditRedo, this, wxID_REDO);
 }
 
 void MainFrame::OnClose(wxCloseEvent &WXUNUSED(event))
@@ -161,12 +163,31 @@ void MainFrame::OnEditCopy(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnEditPaste(wxCommandEvent &WXUNUSED(event))
 {
-	notebook->GetCurrentEditor()->Paste();
+	if (notebook->GetCurrentEditor()->CanPaste())
+	{
+		notebook->GetCurrentEditor()->Paste();
+	}
 }
 
 void MainFrame::OnEditSelectAll(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->GetCurrentEditor()->SelectAll();
+}
+
+void MainFrame::OnEditUndo(wxCommandEvent &WXUNUSED(event))
+{
+	if (notebook->GetCurrentEditor()->CanUndo())
+	{
+		notebook->GetCurrentEditor()->Undo();
+	}
+}
+
+void MainFrame::OnEditRedo(wxCommandEvent &WXUNUSED(event))
+{
+	if (notebook->GetCurrentEditor()->CanRedo())
+	{
+		notebook->GetCurrentEditor()->Redo();
+	}
 }
 
 void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
