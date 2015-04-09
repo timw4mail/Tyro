@@ -5,6 +5,13 @@
       <df name="include">
         <in>jsoncpp.cpp</in>
       </df>
+      <df name="resources">
+        <df name="platform">
+          <df name="msw">
+            <in>resource.rc</in>
+          </df>
+        </df>
+      </df>
       <df name="src">
         <df name="network">
           <in>SFTP.cpp</in>
@@ -84,6 +91,8 @@
       <item path="include/jsoncpp.cpp" ex="false" tool="1" flavor2="0">
         <ccTool flags="0">
         </ccTool>
+      </item>
+      <item path="resources/platform/msw/resource.rc" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/TyroApp.cpp" ex="false" tool="1" flavor2="0">
         <ccTool>
