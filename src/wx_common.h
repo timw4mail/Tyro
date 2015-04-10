@@ -14,6 +14,9 @@
 	#include <wx/wx.h>
 #endif
 
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
+
 #include "definitions.h"
 
 #endif	/* WX_COMMON_H */

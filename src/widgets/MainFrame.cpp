@@ -107,6 +107,7 @@ void MainFrame::SetupMenu()
 	editMenu->Append(wxID_CUT, _T("Cu&t\tCtrl+X"), _T("Cut selected text"));
 	editMenu->Append(wxID_COPY, _T("&Copy\tCtrl+C"), _T("Copy selected text"));
 	editMenu->Append(wxID_PASTE, _T("&Paste\tCtrl+V"), _T("Paste contents of clipboard"));
+	editMenu->Append(wxID_CLEAR, _T("&Delete\tDel"));
 	editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, _T("Select All\tCtrl+A"), _T("Select all the text in the current document"));
 
@@ -228,5 +229,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetDescription("Tyro, a text editor for all development");
 	info.SetCopyright(_T(" (C) 2015, Timothy J Warren"));
 	
-	wxAboutBox(info, this);
+	wxGenericAboutDialog dlg;
+	dlg.Create(info, this);
+	dlg.ShowModal();
 }

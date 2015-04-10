@@ -14,7 +14,6 @@ TabContainer::TabContainer(
 		long style
 ) : wxAuiNotebook(parent, id, pos, size, style)
 {	
-	this->AddTab();
 }
 
 TabContainer::~TabContainer() {}
@@ -23,22 +22,31 @@ void TabContainer::AddTab()
 {
 	untitled_document_count++;
 	wxString caption;
-	
+
 	caption.Printf("Untitled %lu", untitled_document_count);
-	
+
 	EditPane *editor = new EditPane(this, wxID_ANY);
-	
+
 	this->AddPage(editor, caption);
 }
 
 void TabContainer::AddTab(wxString filePath)
 {
-	wxString caption=filePath;
+	wxFileName fileName(filePath);
+	
+	wxString caption= fileName.GetFullName();
 	EditPane *editor = new EditPane(this, wxID_ANY);
 	
-	editor->LoadFile(filePath);
+	bool loaded_file = editor->LoadAndHighlight(filePath);
 	
-	this->AddPage(editor, caption);
+	if (loaded_file)
+	{
+		this->AddPage(editor, caption);
+	}
+	else
+	{
+		// @TODO Add Error dialog here
+	}
 }
 
 EditPane *TabContainer::GetCurrentEditor()

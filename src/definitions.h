@@ -5,6 +5,10 @@
 #ifndef DEFINITIONS_H
 #define	DEFINITIONS_H
 
+// EditPane file extension to lexer mapping
+typedef pair<string, int> StringConstMapData;
+typedef map<string, int> StringConstMap;
+
 const wxString TYRO_FILE_OPEN_WILDCARDS =
 	_T("Bash (*.sh, *.bsh) |*.sh;*.bsh|")
 	_T("Batch (*.bat, *.cmd, *.nt)|*.bat;*.cmd,*.nt|")

@@ -9,6 +9,7 @@
 #include "../TyroApp.h"
 
 #include <wx/aboutdlg.h>
+#include <wx/generic/aboutdlgg.h>
 
 #include "TabContainer.h"
 

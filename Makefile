@@ -8,7 +8,7 @@ PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
 PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
 
-BASE_FLAGS = -DSCI_LEXER -std=gnu++11
+BASE_FLAGS = -DSCI_LEXER -std=c++11
 
 LDLIBS = $(TARGET) $(shell wx-config --libs base core aui stc adv) -lssh2
 WX_CXXFLAGS =  $(shell wx-config --cxxflags) $(BASE_FLAGS)

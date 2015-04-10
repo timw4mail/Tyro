@@ -8,7 +8,9 @@
 #include "../wx_common.h"
 
 #include <wx/aui/aui.h>
+#include <wx/filename.h>
 #include "EditPane.h"
+
 
 static long tab_style = wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS 
 	| wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_CLOSE_ON_ALL_TABS

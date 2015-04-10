@@ -2,8 +2,10 @@
 #define TYROEDIT_PANE_H
 
 #include "../wx_common.h"
+
+#include <wx/stc/stc.h>
+
 #include "../../include/json/json.h"
-#include "EditPaneDefinitions.h"
 
 class EditPane: public wxStyledTextCtrl
 {
@@ -20,7 +22,10 @@ public:
 		wxVSCROLL
 	);
 	~EditPane();
+	bool LoadAndHighlight(wxString filePath);
 private:
+	StringConstMap lexer_map;
+	StringConstMap::iterator lexer_map_it;
 };
 
 #endif // TYRODOC_FRAME_H
