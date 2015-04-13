@@ -77,7 +77,7 @@ string SFTP::getFile(const char *path)
 
 void SFTP::ssh_connect(const char *host, const char *user, const char *pass, const char *port)
 {
-#ifdef __WXWIN__
+#ifdef WIN32
 	WSADATA wsadata;
 	int err;
 	

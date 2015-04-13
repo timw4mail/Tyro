@@ -92,6 +92,7 @@ void MainFrame::SetupMenu()
 	// Create Base menus
 	fileMenu = new wxMenu(_T(""));
 	editMenu = new wxMenu(_T(""));
+	viewMenu = new wxMenu(_T(""));
 	helpMenu = new wxMenu(_T(""));
 
 	// Add items to top-level menus
@@ -108,6 +109,7 @@ void MainFrame::SetupMenu()
 	fileMenu->Enable(wxID_SAVEAS, false);
 	fileMenu->Enable(wxID_CLOSE, false);
 
+	
 	editMenu->Append(wxID_UNDO, _T("&Undo\tCtrl+Z"), _T("Undo last action"));
 	editMenu->Append(wxID_REDO, _T("&Redo\tCtrl+Y"), _T("Redo last action"));
 	editMenu->AppendSeparator();
@@ -127,13 +129,14 @@ void MainFrame::SetupMenu()
 	editMenu->Enable(wxID_PASTE, false);
 	editMenu->Enable(wxID_CLEAR, false);
 	editMenu->Enable(wxID_FIND, false);
-	editMenu->Enable(wxID_SELECTALL, false);
-
+	editMenu->Enable(wxID_SELECTALL, false);	
+	
 	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
 
 	// Add the menus to the menubar
 	mbar->Append(fileMenu, _T("&File"));
 	mbar->Append(editMenu, _T("&Edit"));
+	mbar->Append(viewMenu, _T("&View"));
 	mbar->Append(helpMenu, _T("&Help"));
 
 #ifdef __WXMAC__
@@ -178,18 +181,18 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnFileClose(wxCommandEvent &WXUNUSED(event))
 {
-
+	// @TODO Implement OnFileClose
 }
 
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
-	
+	// @TODO Implement OnSave
 }
 
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
-	
-}
+	// @TODO Implement OnSaveAs
+}	
 
 void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
@@ -247,7 +250,5 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetDescription("Tyro, a text editor for all development");
 	info.SetCopyright(_T(" (C) 2015, Timothy J Warren"));
 	
-	wxGenericAboutDialog dlg;
-	dlg.Create(info, this);
-	dlg.ShowModal();
+	wxAboutBox(info);
 }

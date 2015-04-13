@@ -22,8 +22,14 @@ public:
 		wxVSCROLL
 	);
 	~EditPane();
+	void OnSize(wxSizeEvent &event);
 	bool LoadAndHighlight(wxString filePath);
 private:
+	enum
+	{
+		MARGIN_LINE_NUMBERS,
+		MARGIN_FOLD
+	};
 	StringConstMap lexer_map;
 	StringConstMap::iterator lexer_map_it;
 };

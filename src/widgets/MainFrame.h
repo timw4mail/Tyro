@@ -9,7 +9,6 @@
 #include "../TyroApp.h"
 
 #include <wx/aboutdlg.h>
-#include <wx/generic/aboutdlgg.h>
 
 #include "TabContainer.h"
 
@@ -25,6 +24,7 @@ class MainFrame: public wxFrame
 		wxMenuBar *mbar;
 		wxMenu *fileMenu;
 		wxMenu *editMenu;
+		wxMenu *viewMenu;
 		wxMenu *helpMenu;
 		enum
 		{
