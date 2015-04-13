@@ -35,6 +35,8 @@ class MainFrame: public wxFrame
 		void SetupToolbar();
 		void SetupStatusBar();
 		void BindEvents();
+		void EnableEditControls();
+		void DisableEditControls();
 		void OnNew(wxCommandEvent &event);
 		void OnOpen(wxCommandEvent &event);
 		void OnFileClose(wxCommandEvent &event);

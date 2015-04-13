@@ -4,7 +4,7 @@ EditPane::EditPane(
 	wxWindow *parent, wxWindowID id, const wxPoint &pos, 
 	const wxSize &size, long style
 ) : wxStyledTextCtrl (parent, id, pos, size, style)
-{
+{	
 	StringConstMapData map_data[] = {
 		{"c", wxSTC_LEX_CPP},
 		{"h", wxSTC_LEX_CPP},
@@ -24,10 +24,10 @@ EditPane::EditPane(
 
 EditPane::~EditPane() {}
 
-void EditPane::OnSize(wxSizeEvent &event)
+/*void EditPane::OnSize(wxSizeEvent &event)
 {
 		
-}
+}*/
 
 /**
  * Encapsulate lexer selection when opening a file
@@ -37,6 +37,7 @@ void EditPane::OnSize(wxSizeEvent &event)
  */
 bool EditPane::LoadAndHighlight(wxString filePath)
 {
+	fileName = filePath;
 	wxFileName file(filePath);
 	wxString ext = file.GetExt();
 	
@@ -52,7 +53,6 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	this->SetProperty (wxT("fold"),         wxT("1") );
 	this->SetProperty (wxT("fold.comment"), wxT("1") );
 	this->SetProperty (wxT("fold.compact"), wxT("1") );
-	
 	
 	this->StyleSetForeground (wxSTC_C_STRING,            wxColour(150,0,0));
 	this->StyleSetBackground (wxSTC_C_STRING, wxColor(253, 246, 227));
@@ -78,9 +78,9 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	this->StyleSetBackground (wxSTC_C_COMMENTDOCKEYWORD, wxColor(253, 246, 227));
 	this->StyleSetForeground (wxSTC_C_COMMENTDOCKEYWORDERROR, wxColour(0,0,200));
 	this->StyleSetBackground (wxSTC_C_COMMENTDOCKEYWORDERROR, wxColor(253, 246, 227));
-	/*this->StyleSetBold(wxSTC_C_WORD, true);
+	this->StyleSetBold(wxSTC_C_WORD, true);
 	this->StyleSetBold(wxSTC_C_WORD2, true);
-	this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);*/
+	this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
 
 	lexer_map_it = lexer_map.find((string) ext);
 	this->SetLexer(lexer_map_it->second);

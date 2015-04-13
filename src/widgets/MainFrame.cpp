@@ -29,6 +29,8 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 
 	SetSizerAndFit(base_sizer);
 	
+	this->DisableEditControls();
+	
 	// Finally, bind events
 	this->BindEvents();
 }
@@ -79,8 +81,6 @@ void MainFrame::SetupToolbar()
 	//toolBar->AddSeparator();
 	//toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
 
-	toolBar->EnableTool(wxID_SAVE, false);
-
 	toolBar->Realize();
 }
 
@@ -105,11 +105,6 @@ void MainFrame::SetupMenu()
 	fileMenu->Append(wxID_CLOSE, _T("&Close\tCtrl+W"), _T("Close the current document"));
 	fileMenu->Append(wxID_EXIT, _T("&Quit\tCtrl+Q"), _T("Quit the application"));
 	
-	fileMenu->Enable(wxID_SAVE, false);
-	fileMenu->Enable(wxID_SAVEAS, false);
-	fileMenu->Enable(wxID_CLOSE, false);
-
-	
 	editMenu->Append(wxID_UNDO, _T("&Undo\tCtrl+Z"), _T("Undo last action"));
 	editMenu->Append(wxID_REDO, _T("&Redo\tCtrl+Y"), _T("Redo last action"));
 	editMenu->AppendSeparator();
@@ -120,16 +115,7 @@ void MainFrame::SetupMenu()
 	editMenu->AppendSeparator();
 	editMenu->Append (wxID_FIND, _("&Find\tCtrl+F"));
 	editMenu->AppendSeparator();
-	editMenu->Append(wxID_SELECTALL, _T("Select All\tCtrl+A"), _T("Select all the text in the current document"));
-	
-	editMenu->Enable(wxID_UNDO, false);
-	editMenu->Enable(wxID_REDO, false);
-	editMenu->Enable(wxID_CUT, false);
-	editMenu->Enable(wxID_COPY, false);
-	editMenu->Enable(wxID_PASTE, false);
-	editMenu->Enable(wxID_CLEAR, false);
-	editMenu->Enable(wxID_FIND, false);
-	editMenu->Enable(wxID_SELECTALL, false);	
+	editMenu->Append(wxID_SELECTALL, _T("Select All\tCtrl+A"), _T("Select all the text in the current document"));	
 	
 	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
 
@@ -149,6 +135,8 @@ void MainFrame::BindEvents()
 {
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnNew, this, wxID_NEW);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnOpen, this, wxID_OPEN);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSave, this, wxID_SAVE);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnFileClose, this, wxID_CLOSE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
@@ -162,6 +150,7 @@ void MainFrame::BindEvents()
 
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 {
+	this->EnableEditControls();
 	notebook->AddTab();
 }
 
@@ -176,6 +165,8 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	
 	filename = dlg.GetPath();
 	
+	this->EnableEditControls();
+	
 	notebook->AddTab(filename);
 }
 
@@ -186,7 +177,8 @@ void MainFrame::OnFileClose(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
-	// @TODO Implement OnSave
+	wxString file = notebook->GetCurrentEditor()->fileName;
+	notebook->GetCurrentEditor()->SaveFile(file);
 }
 
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
@@ -251,4 +243,45 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetCopyright(_T(" (C) 2015, Timothy J Warren"));
 	
 	wxAboutBox(info);
+}
+
+/**
+ * Enable file-specific controls
+ */
+void MainFrame::EnableEditControls()
+{
+	fileMenu->Enable(wxID_SAVE, true);
+	fileMenu->Enable(wxID_SAVEAS, true);
+	fileMenu->Enable(wxID_CLOSE, true);
+	//editMenu->Enable(wxID_UNDO, false);
+	//editMenu->Enable(wxID_REDO, false);
+	editMenu->Enable(wxID_CUT, true);
+	editMenu->Enable(wxID_COPY, true);
+	editMenu->Enable(wxID_PASTE, true);
+	editMenu->Enable(wxID_CLEAR, true);
+	editMenu->Enable(wxID_FIND, true);
+	editMenu->Enable(wxID_SELECTALL, true);
+			
+	toolBar->EnableTool(wxID_SAVE, true);
+}
+
+/**
+ * Disables file-specific controls
+ */
+void MainFrame::DisableEditControls()
+{
+	fileMenu->Enable(wxID_SAVE, false);
+	fileMenu->Enable(wxID_SAVEAS, false);
+	fileMenu->Enable(wxID_CLOSE, false);
+	
+	editMenu->Enable(wxID_UNDO, false);
+	editMenu->Enable(wxID_REDO, false);
+	editMenu->Enable(wxID_CUT, false);
+	editMenu->Enable(wxID_COPY, false);
+	editMenu->Enable(wxID_PASTE, false);
+	editMenu->Enable(wxID_CLEAR, false);
+	editMenu->Enable(wxID_FIND, false);
+	editMenu->Enable(wxID_SELECTALL, false);
+	
+	toolBar->EnableTool(wxID_SAVE, false);
 }

@@ -1,4 +1,4 @@
-/* 
+/** 
  * File:   SFTP.h
  * Author: twarren
  *

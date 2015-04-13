@@ -2,10 +2,9 @@
 #define TYROEDIT_PANE_H
 
 #include "../wx_common.h"
+#include "../settings/Settings.h"
 
 #include <wx/stc/stc.h>
-
-#include "../../include/json/json.h"
 
 class EditPane: public wxStyledTextCtrl
 {
@@ -22,6 +21,7 @@ public:
 		wxVSCROLL
 	);
 	~EditPane();
+	wxString fileName;
 	void OnSize(wxSizeEvent &event);
 	bool LoadAndHighlight(wxString filePath);
 private:

@@ -10,6 +10,7 @@ typedef pair<string, int> StringConstMapData;
 typedef map<string, int> StringConstMap;
 
 const wxString TYRO_FILE_OPEN_WILDCARDS =
+	_T("All files (*.*)|*.*|")
 	_T("Bash (*.sh, *.bsh) |*.sh;*.bsh|")
 	_T("Batch (*.bat, *.cmd, *.nt)|*.bat;*.cmd,*.nt|")
 	_T("C/C++ (*.c,*.cpp,*.h)| *.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.sma;*.cp |")
@@ -25,8 +26,7 @@ const wxString TYRO_FILE_OPEN_WILDCARDS =
 	_T("Ruby (*.rb)|*.rb|")
 	_T("SQL (*.sql)|*.sql|")
 	_T("TCL (*.tcl)|*.tcl|")
-	_T("Text (*.txt)|*.txt")
-	_T("All files (*.*)|*.*|");
+	_T("Text (*.txt)|*.txt");
 
 const wxString TYRO_FILE_SAVE_WILDCARDS = 
 	_T("HTML/XHTML (*.html)|*.html|")
