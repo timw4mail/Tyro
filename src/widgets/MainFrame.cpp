@@ -62,7 +62,7 @@ void MainFrame::SetupToolbar()
 
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
 
-	wxToolBar *toolBar = GetToolBar();
+	toolBar = GetToolBar();
 
 	vector<wxBitmap> bitmaps;
 
@@ -78,18 +78,21 @@ void MainFrame::SetupToolbar()
 	//toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
 	//toolBar->AddSeparator();
 	//toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
+
+	toolBar->EnableTool(wxID_SAVE, false);
+
 	toolBar->Realize();
 }
 
 void MainFrame::SetupMenu()
 {
 	// create a menu bar
-	wxMenuBar* mbar = new wxMenuBar();
+	mbar = new wxMenuBar();
 
 	// Create Base menus
-	wxMenu* fileMenu = new wxMenu(_T(""));
-	wxMenu* editMenu = new wxMenu(_T(""));
-	wxMenu* helpMenu = new wxMenu(_T(""));
+	fileMenu = new wxMenu(_T(""));
+	editMenu = new wxMenu(_T(""));
+	helpMenu = new wxMenu(_T(""));
 
 	// Add items to top-level menus
 	fileMenu->Append(wxID_NEW, _T("&New\tCtrl+N"), _T("Create a new file"));
@@ -100,6 +103,10 @@ void MainFrame::SetupMenu()
 	fileMenu->AppendSeparator();
 	fileMenu->Append(wxID_CLOSE, _T("&Close\tCtrl+W"), _T("Close the current document"));
 	fileMenu->Append(wxID_EXIT, _T("&Quit\tCtrl+Q"), _T("Quit the application"));
+	
+	fileMenu->Enable(wxID_SAVE, false);
+	fileMenu->Enable(wxID_SAVEAS, false);
+	fileMenu->Enable(wxID_CLOSE, false);
 
 	editMenu->Append(wxID_UNDO, _T("&Undo\tCtrl+Z"), _T("Undo last action"));
 	editMenu->Append(wxID_REDO, _T("&Redo\tCtrl+Y"), _T("Redo last action"));
@@ -109,7 +116,18 @@ void MainFrame::SetupMenu()
 	editMenu->Append(wxID_PASTE, _T("&Paste\tCtrl+V"), _T("Paste contents of clipboard"));
 	editMenu->Append(wxID_CLEAR, _T("&Delete\tDel"));
 	editMenu->AppendSeparator();
+	editMenu->Append (wxID_FIND, _("&Find\tCtrl+F"));
+	editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, _T("Select All\tCtrl+A"), _T("Select all the text in the current document"));
+	
+	editMenu->Enable(wxID_UNDO, false);
+	editMenu->Enable(wxID_REDO, false);
+	editMenu->Enable(wxID_CUT, false);
+	editMenu->Enable(wxID_COPY, false);
+	editMenu->Enable(wxID_PASTE, false);
+	editMenu->Enable(wxID_CLEAR, false);
+	editMenu->Enable(wxID_FIND, false);
+	editMenu->Enable(wxID_SELECTALL, false);
 
 	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
 

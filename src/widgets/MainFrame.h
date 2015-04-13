@@ -21,6 +21,11 @@ class MainFrame: public wxFrame
 		~MainFrame();
 	private:
 		TabContainer *notebook;
+		wxToolBar *toolBar;
+		wxMenuBar *mbar;
+		wxMenu *fileMenu;
+		wxMenu *editMenu;
+		wxMenu *helpMenu;
 		enum
 		{
 			idMenuQuit = 1000,

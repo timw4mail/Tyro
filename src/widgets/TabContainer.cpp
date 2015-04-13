@@ -5,6 +5,7 @@
 #include "TabContainer.h"
 
 static unsigned long untitled_document_count = 0;
+static unsigned long open_document_count = 0;
 
 TabContainer::TabContainer(
 		wxWindow* parent,
@@ -21,6 +22,8 @@ TabContainer::~TabContainer() {}
 void TabContainer::AddTab()
 {
 	untitled_document_count++;
+	open_document_count++;
+	
 	wxString caption;
 
 	caption.Printf("Untitled %lu", untitled_document_count);
@@ -32,6 +35,8 @@ void TabContainer::AddTab()
 
 void TabContainer::AddTab(wxString filePath)
 {
+	open_document_count++;
+
 	wxFileName fileName(filePath);
 	
 	wxString caption= fileName.GetFullName();
