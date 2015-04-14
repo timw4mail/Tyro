@@ -5,29 +5,10 @@ EditPane::EditPane(
 	const wxSize &size, long style
 ) : wxStyledTextCtrl (parent, id, pos, size, style)
 {	
-	StringConstMapData map_data[] = {
-		{"c", wxSTC_LEX_CPP},
-		{"h", wxSTC_LEX_CPP},
-		{"cpp", wxSTC_LEX_CPP},
-		{"cxx", wxSTC_LEX_CPP},
-		{"py", wxSTC_LEX_PYTHON},
-		{"php", wxSTC_LEX_PHPSCRIPT},
-		{"js", wxSTC_LEX_ESCRIPT},
-		{"json", wxSTC_LEX_ESCRIPT}
-	};
 
-	lexer_map = StringConstMap(
-		map_data,
-		map_data + sizeof map_data / sizeof map_data[0]
-	);
 }
 
 EditPane::~EditPane() {}
-
-/*void EditPane::OnSize(wxSizeEvent &event)
-{
-		
-}*/
 
 /**
  * Encapsulate lexer selection when opening a file
@@ -41,8 +22,12 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	wxFileName file(filePath);
 	wxString ext = file.GetExt();
 	
+	this->SetLexer(wxSTC_LEX_CPP);
+	
 	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, wxColor(101, 123, 131));
     this->StyleSetBackground (wxSTC_STYLE_DEFAULT, wxColor(253, 246, 227));
+	this->StyleSetBackground (wxSTC_STYLE_MAX, wxColor(253, 246, 227));
+	this->StyleSetBackground (wxSTC_STYLE_CONTROLCHAR, wxColor(253, 246, 227));
     this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
 	
 	this->SetMarginWidth (MARGIN_LINE_NUMBERS, 50);
@@ -81,9 +66,6 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	this->StyleSetBold(wxSTC_C_WORD, true);
 	this->StyleSetBold(wxSTC_C_WORD2, true);
 	this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
-
-	lexer_map_it = lexer_map.find((string) ext);
-	this->SetLexer(lexer_map_it->second);
 
 	return this->LoadFile(filePath);
 }

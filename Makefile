@@ -1,6 +1,6 @@
 CXX = $(shell wx-config --cxx)
 
-SOURCES = $(wildcard include/**/*.cpp include/*.cpp)
+SOURCES = $(wildcard include/**/*.cpp src/settings/*.cpp include/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
 TARGET = build/Tyro.a
 
@@ -8,7 +8,7 @@ PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
 PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
 
-BASE_FLAGS = -DSCI_LEXER -std=c++11
+BASE_FLAGS = -DSCI_LEXER
 
 LDLIBS = $(TARGET) $(shell wx-config --libs base core aui stc adv)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags) $(BASE_FLAGS)

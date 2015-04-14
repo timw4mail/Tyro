@@ -13,9 +13,12 @@
 
 class TyroSettings {
 public:
-	TyroSettings();
-	~TyroSettings();
+    TyroSettings();
+    ~TyroSettings();
+    Json::Value GetRoot();
 private:
+    Json::Value default_root;
+    Json::Reader reader;
 };
 
 
