@@ -24,6 +24,7 @@ public:
 	wxString fileName;
 	bool LoadAndHighlight(wxString filePath);
 private:
+	TyroSettings *config;
 	enum
 	{
 		MARGIN_LINE_NUMBERS,
