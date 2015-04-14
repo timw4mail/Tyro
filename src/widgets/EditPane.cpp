@@ -5,7 +5,7 @@ EditPane::EditPane(
 	const wxSize &size, long style
 ) : wxStyledTextCtrl (parent, id, pos, size, style)
 {	
-	config = new TyroSettings();
+	config = new TyroConfig();
 }
 
 EditPane::~EditPane() 
@@ -34,6 +34,8 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 		this->StyleSetBackground(i, wxColor(253, 246, 227));
 		this->StyleSetFaceName(i, "Anonymous Pro");
 	}
+	
+	JsonValue keywords_array = config->GetLang("cpp");
 	
 	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, wxColor(101, 123, 131));
 	this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
@@ -69,8 +71,8 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
 	this->StyleSetBold(wxSTC_C_OPERATOR, true);
 	
-	this->SetKeyWords(0, "alignof and and_eq bitand bitor break case catch compl const_cast continue default delete do dynamic_cast else false for goto if namespace new not not_eq nullptr operator or or_eq reinterpret_cast return sizeof static_assert static_cast switch this throw true try typedef typeid using while xor xor_eq NULL");
-	this->SetKeyWords(1, "alignas asm auto bool char char16_t char32_t class const constexpr decltype double enum explicit export extern final float friend inline int long mutable noexcept override private protected public register short signed static struct template thread_local typename union unsigned virtual void volatile wchar_t");
+	this->SetKeyWords(0, keywords_array[0].asString());
+	this->SetKeyWords(1, keywords_array[1].asString());
 	
 
 	return this->LoadFile(filePath);

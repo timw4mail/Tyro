@@ -2,7 +2,7 @@
 #define TYROEDIT_PANE_H
 
 #include "../wx_common.h"
-#include "../settings/Settings.h"
+#include "../settings/Config.h"
 
 #include <wx/stc/stc.h>
 
@@ -24,7 +24,7 @@ public:
 	wxString fileName;
 	bool LoadAndHighlight(wxString filePath);
 private:
-	TyroSettings *config;
+	TyroConfig *config;
 	enum
 	{
 		MARGIN_LINE_NUMBERS,
