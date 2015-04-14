@@ -1,0 +1,3 @@
+[submodule "Tyro-depends"]
+	path = Tyro-depends
+	url = https://github.com/timw4mail/Tyro-depends.git
