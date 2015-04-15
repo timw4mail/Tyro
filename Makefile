@@ -4,6 +4,8 @@ SOURCES = $(wildcard include/**/*.cpp src/network/*.cpp src/settings/*.cpp inclu
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
 TARGET = build/Tyro.a
 
+JSON_FILES = $(patsubst config/%.json,%.json, $(wildcard config/*.json))
+
 PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
 PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
@@ -17,10 +19,16 @@ CXXFLAGS = -Os
 TEST_SRC= $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 
-all: build $(TARGET) $(PROGRAM)
+all: build json_wrapper $(TARGET) $(PROGRAM)
 
 dev: CXXFLAGS= $(DEV_CXXFLAGS)
 dev: all
+	
+json_wrapper: json_wrapper_build
+	$(foreach var, $(JSON_FILES), config/json2c config/$(var) $(patsubst %.json,config/%_json.h,$(var)) $(patsubst %.json,%_json,$(var));)
+
+json_wrapper_build: 
+	$(CC) config/json2c.c -o config/json2c
 
 build:
 	@mkdir -p build
@@ -57,6 +65,8 @@ tests: $(TESTS)
 	sh ./tests/runtests.sh
 
 clean:
+	rm config/json2c
+	rm config/*_json.h
 	rm -f *.o
 	rm -rf Tyro.app
 	rm -rf build $(OBJECTS) $(PROGRAM) $(TARGET) $(TESTS)

@@ -14,7 +14,5 @@
 
 using namespace std;
 
-#define JSON_INCLUDE(a, b) (string (b) = "(#include (a))")
-
 #endif	// TYRO_COMMON_H
 

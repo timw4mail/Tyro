@@ -6,12 +6,14 @@
 
 TyroConfig::TyroConfig()
 {
-	string raw_json;
-	JSON_INCLUDE("../../config/scintilla.json", raw_json);
+	// Defines languages_json
+	#include "../../config/languages_json.h"
+	string json_string(languages_json);
 	
-	cout << raw_json << endl;
-	
-	reader.parse(raw_json, default_root);
+	if ( ! reader.parse(json_string, default_root))
+	{
+		cerr << reader.getFormattedErrorMessages() << endl;
+	}
 }
 
 TyroConfig::~TyroConfig()
@@ -26,13 +28,5 @@ JsonValue TyroConfig::GetRoot()
 
 JsonValue TyroConfig::GetLang(string name)
 {
-	JsonValue root = this->GetRoot();
-	JsonValue lang = root.get("languages", "");
-	
-	if (lang != "")
-	{
-		return lang.get(name, "");
-	}
-	
-	return JsonValue("");
+	return default_root.get(name, JsonValue());
 }

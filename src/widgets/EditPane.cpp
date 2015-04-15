@@ -35,7 +35,8 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 		this->StyleSetFaceName(i, "Anonymous Pro");
 	}
 	
-	JsonValue keywords_array = config->GetLang("cpp");
+	// Get the list of keywords for the current language
+	JsonValue keywords_array = config->GetLang("cpp").get("keywords", JsonValue());
 	
 	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, wxColor(101, 123, 131));
 	this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
@@ -71,9 +72,16 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
 	this->StyleSetBold(wxSTC_C_OPERATOR, true);
 	
-	this->SetKeyWords(0, keywords_array[0].asString());
-	this->SetKeyWords(1, keywords_array[1].asString());
-	
+	if (keywords_array.isArray())
+	{
+		this->SetKeyWords(0, keywords_array[0].asString());
+		this->SetKeyWords(1, keywords_array[1].asString());
+	}
+	else
+	{
+		cerr << "keywords array is not an array" << endl;
+		cerr << "keyword array is a " << keywords_array.type() << endl;
+	}
 
 	return this->LoadFile(filePath);
 }
