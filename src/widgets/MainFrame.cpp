@@ -48,6 +48,7 @@ void MainFrame::SetupStatusBar()
 void MainFrame::SetupToolbar()
 {
 	// Icon files
+#ifdef __WXMAC__
 	#include "../../resources/xpm/file_add.xpm"
 	#include "../../resources/xpm/folder.xpm"
 	#include "../../resources/xpm/diskette.xpm"
@@ -55,6 +56,15 @@ void MainFrame::SetupToolbar()
 	#include "../../resources/xpm/copy.xpm"
 	#include "../../resources/xpm/scissors.xpm"
 	#include "../../resources/xpm/clipboard.xpm"
+#else
+	#include "../../resources/xpm/small/file_add.xpm"
+	#include "../../resources/xpm/small/folder.xpm"
+	#include "../../resources/xpm/small/diskette.xpm"
+	#include "../../resources/xpm/small/close.xpm"
+	#include "../../resources/xpm/small/copy.xpm"
+	#include "../../resources/xpm/small/scissors.xpm"
+	#include "../../resources/xpm/small/clipboard.xpm"
+#endif
 
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
 
