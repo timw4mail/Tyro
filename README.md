@@ -33,7 +33,7 @@ Building wxWidgets:
 
 1. Download the latest wxWidgets source
 2. Make a new directory in the source tree, like `wxmac`
-3. Run `../configure --disable-shared --disable-` in the new directory
+3. Run `../configure --disable-shared --disable-webviewwebkit` in the new directory
 4. Run `make && make install`
 
 Install libssh2 (Using homebrew):
