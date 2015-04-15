@@ -7,3 +7,6 @@ build/*
 **/*.o
 Tyro.app/*
 nbproject/private/*
+config/*_json.h
+config/json2c
+**/*.exe

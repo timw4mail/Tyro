@@ -12,7 +12,7 @@ PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
 
 BASE_FLAGS = -DSCI_LEXER 
 
-LDLIBS = $(TARGET) $(shell wx-config --libs base core aui stc adv) -lssh2
+LDLIBS = $(TARGET) $(shell wx-config --libs base core aui stc adv) -L/lib -lssh2
 WX_CXXFLAGS =  $(shell wx-config --cxxflags) $(BASE_FLAGS)
 DEV_CXXFLAGS = -g -Wall -Wextra
 CXXFLAGS = -Os 
@@ -65,8 +65,8 @@ tests: $(TESTS)
 	sh ./tests/runtests.sh
 
 clean:
-	rm config/json2c
-	rm config/*_json.h
+	rm -f config/json2c
+	rm -f config/*_json.h
 	rm -f *.o
 	rm -rf Tyro.app
 	rm -rf build $(OBJECTS) $(PROGRAM) $(TARGET) $(TESTS)
