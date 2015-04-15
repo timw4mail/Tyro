@@ -36,7 +36,7 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	}
 	
 	// Get the list of keywords for the current language
-	JsonValue keywords_array = config->GetLang("cpp").get("keywords", JsonValue());
+	JsonValue keywords_array = config->GetLangKeywords("cpp");
 	
 	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, wxColor(101, 123, 131));
 	this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
@@ -74,8 +74,10 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	
 	if (keywords_array.isArray())
 	{
-		this->SetKeyWords(0, keywords_array[0].asString());
-		this->SetKeyWords(1, keywords_array[1].asString());
+		for(int i = 0; i < keywords_array.size(); i++)
+		{
+			this->SetKeyWords(i, keywords_array[i].asString());
+		}
 	}
 	else
 	{

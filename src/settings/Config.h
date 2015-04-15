@@ -14,6 +14,7 @@ public:
     ~TyroConfig();
     JsonValue GetRoot();
 	JsonValue GetLang(string name);
+	JsonValue GetLangKeywords(string name);
 private:
     JsonValue default_root;
     JsonReader reader;

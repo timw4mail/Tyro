@@ -30,7 +30,7 @@ void TabContainer::AddTab()
 
 	EditPane *editor = new EditPane(this, wxID_ANY);
 
-	this->AddPage(editor, caption);
+	this->AddPage(editor, caption, true);
 }
 
 void TabContainer::AddTab(wxString filePath)
@@ -46,11 +46,17 @@ void TabContainer::AddTab(wxString filePath)
 	
 	if (loaded_file)
 	{
-		this->AddPage(editor, caption);
+		this->AddPage(editor, caption, true);
 	}
 	else
 	{
-		// @TODO Add Error dialog here
+		wxMessageDialog err(
+			this, 
+			_T("Failed to open the specified file. Do you have permission to open it?"),
+			_T("Could not open file."),
+			wxOK|wxCENTER|wxICON_WARNING
+		);
+		err.ShowModal();
 	}
 }
 

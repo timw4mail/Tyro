@@ -7,6 +7,7 @@
 TyroConfig::TyroConfig()
 {
 	// Defines languages_json
+	// Generated on compile from languages.json
 	#include "../../config/languages_json.h"
 	string json_string(languages_json);
 	
@@ -29,4 +30,9 @@ JsonValue TyroConfig::GetRoot()
 JsonValue TyroConfig::GetLang(string name)
 {
 	return default_root.get(name, JsonValue());
+}
+
+JsonValue TyroConfig::GetLangKeywords(string name)
+{
+	return this->GetLang(name).get("keywords", JsonValue());
 }

@@ -48,19 +48,13 @@ void MainFrame::SetupStatusBar()
 void MainFrame::SetupToolbar()
 {
 	// Icon files
-#ifdef __WXMAC__
-	#include "../../resources/xpm/48/file-empty.xpm"
-	#include "../../resources/xpm/48/folder.xpm"
-	#include "../../resources/xpm/48/floppy.xpm"
-	#include "../../resources/xpm/48/sign-error.xpm"
-	#include "../../resources/xpm/48/wrench-screwdriver.xpm"
-#else
-	#include "../../resources/xpm/24/file-empty.xpm"
-	#include "../../resources/xpm/24/folder.xpm"
-	#include "../../resources/xpm/24/floppy.xpm"
-	#include "../../resources/xpm/24/sign-error.xpm"
-	#include "../../resources/xpm/24/wrench-screwdriver.xpm"
-#endif
+	#include "../../resources/xpm/file_add.xpm"
+	#include "../../resources/xpm/folder.xpm"
+	#include "../../resources/xpm/diskette.xpm"
+	#include "../../resources/xpm/close.xpm"
+	#include "../../resources/xpm/copy.xpm"
+	#include "../../resources/xpm/scissors.xpm"
+	#include "../../resources/xpm/clipboard.xpm"
 
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
 
@@ -68,17 +62,22 @@ void MainFrame::SetupToolbar()
 
 	vector<wxBitmap> bitmaps;
 
-	bitmaps.push_back(wxBitmap(file_empty));
+	bitmaps.push_back(wxBitmap(file_add));
 	bitmaps.push_back(wxBitmap(folder));
-	bitmaps.push_back(wxBitmap(floppy));
-	bitmaps.push_back(wxBitmap(sign_error));
-	bitmaps.push_back(wxBitmap(wrench_screwdriver));
+	bitmaps.push_back(wxBitmap(diskette));
+	bitmaps.push_back(wxBitmap(close));
+	bitmaps.push_back(wxBitmap(copy));
+	bitmaps.push_back(wxBitmap(scissors));
+	bitmaps.push_back(wxBitmap(clipboard));
 
 	toolBar->AddTool(wxID_NEW, "New", bitmaps[0], "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", bitmaps[1], "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", bitmaps[2], "Save file");
-	//toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
-	//toolBar->AddSeparator();
+	toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
+	toolBar->AddSeparator();
+	toolBar->AddTool(wxID_COPY, "Copy", bitmaps[4], "Copy");
+	toolBar->AddTool(wxID_CUT, "Cut", bitmaps[5], "Cut");
+	toolBar->AddTool(wxID_PASTE, "Paste", bitmaps[6], "Paste");
 	//toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
 
 	toolBar->Realize();
@@ -263,6 +262,10 @@ void MainFrame::EnableEditControls()
 	editMenu->Enable(wxID_SELECTALL, true);
 			
 	toolBar->EnableTool(wxID_SAVE, true);
+	toolBar->EnableTool(wxID_CLOSE, true);
+	toolBar->EnableTool(wxID_COPY, true);
+	toolBar->EnableTool(wxID_CUT, true);
+	toolBar->EnableTool(wxID_PASTE, true);
 }
 
 /**
@@ -284,4 +287,8 @@ void MainFrame::DisableEditControls()
 	editMenu->Enable(wxID_SELECTALL, false);
 	
 	toolBar->EnableTool(wxID_SAVE, false);
+	toolBar->EnableTool(wxID_CLOSE, false);
+	toolBar->EnableTool(wxID_COPY, false);
+	toolBar->EnableTool(wxID_CUT, false);
+	toolBar->EnableTool(wxID_PASTE, false);
 }
