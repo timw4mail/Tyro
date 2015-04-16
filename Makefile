@@ -12,12 +12,20 @@ PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
 
 BASE_FLAGS = -DSCI_LEXER 
 
-LDLIBS = $(TARGET) $(shell wx-config --libs base core aui stc adv) -L/lib -lssh2
+LDLIBS = $(TARGET) $(shell wx-config --libs base core aui stc adv) -lssh2
 WX_CXXFLAGS =  $(shell wx-config --cxxflags) $(BASE_FLAGS)
 DEV_CXXFLAGS = -g -Wall -Wextra
 CXXFLAGS = -Os 
-TEST_SRC= $(wildcard tests/*.cpp)
+TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
+
+UNAME = $(shell uname -s)
+
+# Add the /lib search directory for MSyS on Windows
+ifdef OS
+	ifeq($(OS),Windows_NT)
+		LDLIBS += -L/lib
+	endif
 
 all: build json_wrapper $(TARGET) $(PROGRAM)
 
@@ -47,6 +55,12 @@ $(PROGRAM):
 run:
 	./build/Tyro
 
+release: all
+ifeq ($(UNAME),Darwin)
+	make Tyro.app
+endif
+	
+	
 Tyro.app: all resources/platform/osx/Info.plist
 	SetFile -t APPL $(TARGET)
 	-mkdir Tyro.app
