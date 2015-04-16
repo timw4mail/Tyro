@@ -64,3 +64,24 @@ EditPane *TabContainer::GetCurrentEditor()
 {
 	return (EditPane *) this->GetCurrentPage();
 }
+
+void TabContainer::OnClose(wxCloseEvent &event)
+{
+	//EditPane *currentTab = this->GetCurrentEditor();
+	
+	if (event.CanVeto() && false)//currentTab->isModified())
+	{
+		if (
+				wxMessageBox("The file has not been saved... continue closing?",
+					"Please confirm",
+					wxICON_QUESTION | wxYES_NO
+				) != wxYES
+			)
+		{
+			event.Veto();
+			return;
+		}
+	}
+	
+	Destroy();
+}

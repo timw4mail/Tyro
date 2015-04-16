@@ -146,7 +146,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnOpen, this, wxID_OPEN);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSave, this, wxID_SAVE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnFileClose, this, wxID_CLOSE);
+	Bind(wxEVT_CLOSE_WINDOW, &TabContainer::OnClose, notebook, wxID_CLOSE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCut, this, wxID_CUT);
@@ -186,8 +186,11 @@ void MainFrame::OnFileClose(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
-	wxString file = notebook->GetCurrentEditor()->fileName;
-	notebook->GetCurrentEditor()->SaveFile(file);
+	EditPane *editor = notebook->GetCurrentEditor();
+	wxString file = editor->fileName;
+	
+	editor->SetSavePoint();
+	editor->SaveFile(file);
 }
 
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
