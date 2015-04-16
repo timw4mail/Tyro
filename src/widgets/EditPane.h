@@ -22,8 +22,11 @@ public:
 	);
 	~EditPane();
 	wxString fileName;
+	string GetLangByFile(const wxString &filename);
 	bool LoadAndHighlight(wxString filePath);
 private:
+	StringConstMap lexerMap;
+	StringConstMap::iterator lexerMapIt;
 	TyroConfig *config;
 	enum
 	{

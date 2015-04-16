@@ -52,7 +52,6 @@ void MainFrame::SetupToolbar()
 	#include "../../resources/xpm/file_add.xpm"
 	#include "../../resources/xpm/folder.xpm"
 	#include "../../resources/xpm/diskette.xpm"
-	#include "../../resources/xpm/close.xpm"
 	#include "../../resources/xpm/copy.xpm"
 	#include "../../resources/xpm/scissors.xpm"
 	#include "../../resources/xpm/clipboard.xpm"
@@ -60,7 +59,6 @@ void MainFrame::SetupToolbar()
 	wxBitmap new_file_icon(file_add);
 	wxBitmap open_file_icon(folder);
 	wxBitmap save_file_icon(diskette);
-	wxBitmap close_file_icon(close);
 	wxBitmap copy_icon(copy);
 	wxBitmap cut_icon(scissors);
 	wxBitmap paste_icon(clipboard);
@@ -68,7 +66,6 @@ void MainFrame::SetupToolbar()
 	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW);
 	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN);
 	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE);
-	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_CLOSE);
 	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY);
 	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT);
 	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE);
@@ -81,7 +78,6 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
-	toolBar->AddTool(wxID_CLOSE, "Close", close_file_icon, "Close file");
 	toolBar->AddSeparator();
 	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
 	toolBar->AddTool(wxID_CUT, "Cut", cut_icon, "Cut");
@@ -261,7 +257,7 @@ void MainFrame::EnableEditControls()
 {
 	fileMenu->Enable(wxID_SAVE, true);
 	fileMenu->Enable(wxID_SAVEAS, true);
-	fileMenu->Enable(wxID_CLOSE, true);
+	
 	//editMenu->Enable(wxID_UNDO, false);
 	//editMenu->Enable(wxID_REDO, false);
 	editMenu->Enable(wxID_CUT, true);
@@ -285,7 +281,6 @@ void MainFrame::DisableEditControls()
 {
 	fileMenu->Enable(wxID_SAVE, false);
 	fileMenu->Enable(wxID_SAVEAS, false);
-	fileMenu->Enable(wxID_CLOSE, false);
 	
 	editMenu->Enable(wxID_UNDO, false);
 	editMenu->Enable(wxID_REDO, false);

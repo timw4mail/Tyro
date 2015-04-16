@@ -6,11 +6,57 @@ EditPane::EditPane(
 ) : wxStyledTextCtrl (parent, id, pos, size, style)
 {	
 	config = new TyroConfig();
+	lexerMap["batch"] = wxSTC_LEX_BATCH;
+	lexerMap["caml"] = wxSTC_LEX_CAML;
+	lexerMap["cmake"] = wxSTC_LEX_CMAKE;
+	lexerMap["cpp"] = wxSTC_LEX_CPP;
+	lexerMap["css"] = wxSTC_LEX_CSS;
+	lexerMap["js"] = wxSTC_LEX_CPP;
+	lexerMap["html"] = wxSTC_LEX_HTML;
+	lexerMap["makefile"] = wxSTC_LEX_MAKEFILE;
+	lexerMap["php"] = wxSTC_LEX_PHPSCRIPT;
+	lexerMap["perl"] = wxSTC_LEX_PERL;
+	lexerMap["python"] = wxSTC_LEX_PYTHON;
+	lexerMap["shell"] = wxSTC_LEX_BASH;
 }
 
 EditPane::~EditPane() 
 {
 	delete config;
+}
+
+string EditPane::GetLangByFile(const wxString &filename)
+{
+	JsonValue langList = config->GetRoot();
+	JsonValue::iterator it;
+	
+	// Loop through each language to find a matching file pattern
+	for (it = langList.begin(); it != langList.end(); ++it)
+	{
+		string lang = it.key().asString();
+		
+		
+		// Parse the file pattern
+		wxString file_pattern((*it)["file_pattern"].asString());
+		
+		file_pattern.Lower();
+		
+		while ( ! file_pattern.empty())
+		{
+			wxString cur = file_pattern.BeforeFirst(';');
+			if (
+				(cur == filename) ||
+				(cur == (filename.BeforeLast('.') + _T(".*"))) ||
+				(cur == (_T("*.") + filename.AfterLast('.')))
+			)
+			{
+				return lang;
+			}
+			file_pattern = file_pattern.AfterFirst(';');
+		}
+	}
+	
+	return "";
 }
 
 /**
@@ -22,11 +68,21 @@ EditPane::~EditPane()
 bool EditPane::LoadAndHighlight(wxString filePath)
 {
 	fileName = filePath;
-	wxFileName file(filePath);
-	wxString ext = file.GetExt();
+	string lang = this->GetLangByFile(filePath);
 	
 	this->StyleClearAll();
-	this->SetLexer(wxSTC_LEX_CPP);
+	
+	if (lexerMap.count(lang) > 0)
+	{
+		this->SetLexer(lexerMap[lang]);
+	}
+	else
+	{
+		this->SetLexer(wxSTC_LEX_NULL);
+	}
+	
+	// Get the list of keywords for the current language
+	JsonValue keywords_array = config->GetLangKeywords(lang);
 	
 	// Make sure every background is the same color!
 	for(int i = 0; i <= wxSTC_STYLE_MAX; i++)
@@ -34,9 +90,6 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 		this->StyleSetBackground(i, wxColor(253, 246, 227));
 		this->StyleSetFaceName(i, "Anonymous Pro");
 	}
-	
-	// Get the list of keywords for the current language
-	JsonValue keywords_array = config->GetLangKeywords("cpp");
 	
 	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, wxColor(101, 123, 131));
 	this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
