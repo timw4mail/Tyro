@@ -29,8 +29,6 @@ public:
 	~TabContainer();
 	void AddTab();
 	void AddTab(wxString filePath);
-	void OnEditSelectAll(wxCommandEvent &event);
-	void OnClose(wxCloseEvent &event);
 	EditPane *GetCurrentEditor();
 private:
 };

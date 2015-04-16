@@ -51,7 +51,7 @@
 	"makefile": {
 		"file_pattern": "Makefile;makefile.*,configure.*;*.mak",
 		"keywords": [
-			""
+			"subst patsubst strip findstring filter filter-out sort word wordlist words firstword lastword dir notdir suffix basename foreach file call value eval origin flavor shell guile"
 		]
 	},
 	"php": {

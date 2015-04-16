@@ -1,11 +1,6 @@
 /**
  * Main Application Frame
  */
-
-#ifdef WX_PRECOMP
-#include "wx_pch.h"
-#endif
-
 #include "MainFrame.h"
 
 MainFrame::MainFrame(wxFrame *frame, const wxString& title)
@@ -23,16 +18,14 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
 
 	base_sizer->Add(notebook, 1, wxEXPAND | wxALL, 5);
-
 	base_sizer->SetContainingWindow(this);
 	base_sizer->SetMinSize(600,400);
-
-	SetSizerAndFit(base_sizer);
 	
 	this->DisableEditControls();
-	
-	// Finally, bind events
 	this->BindEvents();
+	
+	// Do the layout
+	SetSizerAndFit(base_sizer);
 }
 
 
@@ -52,6 +45,7 @@ void MainFrame::SetupToolbar()
 	#include "../../resources/xpm/file_add.xpm"
 	#include "../../resources/xpm/folder.xpm"
 	#include "../../resources/xpm/diskette.xpm"
+	#include "../../resources/xpm/close.xpm"
 	#include "../../resources/xpm/copy.xpm"
 	#include "../../resources/xpm/scissors.xpm"
 	#include "../../resources/xpm/clipboard.xpm"
@@ -59,6 +53,7 @@ void MainFrame::SetupToolbar()
 	wxBitmap new_file_icon(file_add);
 	wxBitmap open_file_icon(folder);
 	wxBitmap save_file_icon(diskette);
+	wxBitmap close_file_icon(close);
 	wxBitmap copy_icon(copy);
 	wxBitmap cut_icon(scissors);
 	wxBitmap paste_icon(clipboard);
@@ -66,6 +61,7 @@ void MainFrame::SetupToolbar()
 	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW);
 	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN);
 	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE);
+	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_FILE_CLOSE);
 	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY);
 	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT);
 	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE);
@@ -78,6 +74,7 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
+	toolBar->AddTool(wxID_CLOSE, "Close", close_file_icon, "Close file");
 	toolBar->AddSeparator();
 	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
 	toolBar->AddTool(wxID_CUT, "Cut", cut_icon, "Cut");
@@ -139,7 +136,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnOpen, this, wxID_OPEN);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSave, this, wxID_SAVE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
-	Bind(wxEVT_CLOSE_WINDOW, &TabContainer::OnClose, notebook, wxID_CLOSE);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseTab, this, wxID_CLOSE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCut, this, wxID_CUT);
@@ -172,9 +169,42 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	notebook->AddTab(filename);
 }
 
-void MainFrame::OnFileClose(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 {
-	// @TODO Implement OnFileClose
+	int current_tab = notebook->GetSelection();
+	EditPane *editor = notebook->GetCurrentEditor();
+	if (editor->IsModified())
+	{	
+		int Msgbox_Choice = wxMessageBox(
+			_T("File has not been saved, save file before closing?"), 
+			_T("Modified File"),
+			wxYES_NO | wxCANCEL | wxICON_QUESTION,
+			this
+		);
+			
+		if (Msgbox_Choice == wxYES)
+		{
+			editor->SaveFile();
+			if (editor->IsModified())
+			{
+				wxMessageBox(_("File could not be saved"), _("Error"), wxOK | wxICON_EXCLAMATION);
+				return;
+			}
+			//notebook->DeletePage(current_tab);
+		}
+		else if (Msgbox_Choice == wxCANCEL)
+		{
+			return;
+		}
+	}
+
+	notebook->DeletePage(current_tab);
+	
+	// Disable controls
+	if (notebook->GetPageCount() == 0)
+	{
+		this->DisableEditControls();
+	}
 }
 
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))

@@ -18,9 +18,10 @@
 class TyroApp : public wxApp
 {
 	friend class MainFrame;
-	public:
-		virtual bool OnInit();
-		virtual int OnExit();
+public:
+	virtual bool OnInit();
+	virtual int OnExit();
+private:
 };
 
 #endif // TYROAPP_H

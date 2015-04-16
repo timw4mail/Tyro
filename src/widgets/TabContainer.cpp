@@ -5,7 +5,6 @@
 #include "TabContainer.h"
 
 static unsigned long untitled_document_count = 0;
-static unsigned long open_document_count = 0;
 
 TabContainer::TabContainer(
 		wxWindow* parent,
@@ -22,7 +21,6 @@ TabContainer::~TabContainer() {}
 void TabContainer::AddTab()
 {
 	untitled_document_count++;
-	open_document_count++;
 	
 	wxString caption;
 
@@ -35,8 +33,6 @@ void TabContainer::AddTab()
 
 void TabContainer::AddTab(wxString filePath)
 {
-	open_document_count++;
-
 	wxFileName fileName(filePath);
 	
 	wxString caption= fileName.GetFullName();
@@ -63,25 +59,4 @@ void TabContainer::AddTab(wxString filePath)
 EditPane *TabContainer::GetCurrentEditor()
 {
 	return (EditPane *) this->GetCurrentPage();
-}
-
-void TabContainer::OnClose(wxCloseEvent &event)
-{
-	//EditPane *currentTab = this->GetCurrentEditor();
-	
-	if (event.CanVeto() && false)//currentTab->isModified())
-	{
-		if (
-				wxMessageBox("The file has not been saved... continue closing?",
-					"Please confirm",
-					wxICON_QUESTION | wxYES_NO
-				) != wxYES
-			)
-		{
-			event.Veto();
-			return;
-		}
-	}
-	
-	Destroy();
 }

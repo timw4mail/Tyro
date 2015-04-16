@@ -15,12 +15,16 @@ IMPLEMENT_APP(TyroApp);
 
 bool TyroApp::OnInit()
 {
+	this->SetAppName(APP_NAME);
+	this->SetVendorName(APP_VENDOR);
+	
 	MainFrame* frame = new MainFrame(0L, _("Tyro"));
 
+	SetTopWindow(frame);
+	
 	frame->Layout();
 	frame->CenterOnScreen();
 	frame->Show(true);
-	SetTopWindow(frame);
 
 	return true;
 }

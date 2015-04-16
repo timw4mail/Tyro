@@ -8,6 +8,8 @@
 #include "../wx_common.h"
 #include "../TyroApp.h"
 
+#include <wx/cmdline.h>
+#include <wx/config.h>
 #include <wx/aboutdlg.h>
 
 #include "TabContainer.h"
@@ -31,6 +33,7 @@ class MainFrame: public wxFrame
 			idMenuQuit = 1000,
 			idMenuAbout
 		};
+		wxRect DetermineFrameSize();
 		void SetupMenu();
 		void SetupToolbar();
 		void SetupStatusBar();
@@ -48,7 +51,7 @@ class MainFrame: public wxFrame
 		void OnEditSelectAll(wxCommandEvent &event);
 		void OnEditUndo(wxCommandEvent &event);
 		void OnEditRedo(wxCommandEvent &event);
-		void OnClose(wxCloseEvent &event);
+		void OnCloseTab(wxCommandEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
 };

@@ -22,8 +22,11 @@ public:
 	);
 	~EditPane();
 	wxString fileName;
-	string GetLangByFile(const wxString &filename);
+	string GetLangByFile();
 	bool LoadAndHighlight(wxString filePath);
+	bool SaveFile();
+	bool SaveFile(const wxString &filename);
+	bool IsModified();
 private:
 	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;
@@ -33,6 +36,8 @@ private:
 		MARGIN_LINE_NUMBERS,
 		MARGIN_FOLD
 	};
+	void BindEvents();
+	void OnMarginClick(wxStyledTextEvent &event);
 };
 
 #endif // TYRODOC_FRAME_H
