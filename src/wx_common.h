@@ -16,6 +16,7 @@
 
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/artprov.h>
 
 #include "definitions.h"
 

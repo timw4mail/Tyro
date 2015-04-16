@@ -56,39 +56,36 @@ void MainFrame::SetupToolbar()
 	#include "../../resources/xpm/copy.xpm"
 	#include "../../resources/xpm/scissors.xpm"
 	#include "../../resources/xpm/clipboard.xpm"
-#else
-	#include "../../resources/xpm/small/file_add.xpm"
-	#include "../../resources/xpm/small/folder.xpm"
-	#include "../../resources/xpm/small/diskette.xpm"
-	#include "../../resources/xpm/small/close.xpm"
-	#include "../../resources/xpm/small/copy.xpm"
-	#include "../../resources/xpm/small/scissors.xpm"
-	#include "../../resources/xpm/small/clipboard.xpm"
-#endif
 
+	wxBitmap new_file_icon(file_add);
+	wxBitmap open_file_icon(folder);
+	wxBitmap save_file_icon(diskette);
+	wxBitmap close_file_icon(close);
+	wxBitmap copy_icon(copy);
+	wxBitmap cut_icon(scissors);
+	wxBitmap paste_icon(clipboard);
+#else
+	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW);
+	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN);
+	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE);
+	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_CLOSE);
+	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY);
+	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT);
+	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE);
+#endif 
+	
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
 
 	toolBar = GetToolBar();
 
-	vector<wxBitmap> bitmaps;
-
-	bitmaps.push_back(wxBitmap(file_add));
-	bitmaps.push_back(wxBitmap(folder));
-	bitmaps.push_back(wxBitmap(diskette));
-	bitmaps.push_back(wxBitmap(close));
-	bitmaps.push_back(wxBitmap(copy));
-	bitmaps.push_back(wxBitmap(scissors));
-	bitmaps.push_back(wxBitmap(clipboard));
-
-	toolBar->AddTool(wxID_NEW, "New", bitmaps[0], "New file");
-	toolBar->AddTool(wxID_OPEN, "Open", bitmaps[1], "Open file");
-	toolBar->AddTool(wxID_SAVE, "Save", bitmaps[2], "Save file");
-	toolBar->AddTool(wxID_CLOSE, "Close", bitmaps[3], "Close file");
+	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
+	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
+	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
+	toolBar->AddTool(wxID_CLOSE, "Close", close_file_icon, "Close file");
 	toolBar->AddSeparator();
-	toolBar->AddTool(wxID_COPY, "Copy", bitmaps[4], "Copy");
-	toolBar->AddTool(wxID_CUT, "Cut", bitmaps[5], "Cut");
-	toolBar->AddTool(wxID_PASTE, "Paste", bitmaps[6], "Paste");
-	//toolBar->AddTool(wxID_ANY, "Settings", bitmaps[4], "Change Settings");
+	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
+	toolBar->AddTool(wxID_CUT, "Cut", cut_icon, "Cut");
+	toolBar->AddTool(wxID_PASTE, "Paste", paste_icon, "Paste");
 
 	toolBar->Realize();
 }
