@@ -42,12 +42,19 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	this->StyleClearAll();
 	
 	// Font setup
+#ifdef __WXMAC__
 	wxFont *defaultFont = wxFont::New(
 		14, 
 		wxFONTFAMILY_MODERN, 
-		wxFONTFLAG_ANTIALIASED,
-		"Anonymous Pro"
+		wxFONTFLAG_ANTIALIASED
 	);
+#else
+	wxFont *defaultFont = wxFont::New(
+		12, 
+		wxFONTFAMILY_MODERN, 
+		wxFONTFLAG_ANTIALIASED
+	);
+#endif
 	
 	if (lexerMap.count(lang) > 0)
 	{
