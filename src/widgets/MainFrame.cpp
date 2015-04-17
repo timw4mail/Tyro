@@ -5,7 +5,7 @@
 
 MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	: wxFrame(frame, -1, title)
-{
+{	
 	// Create menus and bars
 	this->SetupMenu();
 	this->SetupStatusBar();
@@ -61,7 +61,7 @@ void MainFrame::SetupToolbar()
 	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW);
 	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN);
 	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE);
-	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_FILE_CLOSE);
+	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_CLOSE);
 	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY);
 	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT);
 	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE);

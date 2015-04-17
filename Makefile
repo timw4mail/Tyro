@@ -8,24 +8,25 @@ JSON_FILES = $(patsubst config/%.json,%.json, $(wildcard config/*.json))
 
 PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
 PROGRAM = build/Tyro
-PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC))
+PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC)) 
 
-BASE_FLAGS = -DSCI_LEXER 
+WX_LDLIBS = $(shell wx-config --libs base core aui stc adv) -lssh2
+WX_CXXFLAGS =  $(shell wx-config --cxxflags)
+WX_RES = $(shell wx-config --rescomp)
 
-LDLIBS = $(TARGET) $(shell wx-config --libs base core aui stc adv) -lssh2
-WX_CXXFLAGS =  $(shell wx-config --cxxflags) $(BASE_FLAGS)
+LDLIBS = $(TARGET) 
+
 DEV_CXXFLAGS = -g -Wall -Wextra
-CXXFLAGS = -Os 
+CXXFLAGS = -Os -s
+
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 
-UNAME = $(shell uname -s)
+OS ?= $(shell uname -s)
 
-# Add the /lib search directory for MSyS on Windows
-ifdef OS
-	ifeq($(OS),Windows_NT)
-		LDLIBS += -L/lib
-	endif
+ifeq ($(OS),Windows_NT)
+	LDLIBS += -L/lib
+endif
 
 all: build json_wrapper $(TARGET) $(PROGRAM)
 
@@ -41,7 +42,6 @@ json_wrapper_build:
 build:
 	@mkdir -p build
 
-#$(TARGET): CXXFLAGS += 
 $(TARGET): $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
@@ -49,19 +49,32 @@ $(TARGET): $(OBJECTS)
 
 $(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS) $(TARGET)
 $(PROGRAM):
-	$(CXX) $(WX_CXXFLAGS) $(PROGRAM_SRC) $(LDLIBS) -o $(PROGRAM)
+	$(CXX) $(WX_CXXFLAGS) $(PROGRAM_SRC) $(LDLIBS) $(WX_LDLIBS) -o $(PROGRAM)
 	
 
 run:
 	./build/Tyro
 
-release: all
-ifeq ($(UNAME),Darwin)
+release:
+ifeq ($(OS),Darwin)
 	make Tyro.app
 endif
-	
+ifeq ($(OS),Windows_NT)
+	make exe
+endif
+ifeq ($(OS),Linux)
+	make all
+endif
+#    strip -sxX $(PROGRAM)
+
+msw_resource:
+	$(WX_RES) resources/platform/msw/resource.rc -O coff -o resource.res
+
+exe: LDLIBS += resource.res
+exe: msw_resource all
 	
 Tyro.app: all resources/platform/osx/Info.plist
+	strip -sxX $(PROGRAM)
 	SetFile -t APPL $(TARGET)
 	-mkdir Tyro.app
 	-mkdir Tyro.app/Contents
@@ -79,9 +92,11 @@ tests: $(TESTS)
 	sh ./tests/runtests.sh
 
 clean:
+	rm -f *.res
 	rm -f config/json2c
+	rm -f config/json2c.exe
 	rm -f config/*_json.h
-	rm -f *.o
+	rm -rf *.o
 	rm -rf Tyro.app
 	rm -rf build $(OBJECTS) $(PROGRAM) $(TARGET) $(TESTS)
 	find . -name "*.gc*" -exec rm {} \;

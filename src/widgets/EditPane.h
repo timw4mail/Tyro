@@ -33,8 +33,8 @@ private:
 	TyroConfig *config;
 	enum
 	{
-		MARGIN_LINE_NUMBERS,
-		MARGIN_FOLD
+		MARGIN_FOLD,
+		MARGIN_LINE_NUMBERS
 	};
 	void BindEvents();
 	void OnMarginClick(wxStyledTextEvent &event);
