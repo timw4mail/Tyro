@@ -29,16 +29,21 @@ EditPane::~EditPane()
 }
 
 /**
- * Encapsulate lexer selection when opening a file
- *
+ * Handle the highlighting config for the
+ * selected file
+ * 
  * @param wxString filePath
- * @return bool
+ * @return void
  */
-bool EditPane::LoadAndHighlight(wxString filePath)
+void EditPane::Highlight(wxString filePath)
 {
-	fileName = filePath;
-	string lang = this->GetLangByFile();
+	this->fileName.Assign(filePath);
 	
+	wxLogDebug("Highlighting method");
+	
+	// Get the configuration name for the selected language
+	string lang = this->GetLangByFile();
+
 	this->StyleClearAll();
 	
 	// Font setup
@@ -147,28 +152,57 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 	else
 	{
 		string typeMap[] = {"null", "int", "unsigned int", "double", "string", "boolean", "array", "object"};
+		stringstream output;
 		
-		cerr << "current lang is:" << lang << endl;
-		cerr << "keywords array is not an array" << endl;
-		cerr << "keyword array is a " << typeMap[keywords_array.type()] << endl;
+		output << "current lang is:" << lang << endl;
+		output << "keywords array is not an array" << endl;
+		output << "keyword array is a " << typeMap[keywords_array.type()] << endl;
+		
+		wxLogDebug(output.str().c_str());
 	}
-
-	return this->LoadFile(filePath);
 }
 
+/**
+ * Check file path and open the selected file
+ *
+ * @param wxString filePath
+ * @return bool
+ */
+bool EditPane::Load(wxString filePath)
+{
+	this->fileName.Assign(filePath);
+	
+	if (this->FileReadable())
+	{	
+		this->Highlight(filePath);
+		bool didLoad = this->LoadFile(filePath);
+		
+		// @TODO Toggle controls based on write permission
+		
+		return didLoad;
+	}
+	
+	return false;
+}
+
+/**
+ * Determine the format of the current file by
+ * matching its extension against the patterns
+ * in the configuration files
+ * 
+ * @return string
+ */
 string EditPane::GetLangByFile()
 {
 	JsonValue langList = config->GetRoot();
 	JsonValue::iterator it;
 	
-	wxFileName fname(this->fileName);
-	wxString curr_file = fname.GetFullName();
+	wxString curr_file = this->fileName.GetFullName();
 	
 	// Loop through each language to find a matching file pattern
 	for (it = langList.begin(); it != langList.end(); ++it)
 	{
 		string lang = it.key().asString();
-		
 		
 		// Parse the file pattern
 		wxString file_pattern((*it)["file_pattern"].asString());
@@ -195,7 +229,9 @@ string EditPane::GetLangByFile()
 
 bool EditPane::SaveFile()
 {
-	if ( ! this->fileName)
+	wxString fname;
+	
+	if ( ! this->fileName.IsOk())
 	{
 		wxFileDialog dlg (
 			this, 
@@ -207,24 +243,88 @@ bool EditPane::SaveFile()
 		);
 		
 		if (dlg.ShowModal() != wxID_OK) return false;
-		this->fileName = dlg.GetPath();
+		fname = dlg.GetPath();
+	}
+	else
+	{
+		fname = this->fileName.GetFullPath();
 	}
 	
-	return this->SaveFile(this->fileName);
+	const wxString cfname(fname);
+	
+	return this->SaveFile(cfname);
 }
 
 bool EditPane::SaveFile(const wxString &filename)
 {
 	if ( ! this->IsModified()) return true;
 	
-	this->SetSavePoint();
+	this->fileName.Assign(filename);
 	
-    return wxStyledTextCtrl::SaveFile(filename);
+	// Check file permissions
+	if (this->FileWritable())
+	{
+		this->SetSavePoint();
+		return wxStyledTextCtrl::SaveFile(filename);
+	}
+	
+	return false;
 }
 
 bool EditPane::IsModified()
 {
-	return (GetModify() && !GetReadOnly());
+	return this->GetModify();
+}
+
+/**
+ * Check that the current file can be opened
+ * 
+ * @return bool 
+ */
+bool EditPane::FileReadable()
+{	
+	if (
+		this->fileName.IsOk() &&
+		this->fileName.Exists() &&
+		this->fileName.IsFileReadable()
+	) return true;
+	
+	// Hmm...well, let's give an error
+	wxMessageDialog errDlg(
+		this, 
+		TYRO_OPEN_ERROR, 
+		TYRO_OPEN_ERROR_CAPTION,
+		wxOK | wxICON_ERROR | wxCENTER
+	);
+	errDlg.ShowModal();
+	
+	return false;
+}
+
+/**
+ * Check that the current file can be saved
+ * 
+ * @return bool 
+ */
+bool EditPane::FileWritable()
+{
+	// Lets see...can we write somewhere?
+	if (
+		this->fileName.IsOk() &&
+		((this->fileName.Exists() && this->fileName.IsFileWritable()) ||
+		(( ! this->fileName.Exists()) && this->fileName.IsDirWritable()))
+	) return true;
+	
+	// Hmm...well, let's give an error
+	wxMessageDialog errDlg(
+		this, 
+		TYRO_SAVE_ERROR, 
+		TYRO_SAVE_ERROR_CAPTION,
+		wxOK | wxICON_ERROR | wxCENTER
+	);
+	errDlg.ShowModal();
+
+	return false;
 }
 
 void EditPane::BindEvents()

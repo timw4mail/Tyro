@@ -10,6 +10,12 @@ const wxString APP_NAME = "Tyro";
 const wxString APP_VENDOR = "Aviat Ion";
 const wxString APP_VERSION = "0.0.1";
 
+// Some boilerplate text
+const wxString TYRO_SAVE_ERROR = "Failed to save the file. Maybe you lack the permissions.";
+const wxString TYRO_SAVE_ERROR_CAPTION = "Saving Failed";
+const wxString TYRO_OPEN_ERROR = "Failed to open the file. Check that it exists, and that you have read permissions.";
+const wxString TYRO_OPEN_ERROR_CAPTION = "Open Failed";
+
 // EditPane file extension to lexer mapping
 typedef pair<string, int> StringConstMapData;
 typedef map<string, int> StringConstMap;

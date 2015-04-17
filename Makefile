@@ -16,8 +16,8 @@ WX_RES = $(shell wx-config --rescomp)
 
 LDLIBS = $(TARGET) 
 
-DEV_CXXFLAGS = -g -Wall -Wextra
-CXXFLAGS = -Os -s
+DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG
+CXXFLAGS = -Os -DNDEBUG
 
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))

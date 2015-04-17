@@ -38,22 +38,15 @@ void TabContainer::AddTab(wxString filePath)
 	wxString caption= fileName.GetFullName();
 	EditPane *editor = new EditPane(this, wxID_ANY);
 	
-	bool loaded_file = editor->LoadAndHighlight(filePath);
-	
-	if (loaded_file)
+	if (editor->Load(filePath))
 	{
+		wxLogDebug("File should be properly loaded.");
 		this->AddPage(editor, caption, true);
+		
+		return;
 	}
-	else
-	{
-		wxMessageDialog err(
-			this, 
-			_T("Failed to open the specified file. Do you have permission to open it?"),
-			_T("Could not open file."),
-			wxOK|wxCENTER|wxICON_WARNING
-		);
-		err.ShowModal();
-	}
+	
+	wxLogDebug("Failed to load file!?");
 }
 
 EditPane *TabContainer::GetCurrentEditor()

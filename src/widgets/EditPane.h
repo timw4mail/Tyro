@@ -21,9 +21,10 @@ public:
 		wxVSCROLL
 	);
 	~EditPane();
-	wxString fileName;
+	wxFileName fileName;
 	string GetLangByFile();
-	bool LoadAndHighlight(wxString filePath);
+	bool Load(wxString filePath);
+	void Highlight(wxString filePath);
 	bool SaveFile();
 	bool SaveFile(const wxString &filename);
 	bool IsModified();
@@ -36,6 +37,8 @@ private:
 		MARGIN_FOLD,
 		MARGIN_LINE_NUMBERS
 	};
+	bool FileReadable();
+	bool FileWritable();
 	void BindEvents();
 	void OnMarginClick(wxStyledTextEvent &event);
 };

@@ -15,9 +15,7 @@ A Cross-platform Code Editor
 Required packages:
 
 * build-essential
-* libwxgtk3.0-0
 * libwxgtk3.0-dev
-* libssh2-1
 * libssh2-1-dev
 
 Optional:

@@ -24,7 +24,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 
 	base_sizer->Add(notebook, 1, wxEXPAND | wxALL, 5);
 	base_sizer->SetContainingWindow(this);
-	base_sizer->SetMinSize(600,400);
+	base_sizer->SetMinSize(800,600);
 	
 	this->DisableEditControls();
 	this->BindEvents();
@@ -222,7 +222,39 @@ void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
-	// @TODO Implement OnSaveAs
+	EditPane *editor = notebook->GetCurrentEditor();
+
+	// If the file hasn't been changed, just return
+	if ( ! editor->IsModified()) return;
+
+	wxFileDialog dlg(
+		this, 
+		"Save as...", 
+		wxEmptyString, 
+		wxEmptyString,
+		TYRO_FILE_SAVE_WILDCARDS,
+		wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+	);
+
+	// Return if the file isn't to be saved
+	if (dlg.ShowModal() != wxID_OK) return;
+
+	wxString filePath = dlg.GetPath();
+
+	// Save the file
+	if(editor->SaveFile(filePath))
+	{
+		wxFileName fileName(filePath);
+		const wxString fullPath = filePath;
+		const wxString caption= fileName.GetFullName();
+		
+		// Update the name of the tab
+		notebook->SetPageToolTip(notebook->GetSelection(), fullPath);
+		notebook->SetPageText(notebook->GetSelection(), caption);
+
+		// Update the editor highlighting
+		editor->Highlight(filePath);
+	}
 }	
 
 void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
