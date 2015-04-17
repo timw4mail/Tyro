@@ -58,6 +58,11 @@ bool EditPane::LoadAndHighlight(wxString filePath)
 		this->SetLexer(wxSTC_LEX_NULL);
 	}
 	
+	// Some basic properties to set
+	this->SetProperty("technology", "2");
+	this->SetProperty("error.inline", "0");
+	this->SetProperty("font.quality", "3"); // LCD Optimized
+	
 	// Get the list of keywords for the current language
 	JsonValue keywords_array = config->GetLangKeywords(lang);
 	
@@ -204,6 +209,9 @@ bool EditPane::SaveFile()
 bool EditPane::SaveFile(const wxString &filename)
 {
 	if ( ! this->IsModified()) return true;
+	
+	this->SetSavePoint();
+	
     return wxStyledTextCtrl::SaveFile(filename);
 }
 

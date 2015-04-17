@@ -5,7 +5,12 @@
 
 MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	: wxFrame(frame, -1, title)
-{	
+{
+	#include "../../resources/xpm/document.xpm"
+	
+	wxIcon app_icon(document);
+	this->SetIcon(app_icon);
+	
 	// Create menus and bars
 	this->SetupMenu();
 	this->SetupStatusBar();
@@ -58,13 +63,13 @@ void MainFrame::SetupToolbar()
 	wxBitmap cut_icon(scissors);
 	wxBitmap paste_icon(clipboard);
 #else
-	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW);
-	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN);
-	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE);
-	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_CLOSE);
-	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY);
-	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT);
-	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE);
+	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR);
+	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR);
+	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR);
+	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_CLOSE, wxART_TOOLBAR);
+	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY, wxART_TOOLBAR);
+	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR);
+	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR);
 #endif 
 	
 	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
@@ -74,7 +79,9 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
+#ifndef __WXWIN__
 	toolBar->AddTool(wxID_CLOSE, "Close", close_file_icon, "Close file");
+#endif
 	toolBar->AddSeparator();
 	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
 	toolBar->AddTool(wxID_CUT, "Cut", cut_icon, "Cut");
@@ -210,10 +217,7 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
 {
 	EditPane *editor = notebook->GetCurrentEditor();
-	wxString file = editor->fileName;
-	
-	editor->SetSavePoint();
-	editor->SaveFile(file);
+	editor->SaveFile();
 }
 
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
@@ -269,8 +273,8 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
 	wxAboutDialogInfo info;
 	
-	info.SetName("Tyro");
-	info.SetVersion("0.0.1", "Prerelease");
+	info.SetName(APP_NAME);
+	info.SetVersion(APP_VERSION, "Prerelease");
 	
 	info.AddDeveloper("Tim Warren, Programmer");
 	
@@ -288,8 +292,6 @@ void MainFrame::EnableEditControls()
 	fileMenu->Enable(wxID_SAVE, true);
 	fileMenu->Enable(wxID_SAVEAS, true);
 	
-	//editMenu->Enable(wxID_UNDO, false);
-	//editMenu->Enable(wxID_REDO, false);
 	editMenu->Enable(wxID_CUT, true);
 	editMenu->Enable(wxID_COPY, true);
 	editMenu->Enable(wxID_PASTE, true);
@@ -312,8 +314,6 @@ void MainFrame::DisableEditControls()
 	fileMenu->Enable(wxID_SAVE, false);
 	fileMenu->Enable(wxID_SAVEAS, false);
 	
-	editMenu->Enable(wxID_UNDO, false);
-	editMenu->Enable(wxID_REDO, false);
 	editMenu->Enable(wxID_CUT, false);
 	editMenu->Enable(wxID_COPY, false);
 	editMenu->Enable(wxID_PASTE, false);

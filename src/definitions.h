@@ -6,8 +6,9 @@
 #define	DEFINITIONS_H
 
 // Application config
-const wxString APP_NAME = _T("Tyro");
-const wxString APP_VENDOR = _T("Aviat Ion");
+const wxString APP_NAME = "Tyro";
+const wxString APP_VENDOR = "Aviat Ion";
+const wxString APP_VERSION = "0.0.1";
 
 // EditPane file extension to lexer mapping
 typedef pair<string, int> StringConstMapData;

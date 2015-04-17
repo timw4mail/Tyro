@@ -74,7 +74,7 @@ exe: LDLIBS += resource.res
 exe: msw_resource all
 	
 Tyro.app: all resources/platform/osx/Info.plist
-	strip -sxX $(PROGRAM)
+	strip -SXx $(PROGRAM)
 	SetFile -t APPL $(TARGET)
 	-mkdir Tyro.app
 	-mkdir Tyro.app/Contents
