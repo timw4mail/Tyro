@@ -42,6 +42,8 @@ class MainFrame: public wxFrame
 		void DisableEditControls();
 		void OnNew(wxCommandEvent &event);
 		void OnOpen(wxCommandEvent &event);
+		void OnClose(wxAuiNotebookEvent &event);
+		void OnClosed(wxAuiNotebookEvent &event);
 		void OnFileClose(wxCommandEvent &event);
 		void OnSave(wxCommandEvent &event);
 		void OnSaveAs(wxCommandEvent &event);

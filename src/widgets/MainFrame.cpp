@@ -143,6 +143,8 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnOpen, this, wxID_OPEN);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSave, this, wxID_SAVE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
+	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &MainFrame::OnClose, this, wxID_ANY);
+	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &MainFrame::OnClosed, this, wxID_ANY);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseTab, this, wxID_CLOSE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
@@ -174,6 +176,47 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	this->EnableEditControls();
 	
 	notebook->AddTab(filename);
+}
+
+void MainFrame::OnClose(wxAuiNotebookEvent &event)
+{
+	int current_tab = notebook->GetSelection();
+	EditPane *editor = notebook->GetCurrentEditor();
+	
+	// Sanity check
+	if (current_tab == -1) return;
+	
+	if (editor->IsModified())
+	{
+		int Msgbox_Choice = wxMessageBox(
+			_T("File has not been saved, save file before closing?"), 
+			_T("Modified File"),
+			wxYES_NO | wxCANCEL | wxICON_QUESTION,
+			this
+		);
+		
+		if (Msgbox_Choice == wxCANCEL)
+		{
+			event.Veto();
+		}
+		else if (Msgbox_Choice == wxYES)
+		{
+			editor->SaveFile();
+			if (editor->IsModified())
+			{
+				wxMessageBox(_("File could not be saved"), _("Error"), wxOK | wxICON_EXCLAMATION);
+				event.Veto();
+			}
+		}
+	}
+}
+
+void MainFrame::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
+{
+	if (notebook->GetPageCount() == 0)
+	{
+		this->DisableEditControls();
+	}
 }
 
 void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
