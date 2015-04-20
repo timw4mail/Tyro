@@ -31,6 +31,5 @@ bool TyroApp::OnInit()
 
 int TyroApp::OnExit()
 {
-	close(true);
-	return 1;
+	return close(true);
 }

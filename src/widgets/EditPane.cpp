@@ -10,12 +10,14 @@ EditPane::EditPane(
 	lexerMap["batch"] = wxSTC_LEX_BATCH;
 	lexerMap["caml"] = wxSTC_LEX_CAML;
 	lexerMap["cmake"] = wxSTC_LEX_CMAKE;
+	lexerMap["cobol"] = wxSTC_LEX_COBOL;
+	lexerMap["coffeescript"] = wxSTC_LEX_CPP;
 	lexerMap["cpp"] = wxSTC_LEX_CPP;
 	lexerMap["css"] = wxSTC_LEX_CSS;
 	lexerMap["js"] = wxSTC_LEX_CPP;
 	lexerMap["html"] = wxSTC_LEX_HTML;
 	lexerMap["makefile"] = wxSTC_LEX_MAKEFILE;
-	lexerMap["php"] = wxSTC_LEX_PHPSCRIPT | wxSTC_LEX_HTML;
+	lexerMap["php"] = wxSTC_LEX_PHPSCRIPT;
 	lexerMap["perl"] = wxSTC_LEX_PERL;
 	lexerMap["python"] = wxSTC_LEX_PYTHON;
 	lexerMap["shell"] = wxSTC_LEX_BASH;

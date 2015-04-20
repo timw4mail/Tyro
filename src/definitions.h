@@ -5,6 +5,13 @@
 #ifndef DEFINITIONS_H
 #define	DEFINITIONS_H
 
+enum {
+	myFILE_MENU,
+	myEDIT_MENU,
+	myVIEW_MENU,
+	myHELP_MENU
+};
+
 // Application config
 const wxString APP_NAME = "Tyro";
 const wxString APP_VENDOR = "Aviat Ion";
@@ -17,7 +24,6 @@ const wxString TYRO_OPEN_ERROR = "Failed to open the file. Check that it exists,
 const wxString TYRO_OPEN_ERROR_CAPTION = "Open Failed";
 
 // EditPane file extension to lexer mapping
-typedef pair<string, int> StringConstMapData;
 typedef map<string, int> StringConstMap;
 
 const wxString TYRO_FILE_OPEN_WILDCARDS =
