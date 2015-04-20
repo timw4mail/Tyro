@@ -222,39 +222,8 @@ void MainFrame::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 {
 	int current_tab = notebook->GetSelection();
-	EditPane *editor = notebook->GetCurrentEditor();
-	if (editor->IsModified())
-	{	
-		int Msgbox_Choice = wxMessageBox(
-			_T("File has not been saved, save file before closing?"), 
-			_T("Modified File"),
-			wxYES_NO | wxCANCEL | wxICON_QUESTION,
-			this
-		);
-			
-		if (Msgbox_Choice == wxYES)
-		{
-			editor->SaveFile();
-			if (editor->IsModified())
-			{
-				wxMessageBox(_("File could not be saved"), _("Error"), wxOK | wxICON_EXCLAMATION);
-				return;
-			}
-			//notebook->DeletePage(current_tab);
-		}
-		else if (Msgbox_Choice == wxCANCEL)
-		{
-			return;
-		}
-	}
 
 	notebook->DeletePage(current_tab);
-	
-	// Disable controls
-	if (notebook->GetPageCount() == 0)
-	{
-		this->DisableEditControls();
-	}
 }
 
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
