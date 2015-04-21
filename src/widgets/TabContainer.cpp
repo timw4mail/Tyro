@@ -18,6 +18,11 @@ TabContainer::TabContainer(
 
 TabContainer::~TabContainer() {}
 
+/**
+ * Add a new blank document
+ * 
+ * @return void
+ */
 void TabContainer::AddTab()
 {
 	untitled_document_count++;
@@ -31,6 +36,12 @@ void TabContainer::AddTab()
 	this->AddPage(editor, caption, true);
 }
 
+/**
+ * Open an existing document
+ * 
+ * @param wxString filePath
+ * @return void
+ */
 void TabContainer::AddTab(wxString filePath)
 {
 	wxFileName fileName(filePath);
@@ -40,7 +51,6 @@ void TabContainer::AddTab(wxString filePath)
 	
 	if (editor->Load(filePath))
 	{
-		wxLogDebug("File should be properly loaded.");
 		this->AddPage(editor, caption, true);
 		
 		return;
@@ -49,6 +59,11 @@ void TabContainer::AddTab(wxString filePath)
 	wxLogDebug("Failed to load file!?");
 }
 
+/**
+ * Get the EditPane control in the current tab
+ * 
+ * @return *EditPane 
+ */
 EditPane *TabContainer::GetCurrentEditor()
 {
 	return (EditPane *) this->GetCurrentPage();

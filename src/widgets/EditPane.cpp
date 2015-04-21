@@ -13,6 +13,7 @@ EditPane::EditPane(
 	theme_config = new TyroConfig();
 	theme_config->LoadJson(themes_json);
 
+	// Map language types to their lexers
 	lexerMap["batch"] = wxSTC_LEX_BATCH;
 	lexerMap["caml"] = wxSTC_LEX_CAML;
 	lexerMap["cmake"] = wxSTC_LEX_CMAKE;
@@ -82,22 +83,22 @@ void EditPane::Highlight(wxString filePath)
 	this->ApplyTheme(lang);
 
 	// Set up Code folding
-	this->SetProperty(wxT("fold"), wxT("1"));
-	this->SetProperty(wxT("fold.comment"), wxT("1"));
-	this->SetProperty(wxT("fold.compact"), wxT("1"));
-	this->SetProperty(wxT("fold.html"), wxT("1"));
+	this->SetProperty("fold", "1");
+	this->SetProperty("fold.comment", "1");
+	this->SetProperty("fold.compact", "1");
+	this->SetProperty("fold.html", "1");
 	this->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
 	this->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
 	this->SetMarginWidth(MARGIN_FOLD, 16);
 	this->SetMarginSensitive(MARGIN_FOLD, true);
 	this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDER,        wxSTC_MARK_BOXPLUSCONNECTED, _T("WHITE"), _T("BLACK"));
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPEN,    wxSTC_MARK_BOXMINUSCONNECTED, _T("WHITE"), _T("BLACK"));
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDERSUB,     wxSTC_MARK_VLINE,     _T("BLACK"), _T("BLACK"));
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDEREND,     wxSTC_MARK_CIRCLEPLUSCONNECTED,  _T("WHITE"), _T("BLACK"));
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  _T("WHITE"), _T("BLACK"));
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     _T("BLACK"), _T("BLACK"));
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_LCORNER,     _T("BLACK"), _T("BLACK"));
+	this->MarkerDefine (wxSTC_MARKNUM_FOLDER,        wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
+    this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPEN,    wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
+    this->MarkerDefine (wxSTC_MARKNUM_FOLDERSUB,     wxSTC_MARK_VLINE,     "BLACK", "BLACK");
+    this->MarkerDefine (wxSTC_MARKNUM_FOLDEREND,     wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
+    this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
+    this->MarkerDefine (wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
+    this->MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
 
 	this->SetLayoutCache (wxSTC_CACHE_NONE);
     this->SetUseHorizontalScrollBar(1);
@@ -112,6 +113,13 @@ void EditPane::Highlight(wxString filePath)
     this->SetBackSpaceUnIndents(true);
 }
 
+/**
+ * Set the current theme for the current language
+ * 
+ * @param string lang
+ * @param string theme
+ * @return void
+ */
 void EditPane::ApplyTheme(string lang, string theme)
 {
 	this->SetTheme(theme);
@@ -196,12 +204,14 @@ string EditPane::GetLangByFile()
 			wxString cur = file_pattern.BeforeFirst(';');
 			if (
 				(cur == curr_file) ||
-				(cur == (curr_file.BeforeLast('.') + _T(".*"))) ||
-				(cur == (_T("*.") + curr_file.AfterLast('.')))
+				(cur == (curr_file.BeforeLast('.') + ".*")) ||
+				(cur == ("*." + curr_file.AfterLast('.')))
 			)
 			{
 				return lang;
 			}
+			
+			// Go to the next pattern for this language
 			file_pattern = file_pattern.AfterFirst(';');
 		}
 	}
@@ -314,6 +324,12 @@ void EditPane::BindEvents()
 	Bind(wxEVT_STC_MARGINCLICK, &EditPane::OnMarginClick, this, wxID_ANY);
 }
 
+/**
+ * Code folding event handler
+ * 
+ * @param wxStyledTextEvent& event
+ * @return void
+ */
 void EditPane::OnMarginClick(wxStyledTextEvent& event)
 {
 	if (event.GetMargin() == MARGIN_FOLD) {
@@ -325,6 +341,12 @@ void EditPane::OnMarginClick(wxStyledTextEvent& event)
     }
 }
 
+/**
+ * Get the list of keywords for the selected language
+ * 
+ * @param string lang
+ * @return JsonValue
+ */
 JsonValue EditPane::GetKeywordList(string lang)
 {
 	return lang_config->GetRoot()
@@ -332,6 +354,13 @@ JsonValue EditPane::GetKeywordList(string lang)
 		.get("keywords", JsonValue());
 }
 
+/**
+ * Retrieve a setting from the current theme
+ * 
+ * @param string type
+ * @param string key
+ * @return JsonValue
+ */
 JsonValue EditPane::GetThemeValue(string type, string key)
 {
 	JsonValue value = this->current_theme
@@ -382,20 +411,21 @@ void EditPane::_ApplyTheme(JsonValue lexer_map)
 	);
 #endif
 
-	wxColor default_background = this->GetThemeColor("background", "default");
-	wxColor default_foreground = this->GetThemeColor("foreground", "default");
+	static const wxColor default_background = this->GetThemeColor("background", "default");
+	static const wxColor default_foreground = this->GetThemeColor("foreground", "default");
 	wxColor line_number_background = ( ! this->GetThemeValue("line_numbers", "background").isNull())
 		? (this->GetThemeColor("line_numbers", "background"))
-		: wxColor("White");
+		: default_background;
 
 	wxColor line_number_foreground = ( ! this->GetThemeValue("line_numbers", "foreground").isNull())
 		? (this->GetThemeColor("line_numbers", "foreground"))
-		: wxColor("Black");
+		: default_foreground;
 
 	// Set default colors/ fonts
 	for(int i = 0; i <= wxSTC_STYLE_MAX; i++)
 	{
 		this->StyleSetBackground(i, default_background);
+		this->StyleSetForeground(i, default_foreground);
 		this->StyleSetFont(i, *defaultFont);
 	}
 
@@ -428,12 +458,13 @@ void EditPane::_ApplyTheme(JsonValue lexer_map)
 		{
 			this->StyleSetBold(i, this->GetThemeValue("bold", key).asBool());
 		}
+		
+		// Italic
+		if (this->GetThemeValue("italic", key).isBool())
+		{
+			this->StyleSetItalic(i, this->GetThemeValue("italic", key).asBool());
+		}
 	}
-
-	/*this->StyleSetBold(wxSTC_C_WORD, false);
-	this->StyleSetBold(wxSTC_C_WORD2, true);
-	this->StyleSetBold(wxSTC_C_COMMENTDOCKEYWORD, true);
-	this->StyleSetBold(wxSTC_C_OPERATOR, true);*/
 }
 
 void EditPane::SetTheme(string theme_name)

@@ -33,7 +33,6 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	SetSizerAndFit(base_sizer);
 }
 
-
 MainFrame::~MainFrame() {}
 
 void MainFrame::SetupStatusBar()
@@ -43,6 +42,11 @@ void MainFrame::SetupStatusBar()
 	SetStatusText(_(""), 1);
 }
 
+/**
+ * Create the main toolbar
+ * 
+ * @return void
+ */
 void MainFrame::SetupToolbar()
 {
 	// Icon files
@@ -90,46 +94,54 @@ void MainFrame::SetupToolbar()
 	toolBar->Realize();
 }
 
+/**
+ * Create the main menu
+ * 
+ * @return void
+ */
 void MainFrame::SetupMenu()
 {
 	// create a menu bar
 	mbar = new wxMenuBar();
 
 	// Create Base menus
-	fileMenu = new wxMenu(_T(""));
-	editMenu = new wxMenu(_T(""));
-	viewMenu = new wxMenu(_T(""));
-	helpMenu = new wxMenu(_T(""));
+	fileMenu = new wxMenu("");
+	editMenu = new wxMenu("");
+	viewMenu = new wxMenu("");
+	langMenu = new wxMenu("");
+	helpMenu = new wxMenu("");
 
 	// Add items to top-level menus
-	fileMenu->Append(wxID_NEW, _T("&New\tCtrl+N"), _T("Create a new file"));
+	fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
 	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_OPEN, _T("&Open\tCtrl+O"), _T("Opens an existing file"));
-	fileMenu->Append(wxID_SAVE, _T("&Save\tCtrl+S"), _T("Save the content"));
-	fileMenu->Append(wxID_SAVEAS, _T("Save &As...\tShift+Ctrl+S"), _T("Save current file as..."));
+	fileMenu->Append(wxID_OPEN, "&Open\tCtrl+O", "Opens an existing file");
+	fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S", "Save the content");
+	fileMenu->Append(wxID_SAVEAS, "Save &As...\tShift+Ctrl+S", "Save current file as...");
 	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_CLOSE, _T("&Close\tCtrl+W"), _T("Close the current document"));
-	fileMenu->Append(wxID_EXIT, _T("&Quit\tCtrl+Q"), _T("Quit the application"));
+	fileMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current document");
+	fileMenu->Append(wxID_EXIT, "&Quit\tCtrl+Q", "Quit the application");
 	
-	editMenu->Append(wxID_UNDO, _T("&Undo\tCtrl+Z"), _T("Undo last action"));
-	editMenu->Append(wxID_REDO, _T("&Redo\tCtrl+Y"), _T("Redo last action"));
+	editMenu->Append(wxID_UNDO, "&Undo\tCtrl+Z", "Undo last action");
+	editMenu->Append(wxID_REDO, "&Redo\tCtrl+Y", "Redo last action");
 	editMenu->AppendSeparator();
-	editMenu->Append(wxID_CUT, _T("Cu&t\tCtrl+X"), _T("Cut selected text"));
-	editMenu->Append(wxID_COPY, _T("&Copy\tCtrl+C"), _T("Copy selected text"));
-	editMenu->Append(wxID_PASTE, _T("&Paste\tCtrl+V"), _T("Paste contents of clipboard"));
-	editMenu->Append(wxID_CLEAR, _T("&Delete\tDel"));
+	editMenu->Append(wxID_CUT, "Cu&t\tCtrl+X", "Cut selected text");
+	editMenu->Append(wxID_COPY, "&Copy\tCtrl+C", "Copy selected text");
+	editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
+	editMenu->Append(wxID_CLEAR, "&Delete\tDel");
 	editMenu->AppendSeparator();
-	editMenu->Append (wxID_FIND, _("&Find\tCtrl+F"));
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_SELECTALL, _T("Select All\tCtrl+A"), _T("Select all the text in the current document"));	
+	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
+	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
+	//editMenu->AppendSeparator();
+	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");	
 	
-	helpMenu->Append(wxID_ABOUT, _T("&About...\tF1"), _T("Show info about this application"));
+	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
 
 	// Add the menus to the menubar
-	mbar->Append(fileMenu, _T("&File"));
-	mbar->Append(editMenu, _T("&Edit"));
-	mbar->Append(viewMenu, _T("&View"));
-	mbar->Append(helpMenu, _T("&Help"));
+	mbar->Append(fileMenu, "&File");
+	mbar->Append(editMenu, "&Edit");
+	//mbar->Append(viewMenu, "&View");
+	mbar->Append(langMenu, "&Language")
+	mbar->Append(helpMenu, "&Help");
 
 #ifdef __WXMAC__
 	wxMenuBar::MacSetCommonMenuBar(mbar);
@@ -137,6 +149,11 @@ void MainFrame::SetupMenu()
 	SetMenuBar(mbar);
 }
 
+/**
+ * Bind event handlers
+ * 
+ * @return void
+ */
 void MainFrame::BindEvents()
 {
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnNew, this, wxID_NEW);
@@ -328,11 +345,17 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.AddDeveloper("Tim Warren, Programmer");
 	
 	info.SetDescription("Tyro, a text editor for all development");
-	info.SetCopyright(_T(" (C) 2015, Timothy J Warren"));
+	info.SetCopyright(" (C) 2015, Timothy J Warren");
 	
 	wxAboutBox(info);
 }
 
+/**
+ * Toggle enable/disable of document-specific controls
+ * 
+ * @param bool enable
+ * @return void
+ */
 void MainFrame::EnableEditControls(bool enable)
 {
 	fileMenu->Enable(wxID_SAVE, enable);

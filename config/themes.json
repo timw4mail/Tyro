@@ -1,10 +1,81 @@
 {
 	"Solarized" : {
+		/*
+			base03	0,	43, 54
+			base02	7,	54, 66
+			base01	88, 110, 117
+			base00	101, 123, 131
+			base0	131, 148, 150
+			base1	147, 161, 161
+			base2	238, 232, 213
+			base3	253, 246, 227
+			yellow	181, 137, 0
+			orange	203, 75, 22
+			red		220, 50, 47
+			magenta	211, 54, 130
+			violet	108, 113, 196
+			blue	38, 139, 210
+			cyan	42,	161, 152
+			green	133, 153, 0
+		 */
 		"background": {
 			"default": [253, 246, 227]
 		},
 		"foreground": {
 			"default": [101, 123, 131],
+			"keyword1": [220, 50, 47],
+			"keyword2": [42, 161, 152],
+			"keyword3": [181, 137, 0],
+			"keyword4": [181, 137, 0],
+			"keyword5": [181, 137, 0],
+			"keyword6": [181, 137, 0],
+			"comment": [147, 161, 161],
+			"comment_line": [147, 161, 161],
+			"comment_doc": [131, 148, 150],
+			"comment_special": [101, 123, 131],
+			"character": [108, 113, 196],
+			"character_eol": [108, 113, 196],
+			"string": [108, 113, 196],
+			"string_eol": [108, 113, 196],
+			"delimeter": [38, 139, 210],
+			"punctuation": [101, 123, 131],
+			"operator": [101, 123, 131],
+			"brace": [101, 123, 131],
+			"command": [],
+			"identifier": [38, 139, 210],
+			"label": [220, 50, 47],
+			"number": [211, 54, 130],
+			"parameter": [0, 43, 54],
+			"regex": [7, 54, 66],
+			"uuid": [0, 43, 54],
+			"value": [7, 54, 66],
+			"preprocessor": [181, 137, 0],
+			"script": [88, 110, 117],
+			"error": [220, 50, 47]
+		},
+		"bold": {
+			"keyword2": true,
+			"operator": true,
+			"label": true,
+			"error": true
+		},
+		"italic": {
+			"error": true
+		},
+		"underline": {
+			
+		},
+		"line_numbers": {
+			"foreground": [147, 161, 161],
+			"background": [238, 232, 213]
+		}
+	},
+	"Solarized Dark" : {
+		"background": {
+			"default": [0, 43, 54]
+		},
+		"foreground": {
+			"default": [131, 148, 150],
 			"keyword1": [220, 50, 47],
 			"keyword2": [203, 76, 22],
 			"keyword3": [181, 137, 0],
@@ -23,7 +94,7 @@
 			"punctuation": [101, 123, 131],
 			"operator": [101, 123, 131],
 			"brace": [101, 123, 131],
-			"command": [],
+			"command": [101, 123, 131],
 			"identifier": [38, 139, 210],
 			"label": [38, 139, 210],
 			"number": [211, 54, 130],
@@ -48,43 +119,6 @@
 		"line_numbers": {
 			"foreground": [147, 161, 161],
 			"background": [238, 232, 213]
-		}
-	},
-	"Solarized Dark" : {
-		"background": {
-			"default": []
-		},
-		"foreground": {
-			"default": [],
-			"keyword1": [],
-			"keyword2": [],
-			"keyword3": [],
-			"keyword4": [],
-			"keyword5": [],
-			"keyword6": [],
-			"comment": [],
-			"line_comment": [],
-			"doc_comment": [],
-			"special_comment": [],
-			"character": [],
-			"character_eol": [],
-			"string": [],
-			"string_eol": [],
-			"delimeter": [],
-			"punctuation": [],
-			"operator": [],
-			"brace": [],
-			"command": [],
-			"identifier": [],
-			"label": [],
-			"number": [],
-			"parameter": [],
-			"regex": [],
-			"uuid": [],
-			"value": [],
-			"preprocessor": [],
-			"script": [],
-			"error": []
 		}
 	}
 }

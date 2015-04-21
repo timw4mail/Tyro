@@ -27,18 +27,15 @@ class MainFrame: public wxFrame
 		wxMenu *fileMenu;
 		wxMenu *editMenu;
 		wxMenu *viewMenu;
+		wxMenu *langMenu;
 		wxMenu *helpMenu;
-		enum
-		{
-			idMenuQuit = 1000,
-			idMenuAbout
-		};
-		wxRect DetermineFrameSize();
 		void SetupMenu();
 		void SetupToolbar();
 		void SetupStatusBar();
 		void BindEvents();
 		void EnableEditControls(bool enable=true);
+		
+		// Event handlers
 		void OnNew(wxCommandEvent &event);
 		void OnOpen(wxCommandEvent &event);
 		void OnClose(wxAuiNotebookEvent &event);
