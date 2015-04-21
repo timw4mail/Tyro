@@ -5,7 +5,13 @@ EditPane::EditPane(
 	const wxSize &size, long style
 ) : wxStyledTextCtrl (parent, id, pos, size, style)
 {	
-	config = new TyroConfig();
+	#include "../../config/languages_json.h"
+	lang_config = new TyroConfig();
+	lang_config->LoadJson(languages_json);
+	
+	#include "../../config/themes_json.h"
+	theme_config = new TyroConfig();
+	theme_config->LoadJson(themes_json);
 	
 	lexerMap["batch"] = wxSTC_LEX_BATCH;
 	lexerMap["caml"] = wxSTC_LEX_CAML;
@@ -27,7 +33,8 @@ EditPane::EditPane(
 
 EditPane::~EditPane() 
 {
-	delete config;
+	delete lang_config;
+	delete theme_config;
 }
 
 /**
@@ -78,7 +85,7 @@ void EditPane::Highlight(wxString filePath)
 	this->SetProperty("font.quality", "3"); // LCD Optimized
 	
 	// Get the list of keywords for the current language
-	JsonValue keywords_array = config->GetLangKeywords(lang);
+	JsonValue keywords_array = this->GetKeywordList(lang);
 	
 	// Make sure every background is the same color!
 	for(int i = 0; i <= wxSTC_STYLE_MAX; i++)
@@ -196,7 +203,7 @@ bool EditPane::Load(wxString filePath)
  */
 string EditPane::GetLangByFile()
 {
-	JsonValue langList = config->GetRoot();
+	JsonValue langList = lang_config->GetRoot();
 	JsonValue::iterator it;
 	
 	wxString curr_file = this->fileName.GetFullName();
@@ -343,4 +350,11 @@ void EditPane::OnMarginClick(wxStyledTextEvent& event)
             this->ToggleFold (lineClick);
         }
     }
+}
+
+JsonValue EditPane::GetKeywordList(string lang)
+{
+	return lang_config->GetRoot()
+		.get(lang, JsonValue())
+		.get("keywords", JsonValue());
 }

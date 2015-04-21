@@ -13,8 +13,7 @@ public:
     TyroConfig();
     ~TyroConfig();
     JsonValue GetRoot();
-	JsonValue GetLang(string name);
-	JsonValue GetLangKeywords(string name);
+	void LoadJson(const char json[]);
 private:
     JsonValue default_root;
     JsonReader reader;

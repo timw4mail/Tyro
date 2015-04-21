@@ -31,7 +31,8 @@ public:
 private:
 	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;
-	TyroConfig *config;
+	TyroConfig *lang_config;
+	TyroConfig *theme_config;
 	enum
 	{
 		MARGIN_FOLD,
@@ -41,6 +42,7 @@ private:
 	bool FileWritable();
 	void BindEvents();
 	void OnMarginClick(wxStyledTextEvent &event);
+	JsonValue GetKeywordList(string lang);
 };
 
 #endif // TYRODOC_FRAME_H

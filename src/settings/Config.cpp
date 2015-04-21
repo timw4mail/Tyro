@@ -4,12 +4,12 @@
 
 #include "Config.h"
 
-TyroConfig::TyroConfig()
+TyroConfig::TyroConfig() {}
+TyroConfig::~TyroConfig() {}
+
+void TyroConfig::LoadJson(const char json[])
 {
-	// Defines languages_json
-	// Generated on compile from languages.json
-	#include "../../config/languages_json.h"
-	string json_string(languages_json);
+	string json_string(json);
 	
 	if ( ! reader.parse(json_string, default_root))
 	{
@@ -17,22 +17,7 @@ TyroConfig::TyroConfig()
 	}
 }
 
-TyroConfig::~TyroConfig()
-{
-	
-}
-
 JsonValue TyroConfig::GetRoot()
 {
 	return default_root;
-}
-
-JsonValue TyroConfig::GetLang(string name)
-{
-	return default_root.get(name, JsonValue());
-}
-
-JsonValue TyroConfig::GetLangKeywords(string name)
-{
-	return this->GetLang(name).get("keywords", JsonValue());
 }
