@@ -26,7 +26,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString& title)
 	base_sizer->SetContainingWindow(this);
 	base_sizer->SetMinSize(800,600);
 	
-	this->DisableEditControls();
+	this->EnableEditControls(false);
 	this->BindEvents();
 	
 	// Do the layout
@@ -79,7 +79,7 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
-#ifndef __WXWIN__
+#ifndef WIN32
 	toolBar->AddTool(wxID_CLOSE, "Close", close_file_icon, "Close file");
 #endif
 	toolBar->AddSeparator();
@@ -215,7 +215,7 @@ void MainFrame::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	if (notebook->GetPageCount() == 0)
 	{
-		this->DisableEditControls();
+		this->EnableEditControls(false);
 	}
 }
 
@@ -328,46 +328,22 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	wxAboutBox(info);
 }
 
-/**
- * Enable file-specific controls
- */
-void MainFrame::EnableEditControls()
+void MainFrame::EnableEditControls(bool enable)
 {
-	fileMenu->Enable(wxID_SAVE, true);
-	fileMenu->Enable(wxID_SAVEAS, true);
+	fileMenu->Enable(wxID_SAVE, enable);
+	fileMenu->Enable(wxID_SAVEAS, enable);
+	fileMenu->Enable(wxID_CLOSE, enable);
 	
-	editMenu->Enable(wxID_CUT, true);
-	editMenu->Enable(wxID_COPY, true);
-	editMenu->Enable(wxID_PASTE, true);
-	editMenu->Enable(wxID_CLEAR, true);
-	editMenu->Enable(wxID_FIND, true);
-	editMenu->Enable(wxID_SELECTALL, true);
-			
-	toolBar->EnableTool(wxID_SAVE, true);
-	toolBar->EnableTool(wxID_CLOSE, true);
-	toolBar->EnableTool(wxID_COPY, true);
-	toolBar->EnableTool(wxID_CUT, true);
-	toolBar->EnableTool(wxID_PASTE, true);
-}
-
-/**
- * Disables file-specific controls
- */
-void MainFrame::DisableEditControls()
-{
-	fileMenu->Enable(wxID_SAVE, false);
-	fileMenu->Enable(wxID_SAVEAS, false);
+	editMenu->Enable(wxID_CUT, enable);
+	editMenu->Enable(wxID_COPY, enable);
+	editMenu->Enable(wxID_PASTE, enable);
+	editMenu->Enable(wxID_CLEAR, enable);
+	editMenu->Enable(wxID_FIND, enable);
+	editMenu->Enable(wxID_SELECTALL, enable);
 	
-	editMenu->Enable(wxID_CUT, false);
-	editMenu->Enable(wxID_COPY, false);
-	editMenu->Enable(wxID_PASTE, false);
-	editMenu->Enable(wxID_CLEAR, false);
-	editMenu->Enable(wxID_FIND, false);
-	editMenu->Enable(wxID_SELECTALL, false);
-	
-	toolBar->EnableTool(wxID_SAVE, false);
-	toolBar->EnableTool(wxID_CLOSE, false);
-	toolBar->EnableTool(wxID_COPY, false);
-	toolBar->EnableTool(wxID_CUT, false);
-	toolBar->EnableTool(wxID_PASTE, false);
+	toolBar->EnableTool(wxID_SAVE, enable);
+	toolBar->EnableTool(wxID_CLOSE, enable);
+	toolBar->EnableTool(wxID_COPY, enable);
+	toolBar->EnableTool(wxID_CUT, enable);
+	toolBar->EnableTool(wxID_PASTE, enable);
 }
