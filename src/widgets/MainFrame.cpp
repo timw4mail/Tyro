@@ -3,7 +3,7 @@
  */
 #include "MainFrame.h"
 
-MainFrame::MainFrame(wxFrame *frame, const wxString& title)
+MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
 {
 	#include "../../resources/xpm/document.xpm"
@@ -79,7 +79,7 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
-#ifndef WIN32
+#ifndef __WXMSW__
 	toolBar->AddTool(wxID_CLOSE, "Close", close_file_icon, "Close file");
 #endif
 	toolBar->AddSeparator();
@@ -197,7 +197,7 @@ void MainFrame::OnClose(wxAuiNotebookEvent &event)
 		
 		if (Msgbox_Choice == wxCANCEL)
 		{
-			event.Veto();
+			return event.Veto();
 		}
 		else if (Msgbox_Choice == wxYES)
 		{
@@ -205,10 +205,10 @@ void MainFrame::OnClose(wxAuiNotebookEvent &event)
 			if (editor->IsModified())
 			{
 				wxMessageBox(_("File could not be saved"), _("Error"), wxOK | wxICON_EXCLAMATION);
-				event.Veto();
+				return event.Veto();
 			}
 		}
-	}
+	};
 }
 
 void MainFrame::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
@@ -224,6 +224,11 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 	int current_tab = notebook->GetSelection();
 
 	notebook->DeletePage(current_tab);
+	
+	if (notebook->GetPageCount() == 0)
+	{
+		this->EnableEditControls(false);
+	}
 }
 
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
