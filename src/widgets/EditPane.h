@@ -10,7 +10,7 @@ class EditPane: public wxStyledTextCtrl
 {
 public:
 	EditPane(
-		wxWindow *parent, 
+		wxWindow *parent,
 		wxWindowID id = wxID_ANY,
 		const wxPoint &post = wxDefaultPosition,
 		const wxSize &size = wxDefaultSize,
@@ -28,11 +28,13 @@ public:
 	bool SaveFile();
 	bool SaveFile(const wxString &filename);
 	bool IsModified();
+	void ApplyTheme(string lang, string theme="Solarized");
 private:
 	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;
 	TyroConfig *lang_config;
 	TyroConfig *theme_config;
+	JsonValue current_theme;
 	enum
 	{
 		MARGIN_FOLD,
@@ -42,7 +44,11 @@ private:
 	bool FileWritable();
 	void BindEvents();
 	void OnMarginClick(wxStyledTextEvent &event);
+	void SetTheme(string theme_name);
+	JsonValue GetThemeValue(string type, string key);
+	wxColor GetThemeColor(string type, string key);
 	JsonValue GetKeywordList(string lang);
+	void _ApplyTheme(JsonValue lexer_map);
 };
 
 #endif // TYRODOC_FRAME_H
