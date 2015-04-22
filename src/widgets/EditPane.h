@@ -48,7 +48,7 @@ private:
 	JsonValue GetThemeValue(string type, string key);
 	wxColor GetThemeColor(string type, string key);
 	JsonValue GetKeywordList(string lang);
-	void _ApplyTheme(JsonValue lexer_map);
+	void _ApplyTheme(JsonValue lexer_map, int addtoi=0);
 };
 
 #endif // TYRODOC_FRAME_H

@@ -33,6 +33,7 @@ EditPane::EditPane(
 	lexerMap["perl"] = wxSTC_LEX_PERL;
 	lexerMap["python"] = wxSTC_LEX_PYTHON;
 	lexerMap["ruby"] = wxSTC_LEX_RUBY;
+	lexerMap["rust"] = wxSTC_LEX_CPP;
 	lexerMap["shell"] = wxSTC_LEX_BASH;
 	lexerMap["sql"] = wxSTC_LEX_SQL;
 	lexerMap["xml"] = wxSTC_LEX_XML;
@@ -62,6 +63,8 @@ void EditPane::Highlight(wxString filePath)
 
 	// Get the configuration name for the selected language
 	string lang = this->GetLangByFile();
+	
+	wxLogDebug("Language selected: %s", lang);
 
 	this->StyleClearAll();
 
@@ -147,9 +150,11 @@ void EditPane::ApplyTheme(string lang, string theme)
 
 		wxLogDebug(output.str().c_str());
 	}
+	
+	int offset_count = 0;//(lang == "php") ? 104 : 0;
 
 	// Do the appropriate mappings to load the selected theme
-	this->_ApplyTheme(lexer_map);
+	this->_ApplyTheme(lexer_map, offset_count);
 }
 
 /**
@@ -370,6 +375,12 @@ JsonValue EditPane::GetThemeValue(string type, string key)
 	return value;
 }
 
+/**
+ * Retrieve the configured color for the specified theme
+ * @param type
+ * @param key
+ * @return 
+ */
 wxColor EditPane::GetThemeColor(string type, string key)
 {
 	JsonValue color_value = this->GetThemeValue(type, key);
@@ -392,9 +403,10 @@ wxColor EditPane::GetThemeColor(string type, string key)
  * Iterate through the theme settings and apply them
  *
  * @param JsonValue lexer_map - Maps token types to theme colors
+ * @param int addtoi - Offset for some languages
  * @return void
  */
-void EditPane::_ApplyTheme(JsonValue lexer_map)
+void EditPane::_ApplyTheme(JsonValue lexer_map, int addtoi)
 {
 	// Font setup
 #ifdef __WXMAC__
@@ -437,20 +449,29 @@ void EditPane::_ApplyTheme(JsonValue lexer_map)
 	this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
 	this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
 
-	for (int i = 0; i < lexer_map.size(); i++)
+	int min = 0 + addtoi;
+	int max = lexer_map.size() + addtoi;
+	
+	for (int i = min; i < max; i++)
 	{
-		string key = lexer_map[i].asString();
+		int n = i - addtoi;
+		string key = lexer_map[n].asString();
+		
+		//wxLogDebug("Token type: %s", key);
+		//wxLogDebug("Lexer constant: %i", i);
 
 		// Set the foreground color, if it exists
 		if ( ! this->GetThemeValue("foreground", key).isNull())
 		{
 			this->StyleSetForeground(i, this->GetThemeColor("foreground", key));
+			wxLogDebug("Set foreground color for %s token type, on value: %i", key, i);
 		}
 
 		// Set the background color, if it exists
 		if ( ! this->GetThemeValue("background", key).isNull())
 		{
 			this->StyleSetBackground(i, this->GetThemeColor("background", key));
+			wxLogDebug("Set background color for %s token type, on value: %i", key, i);
 		}
 
 		// Set bold, if it applies
