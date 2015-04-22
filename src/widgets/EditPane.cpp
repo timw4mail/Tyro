@@ -405,7 +405,7 @@ void EditPane::_ApplyTheme(JsonValue lexer_map)
 	);
 #else
 	wxFont *defaultFont = wxFont::New(
-		12,
+		10,
 		wxFONTFAMILY_MODERN,
 		wxFONTFLAG_ANTIALIASED
 	);

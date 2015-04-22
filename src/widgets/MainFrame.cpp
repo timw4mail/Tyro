@@ -366,7 +366,7 @@ void MainFrame::EnableEditControls(bool enable)
 	editMenu->Enable(wxID_COPY, enable);
 	editMenu->Enable(wxID_PASTE, enable);
 	editMenu->Enable(wxID_CLEAR, enable);
-	editMenu->Enable(wxID_FIND, enable);
+	//editMenu->Enable(wxID_FIND, enable);
 	editMenu->Enable(wxID_SELECTALL, enable);
 	
 	toolBar->EnableTool(wxID_SAVE, enable);
