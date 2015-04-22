@@ -1,7 +1,7 @@
 #Try using clang, if it's installed
-ifneq ($(shell command -v clang),)
+ifneq (command -v clang,)
     CC = clang
-    CXX = clang++ -std=c++98
+    CXX = clang++
 endif
 
 CXX += -Iinclude
@@ -31,8 +31,11 @@ TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 OS ?= $(shell uname -s)
 
 ifeq ($(OS),Darwin)
-	CXX += -mmacosx-version-min=10.5
+    CXX += -std=c++98 -mmacosx-version-min=10.5
+else
+    CXX += -std=c++11
 endif
+
 ifeq ($(OS),Windows_NT)
 	LDLIBS += -L/lib
 endif
@@ -64,26 +67,30 @@ $(PROGRAM):
 run:
 	./build/Tyro
 
-release:
+
+run-grind:
+	valgrind ./build/Tryo
+
+# Make optimized and striped executable
+release: all
+	strip -SXx $(PROGRAM)
 ifeq ($(OS),Darwin)
 	make Tyro.app
 endif
 ifeq ($(OS),Windows_NT)
 	make exe
 endif
-ifeq ($(OS),Linux)
-	make all
-endif
-#    strip -sxX $(PROGRAM)
 
+
+# Windows resource linking
 msw_resource:
 	$(WX_RES) resources/platform/msw/resource.rc -O coff -o resource.res
 
 exe: LDLIBS += resource.res
 exe: msw_resource all
-	
+
+# OS X application bundle	
 Tyro.app: all resources/platform/osx/Info.plist
-	strip -SXx $(PROGRAM)
 	SetFile -t APPL $(TARGET)
 	-mkdir Tyro.app
 	-mkdir Tyro.app/Contents

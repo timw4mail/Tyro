@@ -6,7 +6,6 @@
 #define TYROMAIN_H
 
 #include "../wx_common.h"
-#include "../TyroApp.h"
 
 #include <wx/cmdline.h>
 #include <wx/config.h>

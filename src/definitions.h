@@ -27,45 +27,42 @@ const wxString TYRO_OPEN_ERROR_CAPTION = "Open Failed";
 typedef map<string, int> StringConstMap;
 
 const wxString TYRO_FILE_OPEN_WILDCARDS =
-	_T("All files (*.*)|*.*|")
-	_T("Bash (*.sh, *.bsh) |*.sh;*.bsh|")
-	_T("Batch (*.bat, *.cmd, *.nt)|*.bat;*.cmd,*.nt|")
-	_T("C/C++ (*.c,*.cpp,*.h)| *.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.sma;*.cp |")
-	_T("CSS (*.css)|*.css|")
-	_T("Fortran (*.f9*, *.f, *.for)|*.f9*;*.f,*.for|")
-	_T("HTML/XHTML (*.html, *.htm)|*.htm*|")
-	_T("Java (*.java)|*.java|")
-	_T("JavaScript(*.js)|*.js|")
-	_T("Makefile |Makefile;makefile.*;MAKEFILE;configure.*;*.mak|")
-	_T("Pascal (*.pas, *.inc, *.pp)|*.pas;*.inc;*.pp|")
-	_T("Perl (*.pl, *.cgi)|*.pl;*.pm;*.cgi;*.pod|")
-	_T("PHP (*.php)|*.php|")
-	_T("Ruby (*.rb)|*.rb|")
-	_T("SQL (*.sql)|*.sql|")
-	_T("TCL (*.tcl)|*.tcl|")
-	_T("Text (*.txt)|*.txt");
+	"All files (*.*)|*|"
+	"Bash (*.sh, *.bsh) |*.sh;*.bsh|"
+	"Batch (*.bat, *.cmd, *.nt)|*.bat;*.cmd,*.nt|"
+	"C/C++ (*.c,*.cpp,*.h)| *.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.sma;*.cp |"
+	"CSS (*.css)|*.css|"
+	"Fortran (*.f9*, *.f, *.for)|*.f9*;*.f,*.for|"
+	"HTML/XHTML (*.html, *.htm)|*.htm*|"
+	"Java (*.java)|*.java|"
+	"JavaScript(*.js)|*.js|"
+	"Makefile |Makefile;makefile.*;MAKEFILE;configure.*;*.mak|"
+	"Pascal (*.pas, *.inc, *.pp)|*.pas;*.inc;*.pp|"
+	"Perl (*.pl, *.cgi)|*.pl;*.pm;*.cgi;*.pod|"
+	"PHP (*.php)|*.php|"
+	"Ruby (*.rb)|*.rb|"
+	"SQL (*.sql)|*.sql|"
+	"TCL (*.tcl)|*.tcl|"
+	"Text (*.txt)|*.txt";
 
 const wxString TYRO_FILE_SAVE_WILDCARDS = 
-	_T("All files (*.*)|*.*|")
-	_T("Bash (*.sh, *.bsh) |*.sh;*.bsh|")
-	_T("Batch (*.bat, *.cmd, *.nt)|*.bat;*.cmd,*.nt|")
-	_T("C/C++ (*.c,*.cpp,*.h)| *.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.sma;*.cp |")
-	_T("CSS (*.css)|*.css|")
-	_T("Fortran (*.f9*, *.f, *.for)|*.f9*;*.f,*.for|")
-	_T("HTML/XHTML (*.html, *.htm)|*.htm*|")
-	_T("Java (*.java)|*.java|")
-	_T("JavaScript(*.js)|*.js|")
-	_T("Makefile |Makefile;makefile.*;MAKEFILE;configure.*;*.mak|")
-	_T("Pascal (*.pas, *.inc, *.pp)|*.pas;*.inc;*.pp|")
-	_T("Perl (*.pl, *.cgi)|*.pl;*.pm;*.cgi;*.pod|")
-	_T("PHP (*.php)|*.php|")
-	_T("Ruby (*.rb)|*.rb|")
-	_T("SQL (*.sql)|*.sql|")
-	_T("TCL (*.tcl)|*.tcl|")
-	_T("Text (*.txt)|*.txt");
-
-
-
+	"All files (*.*)|*.*|"
+	"Bash (*.sh, *.bsh) |*.sh;*.bsh|"
+	"Batch (*.bat, *.cmd, *.nt)|*.bat;*.cmd,*.nt|"
+	"C/C++ (*.c,*.cpp,*.h)| *.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.sma;*.cp |"
+	"CSS (*.css)|*.css|"
+	"Fortran (*.f9*, *.f, *.for)|*.f9*;*.f,*.for|"
+	"HTML/XHTML (*.html, *.htm)|*.htm*|"
+	"Java (*.java)|*.java|"
+	"JavaScript(*.js)|*.js|"
+	"Makefile |Makefile;makefile.*;MAKEFILE;configure.*;*.mak|"
+	"Pascal (*.pas, *.inc, *.pp)|*.pas;*.inc;*.pp|"
+	"Perl (*.pl, *.cgi)|*.pl;*.pm;*.cgi;*.pod|"
+	"PHP (*.php)|*.php|"
+	"Ruby (*.rb)|*.rb|"
+	"SQL (*.sql)|*.sql|"
+	"TCL (*.tcl)|*.tcl|"
+	"Text (*.txt)|*.txt";
 
 #endif	/* DEFINITIONS_H */
 
