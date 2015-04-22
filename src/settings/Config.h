@@ -2,7 +2,7 @@
 #define	TYRO_CONFIG_H
 
 #include "../common.h"
-#include "../../include/json/json.h"
+#include <json/json.h>
 
 typedef Json::Value JsonValue;
 typedef Json::Reader JsonReader;

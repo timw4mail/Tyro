@@ -1,10 +1,10 @@
 #Try using clang, if it's installed
 ifneq ($(shell command -v clang),)
     CC = clang
-    CXX = $(patsubst g++,clang++, $(shell wx-config --cxx)) -std=c++98 -I/include
-else
-    CXX = $(shell wx-config --cxx) -I/include
+    CXX = clang++ -std=c++98
 endif
+
+CXX += -Iinclude
 
 SOURCES = $(wildcard include/**/*.cpp src/network/*.cpp src/settings/*.cpp include/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
@@ -30,6 +30,9 @@ TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 
 OS ?= $(shell uname -s)
 
+ifeq ($(OS),Darwin)
+	CXX += -mmacosx-version-min=10.5
+endif
 ifeq ($(OS),Windows_NT)
 	LDLIBS += -L/lib
 endif
