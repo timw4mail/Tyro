@@ -1,7 +1,7 @@
 #Try using clang, if it's installed
-ifneq (command -v clang,)
-    CC = clang
-    CXX = clang++
+ifneq (`command -v clang`,)
+	CC = clang
+	CXX = clang++
 endif
 
 CXX += -Iinclude
@@ -31,9 +31,9 @@ TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 OS ?= $(shell uname -s)
 
 ifeq ($(OS),Darwin)
-    CXX += -std=c++98 -mmacosx-version-min=10.5
+	CXX += -std=c++98 -mmacosx-version-min=10.5
 else
-    CXX += -std=c++11
+	CXX += -std=c++11
 endif
 
 ifeq ($(OS),Windows_NT)
