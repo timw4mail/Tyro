@@ -1,6 +1,7 @@
 #Try using clang, if it's installed
-ifneq ($(shell which clang),clang not found)
-    CXX = $(patsubst g++,clang++, $(shell wx-config --cxx)) -std=c++11 -I/include
+ifneq ($(shell command -v clang),)
+    CC = clang
+    CXX = $(patsubst g++,clang++, $(shell wx-config --cxx)) -std=c++98 -I/include
 else
     CXX = $(shell wx-config --cxx) -I/include
 endif
