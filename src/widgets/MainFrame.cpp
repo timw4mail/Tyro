@@ -140,7 +140,7 @@ void MainFrame::SetupMenu()
 	mbar->Append(fileMenu, "&File");
 	mbar->Append(editMenu, "&Edit");
 	//mbar->Append(viewMenu, "&View");
-	mbar->Append(langMenu, "&Language")
+	//mbar->Append(langMenu, "&Language");
 	mbar->Append(helpMenu, "&Help");
 
 #ifdef __WXMAC__
