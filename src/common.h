@@ -2,7 +2,7 @@
  * A common header for global includes
  */
 #ifndef TYRO_COMMON_H
-#define	TYRO_COMMON_H
+#define TYRO_COMMON_H
 
 // C++ Standard Lib includes
 #include <iostream>

@@ -52,7 +52,7 @@ build:
 	@mkdir -p build
 
 sftp_o:
-	$(CXX) $(CXXFLAGS) $(LDLIBS) -c -o src/network/SFTP.o src/network/SFTP.cpp
+	$(CXX) -static $(CXXFLAGS) $(LDLIBS) -c -o src/network/SFTP.o src/network/SFTP.cpp
 
 $(TYRO_LIB): build sftp_o
 $(TYRO_LIB): OBJECTS += src/network/SFTP.o
@@ -105,7 +105,7 @@ Tyro.app: all resources/platform/osx/Info.plist
 	cp resources/platform/osx/tyro.icns Tyro.app/Contents/Resources/
 
 $(TESTS): $(TYRO_LIB)
-	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(TYRO_LIB) -o $(patsubst %.cpp,%, $(var));)
+	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(TYRO_LIB) $(LDLIBS) -o $(patsubst %.cpp,%, $(var));)
 
 .PHONY: tests	
 tests: $(TESTS)

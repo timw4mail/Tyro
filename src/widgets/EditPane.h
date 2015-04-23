@@ -27,7 +27,6 @@ public:
 	void Highlight(wxString filePath);
 	bool SaveFile();
 	bool SaveFile(const wxString &filename);
-	bool IsModified();
 	void ApplyTheme(string lang, string theme="Solarized");
 private:
 	StringConstMap lexerMap;

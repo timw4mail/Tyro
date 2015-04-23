@@ -80,6 +80,7 @@ void EditPane::Highlight(wxString filePath)
 	// Some basic properties to set
 	this->SetProperty("technology", "2");
 	this->SetProperty("error.inline", "0");
+	this->SetProperty("styling.within.preprocessor", "1");
 	this->SetProperty("font.quality", "3"); // LCD Optimized
 
 	// Apply the theme
@@ -96,24 +97,25 @@ void EditPane::Highlight(wxString filePath)
 	this->SetMarginSensitive(MARGIN_FOLD, true);
 	this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
 	this->MarkerDefine (wxSTC_MARKNUM_FOLDER,        wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPEN,    wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDERSUB,     wxSTC_MARK_VLINE,     "BLACK", "BLACK");
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDEREND,     wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
-    this->MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
+	this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPEN,    wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
+	this->MarkerDefine (wxSTC_MARKNUM_FOLDERSUB,     wxSTC_MARK_VLINE,     "BLACK", "BLACK");
+	this->MarkerDefine (wxSTC_MARKNUM_FOLDEREND,     wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
+	this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
+	this->MarkerDefine (wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
+	this->MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
 
-	this->SetLayoutCache (wxSTC_CACHE_NONE);
-    this->SetUseHorizontalScrollBar(1);
+	this->SetLayoutCache (wxSTC_CACHE_CARET);
+	//this->SetViewWhiteSpace(wxSTC_WS_VISIBLEALWAYS);
+
 
 	// set spaces and indention
-    this->SetTabWidth(4);
+	this->SetTabWidth(4);
 
 	bool use_tabs = (lang != "yaml");
 
-    this->SetUseTabs(use_tabs);
-    this->SetTabIndents(true);
-    this->SetBackSpaceUnIndents(true);
+	this->SetUseTabs(use_tabs);
+	this->SetTabIndents(true);
+	this->SetBackSpaceUnIndents(true);
 }
 
 /**
@@ -151,7 +153,12 @@ void EditPane::ApplyTheme(string lang, string theme)
 		wxLogDebug(output.str().c_str());
 	}
 	
-	int offset_count = 0;//(lang == "php") ? 104 : 0;
+	if (lang == "php")
+	{
+		//this->SetLexerLanguage("php");
+	}
+	
+	int offset_count = (lang == "php") ? 104 : 0;
 
 	// Do the appropriate mappings to load the selected theme
 	this->_ApplyTheme(lexer_map, offset_count);
@@ -268,11 +275,6 @@ bool EditPane::SaveFile(const wxString &filename)
 	return false;
 }
 
-bool EditPane::IsModified()
-{
-	return this->GetModify();
-}
-
 /**
  * Check that the current file can be opened
  *
@@ -338,12 +340,12 @@ void EditPane::BindEvents()
 void EditPane::OnMarginClick(wxStyledTextEvent& event)
 {
 	if (event.GetMargin() == MARGIN_FOLD) {
-        int lineClick = this->LineFromPosition (event.GetPosition());
-        int levelClick = this->GetFoldLevel (lineClick);
-        if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
-            this->ToggleFold (lineClick);
-        }
-    }
+		int lineClick = this->LineFromPosition (event.GetPosition());
+		int levelClick = this->GetFoldLevel (lineClick);
+		if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
+			this->ToggleFold (lineClick);
+		}
+	}
 }
 
 /**

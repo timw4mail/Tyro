@@ -45,7 +45,8 @@
 		"file_pattern": "*.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.xpm",
 		"keywords": [
 			"alignof and and_eq bitand bitor break case catch compl const_cast continue default delete do dynamic_cast else false for goto if namespace new not not_eq nullptr operator or or_eq reinterpret_cast return sizeof static_assert static_cast switch this throw true try typedef typeid using while xor xor_eq NULL",
-			"alignas asm auto bool char char16_t char32_t class const constexpr decltype double enum explicit export extern final float friend inline int long mutable noexcept override private protected public register short signed static struct template thread_local typename union unsigned virtual void volatile wchar_t"
+			"alignas asm auto bool char char16_t char32_t class const constexpr decltype double enum explicit export extern final float friend inline int long mutable noexcept override private protected public register short signed static struct template thread_local typename union unsigned virtual void volatile wchar_t",
+			"abstract access author copyright deprecated deprec example exception global ignore internal license link name package param return see since static staticvar subpackage throws todo version"
 		],
 		"lexer_map": [
 			"default", "comment", "comment_line", "comment_doc", "number", "keyword1", "string", "character", "uuid", "preprocessor", "operator", "identifier", "string_eol", "default", "regex", "comment_special", "keyword2", "keyword3", "error"
@@ -223,7 +224,7 @@
 			""
 		],
 		"lexer_map": [
-			"default", "keyword1", "parameter", "keyword2", "identifier", "number", "string_eol", "string", "value", "comment", "label", "default", "default", "default", "script", "default", "default", "default", "default", "value"
+			"default", "keyword1", "error", "keyword2", "error", "number", "string", "string", "default", "comment", "preprocessor", "keyword1", "keyword3", "keyword3", "keyword4", "keyword5", "keyword6", "preprocessor", "keyword7"
 		]
 	},
 	"yaml": {

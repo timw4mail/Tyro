@@ -48,8 +48,8 @@
 			"parameter": [0, 43, 54],
 			"regex": [7, 54, 66],
 			"uuid": [0, 43, 54],
-			"value": [7, 54, 66],
-			"preprocessor": [181, 137, 0],
+			"value": [0,	43, 54],
+			"preprocessor": [88, 110, 117],
 			"script": [88, 110, 117],
 			"variable": [203, 75, 22],
 			"error": [220, 50, 47]
@@ -59,7 +59,8 @@
 			"keyword2": true,
 			"operator": true,
 			"label": true,
-			"error": true
+			"error": true,
+			"preprocessor": true
 		},
 		"italic": {
 			"error": true
