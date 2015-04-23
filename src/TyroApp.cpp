@@ -1,11 +1,6 @@
-/***************************************************************
- * Name:	  TyroApp.cpp
- * Purpose:   Code for Application Class
- * Author:	Timothy J Warren (tim@timshomepage.net)
- * Created:   2015-03-30
- * Copyright: Timothy J Warren (https://timshomepage.net)
- * License:
- **************************************************************/
+/**
+ * Main application file
+ */
 
 #include "wx_common.h"
 
@@ -27,6 +22,11 @@ private:
 
 IMPLEMENT_APP(TyroApp);
 
+/**
+ * Start the event loop and create the main window
+ * 
+ * @return bool 
+ */
 bool TyroApp::OnInit()
 {
 	this->SetAppName(APP_NAME);
@@ -43,6 +43,11 @@ bool TyroApp::OnInit()
 	return true;
 }
 
+/**
+ * Exit handler
+ * 
+ * @return int 
+ */
 int TyroApp::OnExit()
 {
 	return close(true);

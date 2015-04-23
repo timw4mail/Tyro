@@ -1,6 +1,6 @@
-CXX += -I include
+CXX += -I include -I.
 
-SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/settings/*.cpp)
+SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/network/*.cpp src/settings/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
 TYRO_LIB = build/Tyro.a
 
@@ -14,8 +14,8 @@ WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 WX_RES = $(shell wx-config --rescomp)
 
-DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG
-CXXFLAGS = -Os -DNDEBUG
+DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG -DSTATIC_BUILD
+CXXFLAGS = -Os -DNDEBUG -DSTATIC_BUILD
 
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
@@ -51,11 +51,6 @@ json_wrapper_build:
 build:
 	@mkdir -p build
 
-sftp_o:
-	$(CXX) -static $(CXXFLAGS) $(LDLIBS) -c -o src/network/SFTP.o src/network/SFTP.cpp
-
-$(TYRO_LIB): build sftp_o
-$(TYRO_LIB): OBJECTS += src/network/SFTP.o
 $(TYRO_LIB): $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@

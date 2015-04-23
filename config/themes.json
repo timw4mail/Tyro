@@ -55,8 +55,6 @@
 			"error": [220, 50, 47]
 		},
 		"bold": {
-			"keyword1": true,
-			"keyword2": true,
 			"operator": true,
 			"label": true,
 			"error": true,

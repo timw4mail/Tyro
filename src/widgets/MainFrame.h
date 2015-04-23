@@ -49,6 +49,7 @@ class MainFrame: public wxFrame
 		void OnEditUndo(wxCommandEvent &event);
 		void OnEditRedo(wxCommandEvent &event);
 		void OnCloseTab(wxCommandEvent &event);
+		void OnToggleWhitespace(wxCommandEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
 };

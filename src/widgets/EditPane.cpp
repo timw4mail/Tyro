@@ -5,11 +5,11 @@ EditPane::EditPane(
 	const wxSize &size, long style
 ) : wxStyledTextCtrl (parent, id, pos, size, style)
 {
-	#include "../../config/languages_json.h"
+	#include <config/languages_json.h>
 	lang_config = new TyroConfig();
 	lang_config->LoadJson(languages_json);
 
-	#include "../../config/themes_json.h"
+	#include <config/themes_json.h>
 	theme_config = new TyroConfig();
 	theme_config->LoadJson(themes_json);
 
@@ -105,8 +105,6 @@ void EditPane::Highlight(wxString filePath)
 	this->MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
 
 	this->SetLayoutCache (wxSTC_CACHE_CARET);
-	//this->SetViewWhiteSpace(wxSTC_WS_VISIBLEALWAYS);
-
 
 	// set spaces and indention
 	this->SetTabWidth(4);

@@ -3,6 +3,20 @@
  */
 #include "MainFrame.h"
 
+// Top level menus
+enum {
+	myFILE_MENU,
+	myEDIT_MENU,
+	myVIEW_MENU,
+	myLANG_MENU,
+	myHELP_MENU
+};
+
+// Menu ids
+enum {
+	myID_VIEW_WHITESPACE = wxID_HIGHEST
+};
+
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
 {
@@ -102,7 +116,7 @@ void MainFrame::SetupToolbar()
 void MainFrame::SetupMenu()
 {
 	// create a menu bar
-	mbar = new wxMenuBar();
+	this->mbar = new wxMenuBar();
 
 	// Create Base menus
 	fileMenu = new wxMenu("");
@@ -132,16 +146,18 @@ void MainFrame::SetupMenu()
 	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
 	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
 	//editMenu->AppendSeparator();
-	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");	
+	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
+
+	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
 	
 	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
 
 	// Add the menus to the menubar
-	mbar->Append(fileMenu, "&File");
-	mbar->Append(editMenu, "&Edit");
-	//mbar->Append(viewMenu, "&View");
-	//mbar->Append(langMenu, "&Language");
-	mbar->Append(helpMenu, "&Help");
+	this->mbar->Append(fileMenu, "&File");
+	this->mbar->Append(editMenu, "&Edit");
+	this->mbar->Append(viewMenu, "&View");
+	this->mbar->Append(langMenu, "&Language");
+	this->mbar->Append(helpMenu, "&Help");
 
 #ifdef __WXMAC__
 	wxMenuBar::MacSetCommonMenuBar(mbar);
@@ -171,6 +187,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditSelectAll, this, wxID_SELECTALL);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditUndo, this, wxID_UNDO);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditRedo, this, wxID_REDO);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
 }
 
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
@@ -181,18 +198,24 @@ void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
-	wxString filename;
+	wxArrayString filelist;
+	int listcount;
 	
-	wxFileDialog dlg (this, _T("Open file"), wxEmptyString, wxEmptyString,
-		TYRO_FILE_OPEN_WILDCARDS, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
+	wxFileDialog dlg (this, "Open file(s)", wxEmptyString, wxEmptyString,
+		TYRO_FILE_OPEN_WILDCARDS, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR | wxFD_MULTIPLE);
 
 	if (dlg.ShowModal() != wxID_OK) return;
 	
-	filename = dlg.GetPath();
+	dlg.GetPaths(filelist);
+	listcount = filelist.GetCount();
 	
-	this->EnableEditControls();
+	// Open a new tab for each file
+	for (int i = 0; i < listcount; i++)
+	{
+		notebook->AddTab(filelist[i]);
+	}
 	
-	notebook->AddTab(filename);
+	this->EnableEditControls(true);
 }
 
 void MainFrame::OnClose(wxAuiNotebookEvent &event)
@@ -228,6 +251,12 @@ void MainFrame::OnClose(wxAuiNotebookEvent &event)
 	};
 }
 
+/**
+ * Event handler triggered after a tab is closed
+ * 
+ * @param WXUNUSED
+ * @return void
+ */
 void MainFrame::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	if (notebook->GetPageCount() == 0)
@@ -351,6 +380,21 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 }
 
 /**
+ * Toggle display of invisibles
+ * 
+ * @param wxCommandEvent& event
+ * @return void
+ */
+void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
+{
+	int flag = (event.IsChecked()) 
+		? wxSTC_WS_VISIBLEALWAYS 
+		: wxSTC_WS_INVISIBLE;
+	
+	notebook->GetCurrentEditor()->SetViewWhiteSpace(flag);
+}
+
+/**
  * Toggle enable/disable of document-specific controls
  * 
  * @param bool enable
@@ -358,20 +402,18 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::EnableEditControls(bool enable)
 {
-	fileMenu->Enable(wxID_SAVE, enable);
-	fileMenu->Enable(wxID_SAVEAS, enable);
-	fileMenu->Enable(wxID_CLOSE, enable);
+	this->fileMenu->Enable(wxID_SAVE, enable);
+	this->fileMenu->Enable(wxID_SAVEAS, enable);
+	this->fileMenu->Enable(wxID_CLOSE, enable);
 	
-	editMenu->Enable(wxID_CUT, enable);
-	editMenu->Enable(wxID_COPY, enable);
-	editMenu->Enable(wxID_PASTE, enable);
-	editMenu->Enable(wxID_CLEAR, enable);
-	//editMenu->Enable(wxID_FIND, enable);
-	editMenu->Enable(wxID_SELECTALL, enable);
+	// Enable/disable top level menus
+	this->mbar->EnableTop(myEDIT_MENU, enable);
+	this->mbar->EnableTop(myVIEW_MENU, enable);
+	this->mbar->EnableTop(myLANG_MENU, enable);
 	
-	toolBar->EnableTool(wxID_SAVE, enable);
-	toolBar->EnableTool(wxID_CLOSE, enable);
-	toolBar->EnableTool(wxID_COPY, enable);
-	toolBar->EnableTool(wxID_CUT, enable);
-	toolBar->EnableTool(wxID_PASTE, enable);
+	this->toolBar->EnableTool(wxID_SAVE, enable);
+	this->toolBar->EnableTool(wxID_CLOSE, enable);
+	this->toolBar->EnableTool(wxID_COPY, enable);
+	this->toolBar->EnableTool(wxID_CUT, enable);
+	this->toolBar->EnableTool(wxID_PASTE, enable);
 }
