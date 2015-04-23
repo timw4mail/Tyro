@@ -1,14 +1,8 @@
-#Try using clang, if it's installed
-ifneq (`command -v clang`,)
-	CC = clang
-	CXX = clang++
-endif
+CXX += -I include
 
-CXX += -Iinclude
-
-SOURCES = $(wildcard include/**/*.cpp src/network/*.cpp src/settings/*.cpp include/*.cpp)
+SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/settings/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
-TARGET = build/Tyro.a
+TYRO_LIB = build/Tyro.a
 
 JSON_FILES = $(patsubst config/%.json,%.json, $(wildcard config/*.json))
 
@@ -16,11 +10,9 @@ PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
 PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC)) 
 
-WX_LDLIBS = $(shell wx-config --libs base core aui stc adv) -lssh2
+WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 WX_RES = $(shell wx-config --rescomp)
-
-LDLIBS = $(TARGET) 
 
 DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG
 CXXFLAGS = -Os -DNDEBUG
@@ -30,17 +22,22 @@ TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 
 OS ?= $(shell uname -s)
 
+LDLIBS =
+
 ifeq ($(OS),Darwin)
 	CXX += -std=c++98 -mmacosx-version-min=10.5
-else
+endif
+ifeq ($(OS),Linux)
 	CXX += -std=c++11
 endif
-
 ifeq ($(OS),Windows_NT)
-	LDLIBS += -L/lib
+	CXX += -I/include -DWIN32
+	LDLIBS += -L/lib -lwsock32
 endif
 
-all: build json_wrapper $(TARGET) $(PROGRAM)
+LDLIBS += -lssh2
+
+all: build json_wrapper $(TYRO_LIB) $(PROGRAM)
 
 dev: CXXFLAGS= $(DEV_CXXFLAGS)
 dev: all
@@ -54,14 +51,19 @@ json_wrapper_build:
 build:
 	@mkdir -p build
 
-$(TARGET): $(OBJECTS)
+sftp_o:
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -c -o src/network/SFTP.o src/network/SFTP.cpp
+
+$(TYRO_LIB): build sftp_o
+$(TYRO_LIB): OBJECTS += src/network/SFTP.o
+$(TYRO_LIB): $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
 
 
-$(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS) $(TARGET)
+$(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS) $(TYRO_LIB)
 $(PROGRAM):
-	$(CXX) $(WX_CXXFLAGS) $(PROGRAM_SRC) $(LDLIBS) $(WX_LDLIBS) -o $(PROGRAM)
+	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(TYRO_LIB) $(WX_LDLIBS) -o $(PROGRAM)
 	
 
 run:
@@ -91,7 +93,7 @@ exe: msw_resource all
 
 # OS X application bundle	
 Tyro.app: all resources/platform/osx/Info.plist
-	SetFile -t APPL $(TARGET)
+	SetFile -t APPL $(TYRO_LIB)
 	-mkdir Tyro.app
 	-mkdir Tyro.app/Contents
 	-mkdir Tyro.app/Contents/MacOS
@@ -102,8 +104,10 @@ Tyro.app: all resources/platform/osx/Info.plist
 	cp build/Tyro Tyro.app/Contents/MacOS/Tyro
 	cp resources/platform/osx/tyro.icns Tyro.app/Contents/Resources/
 
+$(TESTS): $(TYRO_LIB)
+	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(TYRO_LIB) -o $(patsubst %.cpp,%, $(var));)
+
 .PHONY: tests	
-tests: LDLIBS = $(TARGET) -lssh2
 tests: $(TESTS)
 	sh ./tests/runtests.sh
 
@@ -114,6 +118,6 @@ clean:
 	rm -f config/*_json.h
 	rm -rf *.o
 	rm -rf Tyro.app
-	rm -rf build $(OBJECTS) $(PROGRAM) $(TARGET) $(TESTS)
+	rm -rf build $(OBJECTS) $(PROGRAM) $(TYRO_LIB) $(TESTS)
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`

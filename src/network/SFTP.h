@@ -15,6 +15,7 @@
 
 #ifdef WIN32
 	// Define this so I actually get functions out of the windows header file
+	#undef _WIN32_WINNT
 	#define _WIN32_WINNT 0x0501
 	#include <Ws2tcpip.h>
 #else

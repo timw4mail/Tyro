@@ -23,12 +23,12 @@
 		},
 		"foreground": {
 			"default": [101, 123, 131],
-			"keyword1": [133, 153, 0],
-			"keyword2": [42, 161, 152],
+			"keyword1": [220, 50, 47],
+			"keyword2": [203, 75, 22],
 			"keyword3": [181, 137, 0],
-			"keyword4": [181, 137, 0],
-			"keyword5": [181, 137, 0],
-			"keyword6": [181, 137, 0],
+			"keyword4": [133, 153, 0],
+			"keyword5": [42, 161, 152],
+			"keyword6": [38, 139, 210],
 			"comment": [147, 161, 161],
 			"comment_line": [147, 161, 161],
 			"comment_doc": [131, 148, 150],
@@ -55,6 +55,7 @@
 			"error": [220, 50, 47]
 		},
 		"bold": {
+			"keyword1": true,
 			"keyword2": true,
 			"operator": true,
 			"label": true,

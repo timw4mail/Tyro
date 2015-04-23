@@ -2,11 +2,6 @@
 #define	TYRO_CONFIG_H
 
 #include "../common.h"
-#include <json/json.h>
-
-typedef Json::Value JsonValue;
-typedef Json::Reader JsonReader;
-typedef Json::Writer JsonWriter;
 
 class TyroConfig {
 public:

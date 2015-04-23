@@ -134,7 +134,7 @@ void EditPane::ApplyTheme(string lang, string theme)
 	JsonValue keywords_array = this->GetKeywordList(lang);
 	if (keywords_array.isArray())
 	{
-		for(int i = 0; i < keywords_array.size(); i++)
+		for(unsigned int i = 0; i < keywords_array.size(); i++)
 		{
 			this->SetKeyWords(i, keywords_array[i].asString());
 		}
