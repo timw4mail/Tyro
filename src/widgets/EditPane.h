@@ -13,12 +13,7 @@ public:
 		wxWindow *parent,
 		wxWindowID id = wxID_ANY,
 		const wxPoint &post = wxDefaultPosition,
-		const wxSize &size = wxDefaultSize,
-		long style =
-#ifndef __WXMAC__
-		wxSUNKEN_BORDER |
-#endif
-		wxVSCROLL
+		const wxSize &size = wxDefaultSize
 	);
 	~EditPane();
 	wxFileName fileName;
@@ -37,6 +32,7 @@ private:
 	enum
 	{
 		MARGIN_FOLD,
+		MARGIN_SYMBOL,
 		MARGIN_LINE_NUMBERS
 	};
 	bool FileReadable();

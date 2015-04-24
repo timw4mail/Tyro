@@ -13,7 +13,7 @@ TabContainer::TabContainer(
 		const wxSize& size,
 		long style
 ) : wxAuiNotebook(parent, id, pos, size, style)
-{	
+{
 }
 
 TabContainer::~TabContainer() {}
@@ -53,6 +53,8 @@ void TabContainer::AddTab(wxString filePath)
 	{
 		this->AddPage(editor, caption, true);
 		
+		this->SetPageToolTip(this->GetPageIndex(this->GetCurrentPage()), fileName.GetFullPath());
+
 		return;
 	}
 	

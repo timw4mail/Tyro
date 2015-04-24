@@ -4,7 +4,7 @@
 #include "MainFrame.h"
 
 // Top level menus
-enum {
+enum myMenuIds {
 	myFILE_MENU,
 	myEDIT_MENU,
 	myVIEW_MENU,
@@ -13,7 +13,7 @@ enum {
 };
 
 // Menu ids
-enum {
+enum myMenuItemIds {
 	myID_VIEW_WHITESPACE = wxID_HIGHEST
 };
 
@@ -188,6 +188,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditUndo, this, wxID_UNDO);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditRedo, this, wxID_REDO);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
+	Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &MainFrame::OnTabContextMenu, this, wxID_ANY);
 }
 
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
@@ -416,4 +417,13 @@ void MainFrame::EnableEditControls(bool enable)
 	this->toolBar->EnableTool(wxID_COPY, enable);
 	this->toolBar->EnableTool(wxID_CUT, enable);
 	this->toolBar->EnableTool(wxID_PASTE, enable);
+}
+
+void MainFrame::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
+{
+	// Create Menu
+	wxMenu *contextMenu = new wxMenu();
+	contextMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current tab");
+
+	this->PopupMenu(contextMenu);
 }

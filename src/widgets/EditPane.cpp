@@ -1,9 +1,8 @@
 #include "EditPane.h"
 
 EditPane::EditPane(
-	wxWindow *parent, wxWindowID id, const wxPoint &pos,
-	const wxSize &size, long style
-) : wxStyledTextCtrl (parent, id, pos, size, style)
+	wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size
+) : wxStyledTextCtrl (parent, id, pos, size, wxBORDER_NONE)
 {
 	#include <config/languages_json.h>
 	lang_config = new TyroConfig();

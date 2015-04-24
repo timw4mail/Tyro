@@ -34,7 +34,7 @@ class MainFrame: public wxFrame
 		void BindEvents();
 		void EnableEditControls(bool enable=true);
 		
-		// Event handlers
+		// Main Menu Event handlers
 		void OnNew(wxCommandEvent &event);
 		void OnOpen(wxCommandEvent &event);
 		void OnClose(wxAuiNotebookEvent &event);
@@ -52,6 +52,9 @@ class MainFrame: public wxFrame
 		void OnToggleWhitespace(wxCommandEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
+
+		// Tab Context Menu Event handlers
+		void OnTabContextMenu(wxAuiNotebookEvent &event);
 };
 
 
