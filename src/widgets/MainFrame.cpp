@@ -373,6 +373,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetVersion(APP_VERSION, "Prerelease");
 	
 	info.AddDeveloper("Tim Warren, Programmer");
+	info.AddArtist("Brian Smith, Icon");
 	
 	info.SetDescription("Tyro, a text editor for all development");
 	info.SetCopyright(" (C) 2015, Timothy J Warren");
