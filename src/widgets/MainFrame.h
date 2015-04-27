@@ -38,6 +38,7 @@ class MainFrame: public wxFrame
 		void OnNew(wxCommandEvent &event);
 		void OnOpen(wxCommandEvent &event);
 		void OnClose(wxAuiNotebookEvent &event);
+		void OnCloseAll(wxCommandEvent &event);
 		void OnClosed(wxAuiNotebookEvent &event);
 		void OnFileClose(wxCommandEvent &event);
 		void OnSave(wxCommandEvent &event);

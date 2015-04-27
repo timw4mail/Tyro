@@ -14,7 +14,10 @@ enum myMenuIds {
 
 // Menu ids
 enum myMenuItemIds {
-	myID_VIEW_WHITESPACE = wxID_HIGHEST
+	myID_VIEW_WHITESPACE = wxID_HIGHEST,
+	myID_VIEW_LINE_ENDINGS,
+	myID_CLOSE_ALL,
+	myID_CLOSE_ALL_BUT_THIS
 };
 
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
@@ -133,6 +136,7 @@ void MainFrame::SetupMenu()
 	fileMenu->Append(wxID_SAVEAS, "Save &As...\tShift+Ctrl+S", "Save current file as...");
 	fileMenu->AppendSeparator();
 	fileMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current document");
+	fileMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
 	fileMenu->Append(wxID_EXIT, "&Quit\tCtrl+Q", "Quit the application");
 	
 	editMenu->Append(wxID_UNDO, "&Undo\tCtrl+Z", "Undo last action");
@@ -179,6 +183,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &MainFrame::OnClose, this, wxID_ANY);
 	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &MainFrame::OnClosed, this, wxID_ANY);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseTab, this, wxID_CLOSE);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseAll, this, myID_CLOSE_ALL);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCut, this, wxID_CUT);
@@ -276,6 +281,12 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 	{
 		this->EnableEditControls(false);
 	}
+}
+
+void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
+{
+	notebook->DeleteAllPages();
+	this->EnableEditControls(false);
 }
 
 void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
@@ -376,7 +387,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.AddArtist("Brian Smith, Icon");
 	
 	info.SetDescription("Tyro, a text editor for all development");
-	info.SetCopyright(" (C) 2015, Timothy J Warren");
+	info.SetCopyright(" (C) 2015");
 	
 	wxAboutBox(info);
 }
@@ -389,11 +400,13 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 {
+	EditPane *editor = notebook->GetCurrentEditor();
 	int flag = (event.IsChecked()) 
 		? wxSTC_WS_VISIBLEALWAYS 
 		: wxSTC_WS_INVISIBLE;
 	
-	notebook->GetCurrentEditor()->SetViewWhiteSpace(flag);
+	editor->SetViewWhiteSpace(flag);
+	editor->SetViewEOL(event.IsChecked());
 }
 
 /**
@@ -407,6 +420,7 @@ void MainFrame::EnableEditControls(bool enable)
 	this->fileMenu->Enable(wxID_SAVE, enable);
 	this->fileMenu->Enable(wxID_SAVEAS, enable);
 	this->fileMenu->Enable(wxID_CLOSE, enable);
+	this->fileMenu->Enable(myID_CLOSE_ALL, enable);
 	
 	// Enable/disable top level menus
 	this->mbar->EnableTop(myEDIT_MENU, enable);
@@ -425,6 +439,7 @@ void MainFrame::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 	// Create Menu
 	wxMenu *contextMenu = new wxMenu();
 	contextMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current tab");
+	contextMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
 
 	this->PopupMenu(contextMenu);
 }
