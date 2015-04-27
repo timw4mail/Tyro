@@ -20,9 +20,9 @@ enum myMenuItemIds {
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
 {
-	#include "../../resources/xpm/document.xpm"
+	#include "../../resources/xpm/tyro.xpm"
 	
-	wxIcon app_icon(document);
+	wxIcon app_icon(tyro_icon);
 	this->SetIcon(app_icon);
 	
 	// Create menus and bars
