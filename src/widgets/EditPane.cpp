@@ -77,6 +77,7 @@ void EditPane::Highlight(wxString filePath)
 	}
 
 	// Some basic properties to set
+	this->SetStyleBits(8);
 	this->SetProperty("technology", "2");
 	this->SetProperty("error.inline", "0");
 	this->SetProperty("styling.within.preprocessor", "1");
@@ -150,12 +151,7 @@ void EditPane::ApplyTheme(string lang, string theme)
 		wxLogDebug(output.str().c_str());
 	}
 	
-	if (lang == "php")
-	{
-		//this->SetLexerLanguage("php");
-	}
-	
-	int offset_count = (lang == "php") ? 104 : 0;
+	int offset_count = (lang == "php") ? 103 : 0;
 
 	// Do the appropriate mappings to load the selected theme
 	this->_ApplyTheme(lexer_map, offset_count);
@@ -463,14 +459,12 @@ void EditPane::_ApplyTheme(JsonValue lexer_map, int addtoi)
 		if ( ! this->GetThemeValue("foreground", key).isNull())
 		{
 			this->StyleSetForeground(i, this->GetThemeColor("foreground", key));
-			wxLogDebug("Set foreground color for %s token type, on value: %i", key, i);
 		}
 
 		// Set the background color, if it exists
 		if ( ! this->GetThemeValue("background", key).isNull())
 		{
 			this->StyleSetBackground(i, this->GetThemeColor("background", key));
-			wxLogDebug("Set background color for %s token type, on value: %i", key, i);
 		}
 
 		// Set bold, if it applies
