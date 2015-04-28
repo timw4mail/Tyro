@@ -122,11 +122,11 @@ void MainFrame::SetupMenu()
 	this->mbar = new wxMenuBar();
 
 	// Create Base menus
-	fileMenu = new wxMenu("");
-	editMenu = new wxMenu("");
-	viewMenu = new wxMenu("");
-	langMenu = new wxMenu("");
-	helpMenu = new wxMenu("");
+	fileMenu = new wxMenu();
+	editMenu = new wxMenu();
+	viewMenu = new wxMenu();
+	langMenu = new wxMenu();
+	helpMenu = new wxMenu();
 
 	// Add items to top-level menus
 	fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
@@ -157,21 +157,6 @@ void MainFrame::SetupMenu()
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
 	
 	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
-	
-	// Setup Menu Images
-#ifndef __WXMAC__
-	fileMenu->FindChildItem(wxID_NEW)->SetBitmap(wxArtProvider::GetBitmap(wxART_NEW, wxART_MENU));
-	fileMenu->FindChildItem(wxID_OPEN)->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_MENU));
-	fileMenu->FindChildItem(wxID_SAVE)->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_MENU));
-	fileMenu->FindChildItem(wxID_SAVEAS)->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS, wxART_MENU));
-	fileMenu->FindChildItem(wxID_EXIT)->SetBitmap(wxArtProvider::GetBitmap(wxART_QUIT, wxART_MENU));
-	
-	editMenu->FindChildItem(wxID_UNDO)->SetBitmap(wxArtProvider::GetBitmap(wxART_UNDO, wxART_MENU));
-	editMenu->FindChildItem(wxID_REDO)->SetBitmap(wxArtProvider::GetBitmap(wxART_REDO, wxART_MENU));
-	editMenu->FindChildItem(wxID_CUT)->SetBitmap(wxArtProvider::GetBitmap(wxART_CUT, wxART_MENU));
-	editMenu->FindChildItem(wxID_COPY)->SetBitmap(wxArtProvider::GetBitmap(wxART_COPY, wxART_MENU));
-	editMenu->FindChildItem(wxID_PASTE)->SetBitmap(wxArtProvider::GetBitmap(wxART_PASTE, wxART_MENU));
-#endif
 
 	// Add the menus to the menubar
 	this->mbar->Append(fileMenu, "&File");

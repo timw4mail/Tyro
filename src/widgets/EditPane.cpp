@@ -28,7 +28,7 @@ EditPane::EditPane(
 	lexerMap["lua"] = wxSTC_LEX_LUA;
 	lexerMap["makefile"] = wxSTC_LEX_MAKEFILE;
 	lexerMap["markdown"] = wxSTC_LEX_MARKDOWN;
-	lexerMap["php"] = wxSTC_LEX_PHPSCRIPT;
+	lexerMap["php"] = wxSTC_LEX_HTML;
 	lexerMap["perl"] = wxSTC_LEX_PERL;
 	lexerMap["python"] = wxSTC_LEX_PYTHON;
 	lexerMap["ruby"] = wxSTC_LEX_RUBY;
@@ -151,7 +151,7 @@ void EditPane::ApplyTheme(string lang, string theme)
 		wxLogDebug(output.str().c_str());
 	}
 	
-	int offset_count = (lang == "php") ? 103 : 0;
+	int offset_count = 0;
 
 	// Do the appropriate mappings to load the selected theme
 	this->_ApplyTheme(lexer_map, offset_count);
