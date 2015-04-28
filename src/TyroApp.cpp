@@ -5,6 +5,7 @@
 #include "wx_common.h"
 
 #include <wx/app.h>
+#include <wx/config.h>
 #include <wx/debug.h>
 
 class TyroApp : public wxApp
@@ -15,6 +16,8 @@ public:
 	virtual int OnExit();
 private:
 };
+
+wxConfigBase *Config;
 
 //**************************************************************
 
@@ -32,6 +35,7 @@ bool TyroApp::OnInit()
 	this->SetAppName(APP_NAME);
 	this->SetVendorName(APP_VENDOR);
 	
+	Config = wxConfigBase::Get();
 	MainFrame* frame = new MainFrame(0L, APP_NAME);
 
 	SetTopWindow(frame);
@@ -50,5 +54,8 @@ bool TyroApp::OnInit()
  */
 int TyroApp::OnExit()
 {
+	// Deallocate config object
+	delete wxConfigBase::Set((wxConfigBase *) NULL);
+	
 	return close(true);
 }

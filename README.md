@@ -46,6 +46,15 @@ Build the app:
 
 See the guide for building on Windows: [Windows-Build](./Windows-Build.md)
 
+## Make commands
+Please note that make commands are chainable. For a typical programming loop, `make clean dev run` is very useful.
+
+* all - Make a release binary in the build folder
+* clean - Remove intermediate build files
+* dev - Make a development binary in the build folder
+* run - Run the current binary in the build folder
+* release - Make a release binary, with the appropriate resources compiled in. Makes an app bundle on OS X, and adds the icon to the program on Windows.
+
 
 
  
