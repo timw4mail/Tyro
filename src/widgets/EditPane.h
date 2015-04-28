@@ -39,6 +39,7 @@ private:
 	bool FileWritable();
 	void BindEvents();
 	void OnMarginClick(wxStyledTextEvent &event);
+	void OnCharAdded(wxStyledTextEvent &event);
 	void SetTheme(string theme_name);
 	JsonValue GetThemeValue(string type, string key);
 	wxColor GetThemeColor(string type, string key);

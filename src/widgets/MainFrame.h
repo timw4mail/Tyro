@@ -43,12 +43,19 @@ class MainFrame: public wxFrame
 		void OnFileClose(wxCommandEvent &event);
 		void OnSave(wxCommandEvent &event);
 		void OnSaveAs(wxCommandEvent &event);
+		
 		void OnEditCut(wxCommandEvent &event);
 		void OnEditCopy(wxCommandEvent &event);
 		void OnEditPaste(wxCommandEvent &event);
 		void OnEditSelectAll(wxCommandEvent &event);
 		void OnEditUndo(wxCommandEvent &event);
 		void OnEditRedo(wxCommandEvent &event);
+		
+		void OnFind (wxCommandEvent &event);
+		void OnFindNext (wxCommandEvent &event);
+		void OnReplace (wxCommandEvent &event);
+		void OnReplaceNext (wxCommandEvent &event);
+		
 		void OnCloseTab(wxCommandEvent &event);
 		void OnToggleWhitespace(wxCommandEvent &event);
 		void OnQuit(wxCommandEvent &event);

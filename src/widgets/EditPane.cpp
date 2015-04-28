@@ -322,6 +322,7 @@ bool EditPane::FileWritable()
 void EditPane::BindEvents()
 {
 	Bind(wxEVT_STC_MARGINCLICK, &EditPane::OnMarginClick, this, wxID_ANY);
+	Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
 }
 
 /**
@@ -338,6 +339,31 @@ void EditPane::OnMarginClick(wxStyledTextEvent& event)
 		if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
 			this->ToggleFold (lineClick);
 		}
+	}
+}
+
+/**
+ * Look at characters added to help with indentation
+ * 
+ * @param wxStyledTextEvent& event
+ * @return void
+ */
+void EditPane::OnCharAdded(wxStyledTextEvent& event)
+{
+	char chr = (char) event.GetKey();
+	int currentLine = this->GetCurrentLine();
+	
+	if (chr == '\n')
+	{
+		int lineInd = 0;
+		if (currentLine > 0)
+		{
+			lineInd = this->GetLineIndentation(currentLine - 1);
+		}
+		if (lineInd == 0) return;
+		
+		this->SetLineIndentation(currentLine, lineInd);
+		this->GotoPos(this->PositionFromLine(currentLine) + (lineInd / 4));
 	}
 }
 
@@ -439,7 +465,7 @@ void EditPane::_ApplyTheme(JsonValue lexer_map, int addtoi)
 	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, default_foreground);
 	this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
 
-	this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, _T("_9999")));
+	this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, _T("_99999")));
 	this->StyleSetForeground (wxSTC_STYLE_LINENUMBER, line_number_foreground);
 	this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
 	this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);

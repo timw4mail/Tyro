@@ -150,6 +150,8 @@ void MainFrame::SetupMenu()
 	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
 	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
 	//editMenu->AppendSeparator();
+	editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
+	editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
 
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
@@ -407,6 +409,18 @@ void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 	
 	editor->SetViewWhiteSpace(flag);
 	editor->SetViewEOL(event.IsChecked());
+}
+
+void MainFrame::OnFind (wxCommandEvent &WXUNUSED(event)) {
+}
+
+void MainFrame::OnFindNext (wxCommandEvent &WXUNUSED(event)) {
+}
+
+void MainFrame::OnReplace (wxCommandEvent &WXUNUSED(event)) {
+}
+
+void MainFrame::OnReplaceNext (wxCommandEvent &WXUNUSED(event)) {
 }
 
 /**
