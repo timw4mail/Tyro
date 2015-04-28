@@ -31,6 +31,7 @@ ifeq ($(OS),Linux)
 	CXX += -std=c++11
 endif
 ifeq ($(OS),Windows_NT)
+	CXXFLAGS = -DNDEBUG -DSTATIC_BUILD
 	CXX += -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32
 endif
@@ -51,31 +52,36 @@ json_wrapper_build:
 build:
 	@mkdir -p build
 
-$(TYRO_LIB): $(OBJECTS)
+$(TYRO_LIB): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
 
 
 $(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS) $(TYRO_LIB)
 $(PROGRAM):
-	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(TYRO_LIB) $(WX_LDLIBS) -o $(PROGRAM)
+	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(TYRO_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
 	
+lib: $(OBJECTS) $(TYRO_LIB)
 
 run:
 	./build/Tyro
 
 
 run-grind:
-	valgrind ./build/Tryo
+	valgrind $(PROGRAM)
 
 # Make optimized and striped executable
-release: all
-	strip -SXx $(PROGRAM)
+release:
 ifeq ($(OS),Darwin)
+	strip -SXx $(PROGRAM)
 	make Tyro.app
 endif
 ifeq ($(OS),Windows_NT)
 	make exe
+endif
+ifeq ($(OS),Linux)
+	make all
+	strip -SXx $(PROGRAM)
 endif
 
 
@@ -84,7 +90,8 @@ msw_resource:
 	$(WX_RES) resources/platform/msw/resource.rc -O coff -o resource.res
 
 exe: LDLIBS += resource.res
-exe: msw_resource all
+exe: json_wrapper_build json_wrapper $(TYRO_LIB)
+exe: msw_resource $(PROGRAM) 
 
 # OS X application bundle	
 Tyro.app: all resources/platform/osx/Info.plist
