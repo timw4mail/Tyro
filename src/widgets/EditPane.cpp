@@ -58,12 +58,8 @@ void EditPane::Highlight(wxString filePath)
 {
 	this->fileName.Assign(filePath);
 
-	wxLogDebug("Highlighting method");
-
 	// Get the configuration name for the selected language
 	string lang = this->GetLangByFile();
-	
-	wxLogDebug("Language selected: %s", lang);
 
 	this->StyleClearAll();
 
@@ -81,6 +77,7 @@ void EditPane::Highlight(wxString filePath)
 	this->SetProperty("technology", "2");
 	this->SetProperty("error.inline", "0");
 	this->SetProperty("styling.within.preprocessor", "1");
+	this->SetProperty("lexer.cpp.track.preprocessor", "1");
 	this->SetProperty("font.quality", "3"); // LCD Optimized
 
 	// Apply the theme
@@ -503,6 +500,12 @@ void EditPane::_ApplyTheme(JsonValue lexer_map, int addtoi)
 		if (this->GetThemeValue("italic", key).isBool())
 		{
 			this->StyleSetItalic(i, this->GetThemeValue("italic", key).asBool());
+		}
+		
+		// Underline
+		if (this->GetThemeValue("underline", key).isBool())
+		{
+			this->StyleSetUnderline(i, this->GetThemeValue("underline", key).asBool());
 		}
 	}
 }

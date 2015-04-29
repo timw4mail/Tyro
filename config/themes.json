@@ -29,6 +29,8 @@
 			"keyword4": [133, 153, 0],
 			"keyword5": [42, 161, 152],
 			"keyword6": [38, 139, 210],
+			"keyword7": [211, 54, 130],
+			"keyword8": [108, 113, 196],
 			"comment": [147, 161, 161],
 			"comment_line": [147, 161, 161],
 			"comment_doc": [131, 148, 150],
@@ -57,14 +59,14 @@
 		"bold": {
 			"operator": true,
 			"label": true,
-			"error": true,
-			"preprocessor": true
+			"preprocessor": true,
+			"comment_special": true
 		},
 		"italic": {
 			"error": true
 		},
 		"underline": {
-			
+			"error": true
 		},
 		"line_numbers": {
 			"foreground": [147, 161, 161],
