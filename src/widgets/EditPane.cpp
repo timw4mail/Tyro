@@ -4,9 +4,7 @@ EditPane::EditPane(
 	wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size
 ) : wxStyledTextCtrl (parent, id, pos, size, wxBORDER_NONE)
 {
-	#include <config/languages_json.h>
-	lang_config = new TyroConfig();
-	lang_config->LoadJson(languages_json);
+	lang_config = new LangConfig();
 
 	#include <config/themes_json.h>
 	theme_config = new TyroConfig();
@@ -59,7 +57,7 @@ void EditPane::Highlight(wxString filePath)
 	this->fileName.Assign(filePath);
 
 	// Get the configuration name for the selected language
-	string lang = this->GetLangByFile();
+	string lang = lang_config->GetLangByFile(this->fileName);
 
 	this->StyleClearAll();
 
@@ -124,11 +122,10 @@ void EditPane::ApplyTheme(string lang, string theme)
 {
 	this->SetTheme(theme);
 
-	JsonValue lang_list = lang_config->GetRoot();
-	JsonValue lexer_map = lang_list.get(lang, JsonValue()).get("lexer_map", JsonValue());
-
-	// Get the list of keywords for the current language
-	JsonValue keywords_array = this->GetKeywordList(lang);
+	// Get the keywords and mapping for the selected language
+	JsonValue lexer_map = lang_config->GetLexerMap(lang);
+	JsonValue keywords_array = lang_config->GetKeywordList(lang);
+	
 	if (keywords_array.isArray())
 	{
 		for(unsigned int i = 0; i < keywords_array.size(); i++)
@@ -147,11 +144,9 @@ void EditPane::ApplyTheme(string lang, string theme)
 
 		wxLogDebug(output.str().c_str());
 	}
-	
-	int offset_count = 0;
 
 	// Do the appropriate mappings to load the selected theme
-	this->_ApplyTheme(lexer_map, offset_count);
+	this->_ApplyTheme(lexer_map);
 }
 
 /**
@@ -175,50 +170,6 @@ bool EditPane::Load(wxString filePath)
 	}
 
 	return false;
-}
-
-/**
- * Determine the format of the current file by
- * matching its extension against the patterns
- * in the configuration files
- *
- * @return string
- */
-string EditPane::GetLangByFile()
-{
-	JsonValue langList = lang_config->GetRoot();
-	JsonValue::iterator it;
-
-	wxString curr_file = this->fileName.GetFullName();
-
-	// Loop through each language to find a matching file pattern
-	for (it = langList.begin(); it != langList.end(); ++it)
-	{
-		string lang = it.key().asString();
-
-		// Parse the file pattern
-		wxString file_pattern((*it)["file_pattern"].asString());
-
-		file_pattern.Lower();
-
-		while ( ! file_pattern.empty())
-		{
-			wxString cur = file_pattern.BeforeFirst(';');
-			if (
-				(cur == curr_file) ||
-				(cur == (curr_file.BeforeLast('.') + ".*")) ||
-				(cur == ("*." + curr_file.AfterLast('.')))
-			)
-			{
-				return lang;
-			}
-			
-			// Go to the next pattern for this language
-			file_pattern = file_pattern.AfterFirst(';');
-		}
-	}
-
-	return "";
 }
 
 bool EditPane::SaveFile()
@@ -365,19 +316,6 @@ void EditPane::OnCharAdded(wxStyledTextEvent& event)
 }
 
 /**
- * Get the list of keywords for the selected language
- * 
- * @param string lang
- * @return JsonValue
- */
-JsonValue EditPane::GetKeywordList(string lang)
-{
-	return lang_config->GetRoot()
-		.get(lang, JsonValue())
-		.get("keywords", JsonValue());
-}
-
-/**
  * Retrieve a setting from the current theme
  * 
  * @param string type
@@ -424,7 +362,7 @@ wxColor EditPane::GetThemeColor(string type, string key)
  * @param int addtoi - Offset for some languages
  * @return void
  */
-void EditPane::_ApplyTheme(JsonValue lexer_map, int addtoi)
+void EditPane::_ApplyTheme(JsonValue &lexer_map)
 {
 	// Font setup
 #ifdef __WXMAC__
@@ -467,13 +405,11 @@ void EditPane::_ApplyTheme(JsonValue lexer_map, int addtoi)
 	this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
 	this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
 
-	int min = 0 + addtoi;
-	int max = lexer_map.size() + addtoi;
+	int max = lexer_map.size();
 	
-	for (int i = min; i < max; i++)
+	for (int i = 0; i < max; i++)
 	{
-		int n = i - addtoi;
-		string key = lexer_map[n].asString();
+		string key = lexer_map[i].asString();
 		
 		//wxLogDebug("Token type: %s", key);
 		//wxLogDebug("Lexer constant: %i", i);

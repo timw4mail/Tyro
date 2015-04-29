@@ -2,7 +2,8 @@
 #define TYROEDIT_PANE_H
 
 #include "../wx_common.h"
-#include "../settings/Config.h"
+#include "../base/settings/Config.h"
+#include "../settings/LangConfig.h"
 
 #include <wx/stc/stc.h>
 
@@ -17,7 +18,6 @@ public:
 	);
 	~EditPane();
 	wxFileName fileName;
-	string GetLangByFile();
 	bool Load(wxString filePath);
 	void Highlight(wxString filePath);
 	bool SaveFile();
@@ -26,10 +26,10 @@ public:
 private:
 	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;
-	TyroConfig *lang_config;
+	LangConfig *lang_config;
 	TyroConfig *theme_config;
 	JsonValue current_theme;
-	enum
+	enum myMargins
 	{
 		MARGIN_FOLD,
 		MARGIN_SYMBOL,
@@ -43,8 +43,7 @@ private:
 	void SetTheme(string theme_name);
 	JsonValue GetThemeValue(string type, string key);
 	wxColor GetThemeColor(string type, string key);
-	JsonValue GetKeywordList(string lang);
-	void _ApplyTheme(JsonValue lexer_map, int addtoi=0);
+	void _ApplyTheme(JsonValue &lexer_map);
 };
 
 #endif // TYRODOC_FRAME_H

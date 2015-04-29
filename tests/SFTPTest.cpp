@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "../src/network/SFTP.h"
+#include "../src/base/network/SFTP.h"
 
 
 TEST_CASE("ssh connections work", "[SFTP]") {

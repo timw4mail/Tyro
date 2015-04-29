@@ -1,10 +1,10 @@
-SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/network/*.cpp src/settings/*.cpp)
+SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/base/**/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
 TYRO_LIB = build/Tyro.a
 
 JSON_FILES = $(patsubst config/%.json,%.json, $(wildcard config/*.json))
 
-PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
+PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp src/settings/*.cpp)
 PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC)) 
 
@@ -29,11 +29,7 @@ else
 	WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 endif
 
-ifeq ($(OS),Darwin)
-	LDLIBS += /usr/local/lib/libssh2.a
-else
-	LDLIBS += -lssh2
-endif
+LDLIBS += -lssh2
 
 # Platform compiler flags
 ifeq ($(OS),Darwin)
@@ -52,7 +48,7 @@ CXX += -I include -I.
 
 all: build json_wrapper $(TYRO_LIB) $(PROGRAM)
 
-dev: CXXFLAGS= $(DEV_CXXFLAGS)
+dev: CXXFLAGS = $(DEV_CXXFLAGS)
 dev: all
 	
 json_wrapper: json_wrapper_build
@@ -121,7 +117,7 @@ Tyro.app: all
 	cp resources/platform/osx/tyro.icns build/Tyro.app/Contents/Resources/
 
 $(TESTS): $(TYRO_LIB)
-	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(TYRO_LIB) $(LDLIBS) -o $(patsubst %.cpp,%, $(var));)
+	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(TYRO_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(patsubst %.cpp,%, $(var));)
 
 .PHONY: tests	
 tests: $(TESTS)
