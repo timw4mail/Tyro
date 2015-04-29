@@ -17,7 +17,8 @@ enum myMenuItemIds {
 	myID_VIEW_WHITESPACE = wxID_HIGHEST,
 	myID_VIEW_LINE_ENDINGS,
 	myID_CLOSE_ALL,
-	myID_CLOSE_ALL_BUT_THIS
+	myID_CLOSE_ALL_BUT_THIS,
+	myID_LINE_WRAP
 };
 
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
@@ -155,6 +156,7 @@ void MainFrame::SetupMenu()
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
 
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
+	viewMenu->AppendCheckItem(myID_LINE_WRAP, "Wrap Lines", "Toggle line wrapping");
 	
 	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
 
@@ -196,6 +198,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditRedo, this, wxID_REDO);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
 	Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &MainFrame::OnTabContextMenu, this, wxID_ANY);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
 }
 
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
@@ -411,16 +414,30 @@ void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 	editor->SetViewEOL(event.IsChecked());
 }
 
-void MainFrame::OnFind (wxCommandEvent &WXUNUSED(event)) {
+void MainFrame::OnFind(wxCommandEvent &WXUNUSED(event)) 
+{
 }
 
-void MainFrame::OnFindNext (wxCommandEvent &WXUNUSED(event)) {
+void MainFrame::OnFindNext(wxCommandEvent &WXUNUSED(event)) 
+{
 }
 
-void MainFrame::OnReplace (wxCommandEvent &WXUNUSED(event)) {
+void MainFrame::OnReplace(wxCommandEvent &WXUNUSED(event)) 
+{
 }
 
-void MainFrame::OnReplaceNext (wxCommandEvent &WXUNUSED(event)) {
+void MainFrame::OnReplaceNext(wxCommandEvent &WXUNUSED(event)) 
+{
+}
+
+void MainFrame::OnToggleLineWrap(wxCommandEvent &event)
+{
+	EditPane *editor = notebook->GetCurrentEditor();
+	int flag = (event.IsChecked())
+		? wxSTC_WRAP_WORD
+		: wxSTC_WRAP_NONE;
+	
+	editor->SetWrapMode(flag);
 }
 
 /**

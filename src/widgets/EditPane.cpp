@@ -101,7 +101,7 @@ void EditPane::Highlight(wxString filePath)
 	this->MarkerDefine (wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
 	this->MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
 
-	this->SetLayoutCache (wxSTC_CACHE_CARET);
+	this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
 
 	// set spaces and indention
 	this->SetTabWidth(4);

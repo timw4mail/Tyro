@@ -51,13 +51,14 @@ class MainFrame: public wxFrame
 		void OnEditUndo(wxCommandEvent &event);
 		void OnEditRedo(wxCommandEvent &event);
 		
-		void OnFind (wxCommandEvent &event);
-		void OnFindNext (wxCommandEvent &event);
-		void OnReplace (wxCommandEvent &event);
-		void OnReplaceNext (wxCommandEvent &event);
+		void OnFind(wxCommandEvent &event);
+		void OnFindNext(wxCommandEvent &event);
+		void OnReplace(wxCommandEvent &event);
+		void OnReplaceNext(wxCommandEvent &event);
+		void OnToggleWhitespace(wxCommandEvent &event);
+		void OnToggleLineWrap(wxCommandEvent &event);
 		
 		void OnCloseTab(wxCommandEvent &event);
-		void OnToggleWhitespace(wxCommandEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
 
