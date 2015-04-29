@@ -8,5 +8,7 @@
 	<string>Tyro</string>
 	<key>CFBundleIconFile</key>
 	<string>tyro.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>net.timshomepage.Tyro</string>
 </dict>
 </plist>

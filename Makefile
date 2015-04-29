@@ -1,5 +1,3 @@
-CXX += -I include -I.
-
 SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/network/*.cpp src/settings/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
 TYRO_LIB = build/Tyro.a
@@ -10,33 +8,47 @@ PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp)
 PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC)) 
 
-WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
-WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 WX_RES = $(shell wx-config --rescomp)
 
-DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG -DSTATIC_BUILD
-CXXFLAGS = -Os -DNDEBUG -DSTATIC_BUILD
+DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG
+CXXFLAGS = -Os -DNDEBUG
 
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 
-OS ?= $(shell uname -s)
-
 LDLIBS =
 
+OS ?= $(shell uname -s)
+
+# Get static version of libs to link to on platforms that support it
+ifneq ($(OS),Linux)
+	WX_CXXFLAGS = $(shell wx-config --static --cxxflags)
+	WX_LDLIBS = $(shell wx-config --static --libs base core aui stc adv)
+else
+	WX_CXXFLAGS =  $(shell wx-config --cxxflags)
+	WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
+endif
+
 ifeq ($(OS),Darwin)
-	CXX += -std=c++98 -mmacosx-version-min=10.5
+	LDLIBS += /usr/local/lib/libssh2.a
+else
+	LDLIBS += -lssh2
+endif
+
+# Platform compiler flags
+ifeq ($(OS),Darwin)
+	CXX = clang++ -std=c++98 -mmacosx-version-min=10.5
 endif
 ifeq ($(OS),Linux)
 	CXX += -std=c++11
 endif
 ifeq ($(OS),Windows_NT)
-	CXXFLAGS = -DNDEBUG -DSTATIC_BUILD
+	CXXFLAGS = -DNDEBUG -DSTATIC_BUILD -static
 	CXX += -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32
 endif
 
-LDLIBS += -lssh2
+CXX += -I include -I.
 
 all: build json_wrapper $(TYRO_LIB) $(PROGRAM)
 
@@ -57,7 +69,7 @@ $(TYRO_LIB): build $(OBJECTS)
 	ranlib $@
 
 
-$(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS) $(TYRO_LIB)
+$(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS)
 $(PROGRAM):
 	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(TYRO_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
 	
@@ -73,6 +85,7 @@ run-grind:
 # Make optimized and striped executable
 release:
 ifeq ($(OS),Darwin)
+	make all
 	strip -SXx $(PROGRAM)
 	make Tyro.app
 endif
@@ -93,18 +106,19 @@ exe: LDLIBS += resource.res
 exe: json_wrapper_build json_wrapper $(TYRO_LIB)
 exe: msw_resource $(PROGRAM) 
 
-# OS X application bundle	
-Tyro.app: all resources/platform/osx/Info.plist
+# OS X application bundle
+Tyro.app: CXXFLAGS += -static	
+Tyro.app: all
 	SetFile -t APPL $(TYRO_LIB)
-	-mkdir Tyro.app
-	-mkdir Tyro.app/Contents
-	-mkdir Tyro.app/Contents/MacOS
-	-mkdir Tyro.app/Contents/Resources
-	-mkdir Tyro.app/Contents/Resources/English.lproj
-	cp resources/platform/osx/Info.plist Tyro.app/Contents/
-	echo -n 'APPL????' > Tyro.app/Contents/PkgInfo
-	cp build/Tyro Tyro.app/Contents/MacOS/Tyro
-	cp resources/platform/osx/tyro.icns Tyro.app/Contents/Resources/
+	-mkdir -p build/Tyro.app
+	-mkdir -p build/Tyro.app/Contents
+	-mkdir -p build/Tyro.app/Contents/MacOS
+	-mkdir -p build/Tyro.app/Contents/Resources
+	-mkdir -p build/Tyro.app/Contents/Resources/English.lproj
+	cp resources/platform/osx/Info.plist build/Tyro.app/Contents/
+	echo -n 'APPL????' > build/Tyro.app/Contents/PkgInfo
+	cp build/Tyro build/Tyro.app/Contents/MacOS/Tyro
+	cp resources/platform/osx/tyro.icns build/Tyro.app/Contents/Resources/
 
 $(TESTS): $(TYRO_LIB)
 	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(TYRO_LIB) $(LDLIBS) -o $(patsubst %.cpp,%, $(var));)
@@ -119,7 +133,7 @@ clean:
 	rm -f config/json2c.exe
 	rm -f config/*_json.h
 	rm -rf *.o
-	rm -rf Tyro.app
+	rm -rf build/Tyro.app
 	rm -rf build $(OBJECTS) $(PROGRAM) $(TYRO_LIB) $(TESTS)
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
