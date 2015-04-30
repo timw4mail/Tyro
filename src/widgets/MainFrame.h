@@ -33,6 +33,7 @@ class MainFrame: public wxFrame
 		void SetupStatusBar();
 		void BindEvents();
 		void EnableEditControls(bool enable=true);
+		void EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable=true);
 		
 		// Main Menu Event handlers
 		void OnNew(wxCommandEvent &event);

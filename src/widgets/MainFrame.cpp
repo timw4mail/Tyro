@@ -151,8 +151,8 @@ void MainFrame::SetupMenu()
 	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
 	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
 	//editMenu->AppendSeparator();
-	editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
-	editMenu->AppendSeparator();
+	//editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
+	//editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
 
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
@@ -454,9 +454,9 @@ void MainFrame::EnableEditControls(bool enable)
 	this->fileMenu->Enable(myID_CLOSE_ALL, enable);
 	
 	// Enable/disable top level menus
-	this->mbar->EnableTop(myEDIT_MENU, enable);
-	this->mbar->EnableTop(myVIEW_MENU, enable);
-	this->mbar->EnableTop(myLANG_MENU, enable);
+	this->EnableEntireMenu(myEDIT_MENU, this->editMenu, enable);
+	this->EnableEntireMenu(myVIEW_MENU, this->viewMenu, enable);
+	this->EnableEntireMenu(myLANG_MENU, this->langMenu, enable);
 	
 	this->toolBar->EnableTool(wxID_SAVE, enable);
 	this->toolBar->EnableTool(wxID_CLOSE, enable);
@@ -465,6 +465,36 @@ void MainFrame::EnableEditControls(bool enable)
 	this->toolBar->EnableTool(wxID_PASTE, enable);
 }
 
+/**
+ * Enable/disable all the items in the menu, for environments
+ * that don't properly support disabling the menu by the parent label (like Ubuntu's Unity)
+ *
+ * @param size_t menuId
+ * @param wxMenu* menu
+ * @param bool enable
+ * @return void
+ */ 
+void MainFrame::EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable)
+{
+	// Toggle the top of the menu
+	this->mbar->EnableTop(menuId, enable);
+	
+	// Toggle the rest of the items in the menu
+	wxMenuItemList list = menu->GetMenuItems();
+	wxMenuItemList::iterator iter;
+	
+	for(iter = list.begin(); iter != list.end(); ++iter)
+	{
+		wxMenuItem *current = *iter;
+		current->Enable(enable);
+	}
+}
+
+/**
+ * Displays a context menu on the current tab
+ * 
+ * @return void
+ */ 
 void MainFrame::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	// Create Menu
