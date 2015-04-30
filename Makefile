@@ -29,19 +29,19 @@ else
 	WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 endif
 
-LDLIBS += -lssh2
-
 # Platform compiler flags
 ifeq ($(OS),Darwin)
 	CXX = clang++ -std=c++98 -mmacosx-version-min=10.5
+	LDLIBS += /usr/local/lib/libssh2.a
 endif
 ifeq ($(OS),Linux)
 	CXX += -std=c++11
+	LDLIBS += -lssh2
 endif
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS = -DNDEBUG -DSTATIC_BUILD -static
 	CXX += -I/include -DWIN32
-	LDLIBS += -L/lib -lwsock32
+	LDLIBS += -L/lib -lwsock32 -lssh2
 endif
 
 CXX += -I include -I.
