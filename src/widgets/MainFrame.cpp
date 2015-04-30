@@ -3,28 +3,12 @@
  */
 #include "MainFrame.h"
 
-// Top level menus
-enum myMenuIds {
-	myFILE_MENU,
-	myEDIT_MENU,
-	myVIEW_MENU,
-	myLANG_MENU,
-	myHELP_MENU
-};
-
-// Menu ids
-enum myMenuItemIds {
-	myID_VIEW_WHITESPACE = wxID_HIGHEST,
-	myID_VIEW_LINE_ENDINGS,
-	myID_CLOSE_ALL,
-	myID_CLOSE_ALL_BUT_THIS,
-	myID_LINE_WRAP
-};
-
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
 {
 	#include "../../resources/xpm/tyro.xpm"
+
+	findReplaceData = new wxFindReplaceData();
 	
 	wxIcon app_icon(tyro_icon);
 	this->SetIcon(app_icon);
@@ -148,15 +132,15 @@ void MainFrame::SetupMenu()
 	editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
 	editMenu->Append(wxID_CLEAR, "&Delete\tDel");
 	editMenu->AppendSeparator();
-	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
-	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
-	//editMenu->AppendSeparator();
+	editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
+	editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
+	editMenu->AppendSeparator();
 	//editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
 	//editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
 
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
-	viewMenu->AppendCheckItem(myID_LINE_WRAP, "Wrap Lines", "Toggle line wrapping");
+	viewMenu->AppendCheckItem(myID_LINE_WRAP, "Word Wrap", "Toggle wrapping of long lines");
 	
 	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
 
@@ -180,25 +164,43 @@ void MainFrame::SetupMenu()
  */
 void MainFrame::BindEvents()
 {
+	// File Menu Events
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnNew, this, wxID_NEW);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnOpen, this, wxID_OPEN);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSave, this, wxID_SAVE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
-	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &MainFrame::OnClose, this, wxID_ANY);
-	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &MainFrame::OnClosed, this, wxID_ANY);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseTab, this, wxID_CLOSE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseAll, this, myID_CLOSE_ALL);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
+	
+	// Edit Menu Events
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCut, this, wxID_CUT);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCopy, this, wxID_COPY);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditPaste, this, wxID_PASTE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditSelectAll, this, wxID_SELECTALL);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditUndo, this, wxID_UNDO);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditRedo, this, wxID_REDO);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditFind, this, wxID_FIND);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditReplace, this, wxID_REPLACE);
+	
+	// View Menu Events
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
-	Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &MainFrame::OnTabContextMenu, this, wxID_ANY);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
+	
+	// Notebook Events
+	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &MainFrame::OnClose, this, wxID_ANY);
+	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &MainFrame::OnClosed, this, wxID_ANY);
+	Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &MainFrame::OnTabContextMenu, this, wxID_ANY);
+	
+	// Find/Replace Events
+	Bind(wxEVT_FIND, &MainFrame::OnFindDialog, this, wxID_ANY);
+	Bind(wxEVT_FIND_NEXT, &MainFrame::OnFindDialog, this, wxID_ANY);
+	Bind(wxEVT_FIND_REPLACE, &MainFrame::OnFindDialog, this, wxID_ANY);
+	Bind(wxEVT_FIND_REPLACE_ALL, &MainFrame::OnFindDialog, this, wxID_ANY);
+	Bind(wxEVT_FIND_CLOSE, &MainFrame::OnFindDialog, this, wxID_ANY);
+	
+	// Help Menu Events
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
 
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
@@ -386,7 +388,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	wxAboutDialogInfo info;
 	
 	info.SetName(APP_NAME);
-	info.SetVersion(APP_VERSION, "Prerelease");
+	info.SetVersion(APP_VERSION, APP_VERSION_MORE);
 	
 	info.AddDeveloper("Tim Warren, Programmer");
 	info.AddArtist("Brian Smith, Icon");
@@ -414,20 +416,96 @@ void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 	editor->SetViewEOL(event.IsChecked());
 }
 
-void MainFrame::OnFind(wxCommandEvent &WXUNUSED(event)) 
+void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event)) 
 {
+	if (findDlg)
+	{
+		wxDELETE(findDlg);
+	}
+	else
+	{
+		findDlg = new wxFindReplaceDialog(
+			this,
+			findReplaceData,
+			"Find"
+		);
+		
+		findDlg->Show(true);
+	}
 }
 
-void MainFrame::OnFindNext(wxCommandEvent &WXUNUSED(event)) 
+void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event)) 
 {
+	if (replaceDlg)
+	{
+		wxDELETE(replaceDlg);
+	}
+	else
+	{
+		replaceDlg = new wxFindReplaceDialog(
+			this, 
+			findReplaceData,
+			"Find and Replace",
+			wxFR_REPLACEDIALOG
+		);
+		
+		replaceDlg->Show(true);
+	}
 }
 
-void MainFrame::OnReplace(wxCommandEvent &WXUNUSED(event)) 
+/**
+ * Handles events coming from find dialog
+ * @param event
+ */
+void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 {
-}
-
-void MainFrame::OnReplaceNext(wxCommandEvent &WXUNUSED(event)) 
-{
+	wxEventType type = event.GetEventType();
+	EditPane *editor = notebook->GetCurrentEditor();
+	
+	// Parse flags
+	int stc_flags = 0;
+	int fr_flags = event.GetFlags();
+	
+	if ((fr_flags & wxFR_WHOLEWORD) != 0) stc_flags |= wxSTC_FIND_WHOLEWORD;
+	if ((fr_flags & wxFR_MATCHCASE) != 0) stc_flags |= wxSTC_FIND_MATCHCASE;
+	
+	// Send find flags to editor control
+	editor->SetSearchFlags(stc_flags);
+	
+	if (type == wxEVT_FIND)
+	{
+		editor->SearchAnchor(); // Set staring search position at current position
+		editor->SearchNext(stc_flags, event.GetFindString());
+	}
+	else if (type == wxEVT_FIND_NEXT)
+	{
+		editor->SearchAnchor();
+		if ((fr_flags & wxFR_DOWN) != 0)
+		{
+			editor->SearchNext(stc_flags, event.GetFindString());
+		}
+		else
+		{
+			editor->SearchPrev(stc_flags, event.GetFindString());
+		}
+		
+	}
+	else if (type == wxEVT_FIND_REPLACE)
+	{
+		
+	}
+	else if (type == wxEVT_FIND_REPLACE_ALL)
+	{
+		
+	}
+	else if (type == wxEVT_FIND_CLOSE)
+	{
+		event.GetDialog()->Destroy();
+	}
+	else
+	{
+		
+	}
 }
 
 void MainFrame::OnToggleLineWrap(wxCommandEvent &event)

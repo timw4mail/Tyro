@@ -9,6 +9,7 @@ PROGRAM = build/Tyro
 PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC)) 
 
 WX_RES = $(shell wx-config --rescomp)
+WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 
 DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG
 CXXFLAGS = -Os -DNDEBUG
@@ -22,10 +23,8 @@ OS ?= $(shell uname -s)
 
 # Get static version of libs to link to on platforms that support it
 ifneq ($(OS),Linux)
-	WX_CXXFLAGS = $(shell wx-config --static --cxxflags)
 	WX_LDLIBS = $(shell wx-config --static --libs base core aui stc adv)
 else
-	WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 	WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 endif
 

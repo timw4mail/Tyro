@@ -4,7 +4,7 @@ In order to keep a consistent build system, Tyro is built with MinGW and Msys. T
 
 ## Build Environment Setup:
 
-1. Download MinGW installer
+1. Download MinGW [installer](http://www.mingw.org/download/installer)
 2. Install MinGW & MSyS (at least the following packages)
 
 	* mingw-developer-toolkit

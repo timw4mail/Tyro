@@ -10,6 +10,7 @@
 #include <wx/cmdline.h>
 #include <wx/config.h>
 #include <wx/aboutdlg.h>
+#include <wx/fdrepdlg.h>
 
 #include "TabContainer.h"
 
@@ -28,6 +29,9 @@ class MainFrame: public wxFrame
 		wxMenu *viewMenu;
 		wxMenu *langMenu;
 		wxMenu *helpMenu;
+		wxFindReplaceData *findReplaceData;
+		wxFindReplaceDialog *findDlg;
+		wxFindReplaceDialog *replaceDlg;
 		void SetupMenu();
 		void SetupToolbar();
 		void SetupStatusBar();
@@ -52,10 +56,9 @@ class MainFrame: public wxFrame
 		void OnEditUndo(wxCommandEvent &event);
 		void OnEditRedo(wxCommandEvent &event);
 		
-		void OnFind(wxCommandEvent &event);
-		void OnFindNext(wxCommandEvent &event);
-		void OnReplace(wxCommandEvent &event);
-		void OnReplaceNext(wxCommandEvent &event);
+		void OnEditFind(wxCommandEvent &event);
+		void OnEditReplace(wxCommandEvent &event);
+		void OnFindDialog(wxFindDialogEvent &event);
 		void OnToggleWhitespace(wxCommandEvent &event);
 		void OnToggleLineWrap(wxCommandEvent &event);
 		
