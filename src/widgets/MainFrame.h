@@ -61,6 +61,7 @@ class MainFrame: public wxFrame
 		void OnFindDialog(wxFindDialogEvent &event);
 		void OnToggleWhitespace(wxCommandEvent &event);
 		void OnToggleLineWrap(wxCommandEvent &event);
+		void OnToggleLineEndings(wxCommandEvent &event);
 		
 		void OnCloseTab(wxCommandEvent &event);
 		void OnQuit(wxCommandEvent &event);

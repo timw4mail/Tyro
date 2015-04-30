@@ -132,14 +132,15 @@ void MainFrame::SetupMenu()
 	editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
 	editMenu->Append(wxID_CLEAR, "&Delete\tDel");
 	editMenu->AppendSeparator();
-	editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
-	editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
-	editMenu->AppendSeparator();
+	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
+	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
+	//editMenu->AppendSeparator();
 	//editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
 	//editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
 
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
+	viewMenu->AppendCheckItem(myID_VIEW_LINE_ENDINGS, "Show line endings", "Toggle visibility of line ending characters");
 	viewMenu->AppendCheckItem(myID_LINE_WRAP, "Word Wrap", "Toggle wrapping of long lines");
 	
 	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
@@ -186,6 +187,7 @@ void MainFrame::BindEvents()
 	// View Menu Events
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineEndings, this, myID_VIEW_LINE_ENDINGS);
 	
 	// Notebook Events
 	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &MainFrame::OnClose, this, wxID_ANY);
@@ -296,9 +298,17 @@ void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 	this->EnableEditControls(false);
 }
 
-void MainFrame::OnSave(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnSave(wxCommandEvent &event)
 {
 	EditPane *editor = notebook->GetCurrentEditor();
+	
+	// Check if the filename is set for the current file
+	if ( ! editor->fileName.IsOk())
+	{
+		this->OnSaveAs(event);
+		return;
+	}
+	
 	editor->SaveFile();
 }
 
@@ -413,7 +423,6 @@ void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 		: wxSTC_WS_INVISIBLE;
 	
 	editor->SetViewWhiteSpace(flag);
-	editor->SetViewEOL(event.IsChecked());
 }
 
 void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event)) 
@@ -479,7 +488,6 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	}
 	else if (type == wxEVT_FIND_NEXT)
 	{
-		editor->SearchAnchor();
 		if ((fr_flags & wxFR_DOWN) != 0)
 		{
 			editor->SearchNext(stc_flags, event.GetFindString());
@@ -488,7 +496,7 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 		{
 			editor->SearchPrev(stc_flags, event.GetFindString());
 		}
-		
+		editor->SearchAnchor();
 	}
 	else if (type == wxEVT_FIND_REPLACE)
 	{
@@ -502,10 +510,6 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	{
 		event.GetDialog()->Destroy();
 	}
-	else
-	{
-		
-	}
 }
 
 void MainFrame::OnToggleLineWrap(wxCommandEvent &event)
@@ -516,6 +520,17 @@ void MainFrame::OnToggleLineWrap(wxCommandEvent &event)
 		: wxSTC_WRAP_NONE;
 	
 	editor->SetWrapMode(flag);
+}
+
+/**
+ * Toggle display of line ending characters
+ * 
+ * @param wxCommandEvent& event
+ * @return void
+ */
+void MainFrame::OnToggleLineEndings(wxCommandEvent &event)
+{
+	notebook->GetCurrentEditor()->SetViewEOL(event.IsChecked());
 }
 
 /**

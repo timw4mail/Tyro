@@ -38,7 +38,7 @@ ifeq ($(OS),Linux)
 	LDLIBS += -lssh2
 endif
 ifeq ($(OS),Windows_NT)
-	CXXFLAGS = -DNDEBUG -DSTATIC_BUILD -static
+	CXXFLAGS = -DNDEBUG -static
 	CXX += -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32 -lssh2
 endif
@@ -86,6 +86,7 @@ ifeq ($(OS),Darwin)
 endif
 ifeq ($(OS),Windows_NT)
 	make exe
+	strip -SXx $(PROGRAM).exe
 endif
 ifeq ($(OS),Linux)
 	make all
