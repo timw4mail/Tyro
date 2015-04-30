@@ -5,8 +5,8 @@ bin/*
 obj/*
 build/*
 **/*.o
-Tyro.app/*
-nbproject/private/*
+nbproject/*
+.idea/*
 config/*_json.h
 config/json2c
 **/*.exe
