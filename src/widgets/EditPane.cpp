@@ -37,6 +37,41 @@ EditPane::EditPane(
 	lexerMap["yaml"] = wxSTC_LEX_YAML;
 
 	this->BindEvents();
+	
+	// Some basic properties to set
+	this->SetStyleBits(8);
+	this->SetScrollWidthTracking(true);// Set scroll width by longest line
+	this->SetProperty("technology", "2");
+	this->SetProperty("error.inline", "0");
+	this->SetProperty("styling.within.preprocessor", "1");
+	this->SetProperty("lexer.cpp.track.preprocessor", "1");
+	this->SetProperty("font.quality", "3"); // LCD Optimized
+	
+	// Set up Code folding
+	this->SetProperty("fold", "1");
+	this->SetProperty("fold.comment", "1");
+	this->SetProperty("fold.compact", "1");
+	this->SetProperty("fold.html", "1");
+	this->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
+	this->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
+	this->SetMarginWidth(MARGIN_FOLD, 16);
+	this->SetMarginSensitive(MARGIN_FOLD, true);
+	this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
+	this->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
+	this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
+	this->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,     "BLACK", "BLACK");
+	this->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
+	this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
+	this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
+	this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
+	
+	this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
+
+	// set spaces and indention
+	this->SetTabWidth(4);
+	
+	// Blank highlight
+	this->Highlight("");
 }
 
 EditPane::~EditPane()
@@ -70,39 +105,8 @@ void EditPane::Highlight(wxString filePath)
 		this->SetLexer(wxSTC_LEX_NULL);
 	}
 
-	// Some basic properties to set
-	this->SetStyleBits(8);
-	this->SetProperty("technology", "2");
-	this->SetProperty("error.inline", "0");
-	this->SetProperty("styling.within.preprocessor", "1");
-	this->SetProperty("lexer.cpp.track.preprocessor", "1");
-	this->SetProperty("font.quality", "3"); // LCD Optimized
-
 	// Apply the theme
 	this->ApplyTheme(lang);
-
-	// Set up Code folding
-	this->SetProperty("fold", "1");
-	this->SetProperty("fold.comment", "1");
-	this->SetProperty("fold.compact", "1");
-	this->SetProperty("fold.html", "1");
-	this->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
-	this->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
-	this->SetMarginWidth(MARGIN_FOLD, 16);
-	this->SetMarginSensitive(MARGIN_FOLD, true);
-	this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDER,        wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPEN,    wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDERSUB,     wxSTC_MARK_VLINE,     "BLACK", "BLACK");
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDEREND,     wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
-	this->MarkerDefine (wxSTC_MARKNUM_FOLDERTAIL,    wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
-
-	this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
-
-	// set spaces and indention
-	this->SetTabWidth(4);
 
 	bool use_tabs = (lang != "yaml");
 
@@ -400,7 +404,7 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, default_foreground);
 	this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
 
-	this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, _T("_99999")));
+	this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, "_999"));
 	this->StyleSetForeground (wxSTC_STYLE_LINENUMBER, line_number_foreground);
 	this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
 	this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);

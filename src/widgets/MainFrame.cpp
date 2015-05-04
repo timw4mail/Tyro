@@ -8,7 +8,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 {
 	#include "../../resources/xpm/tyro.xpm"
 
-	findReplaceData = new wxFindReplaceData();
+	findReplaceData = new wxFindReplaceData(wxFR_DOWN);
 	
 	wxIcon app_icon(tyro_icon);
 	this->SetIcon(app_icon);
@@ -475,39 +475,70 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	int stc_flags = 0;
 	int fr_flags = event.GetFlags();
 	
-	if ((fr_flags & wxFR_WHOLEWORD) != 0) stc_flags |= wxSTC_FIND_WHOLEWORD;
-	if ((fr_flags & wxFR_MATCHCASE) != 0) stc_flags |= wxSTC_FIND_MATCHCASE;
+	if (fr_flags & wxFR_WHOLEWORD) stc_flags |= wxSTC_FIND_WHOLEWORD;
+	if (fr_flags & wxFR_MATCHCASE) stc_flags |= wxSTC_FIND_MATCHCASE;
+	
+	// Position after search
+	int new_pos = 0;
+	int new_line = 1;
 	
 	// Send find flags to editor control
 	editor->SetSearchFlags(stc_flags);
-	
+	  
 	if (type == wxEVT_FIND)
 	{
-		editor->SearchAnchor(); // Set staring search position at current position
-		editor->SearchNext(stc_flags, event.GetFindString());
-	}
-	else if (type == wxEVT_FIND_NEXT)
-	{
+		wxLogDebug("wxEVT_FIND");
+		
+		editor->SearchAnchor();
+		
 		if ((fr_flags & wxFR_DOWN) != 0)
 		{
-			editor->SearchNext(stc_flags, event.GetFindString());
+			new_pos = editor->SearchNext(stc_flags, event.GetFindString());
 		}
 		else
 		{
-			editor->SearchPrev(stc_flags, event.GetFindString());
+			new_pos = editor->SearchPrev(stc_flags, event.GetFindString());
 		}
-		editor->SearchAnchor();
+		
+		if (new_pos >= 0)
+		{
+			new_line = editor->LineFromPosition(new_pos);
+			editor->ScrollToLine(new_line);
+		}
+	}
+	else if (type == wxEVT_FIND_NEXT)
+	{
+		wxLogDebug("wxEVT_FIND_NEXT");
+		
+		if ((fr_flags & wxFR_DOWN) != 0)
+		{
+			new_pos = editor->SearchNext(stc_flags, event.GetFindString());
+		}
+		else
+		{
+			new_pos = editor->SearchPrev(stc_flags, event.GetFindString());
+		}
+		
+		if (new_pos >= 0)
+		{
+			/*editor->SetSelectionStart(editor->GetAnchor());
+			editor->SetSelectionEnd(new_pos);*/
+			
+			new_line = editor->LineFromPosition(new_pos);
+			editor->ScrollToLine(new_line);
+		}
 	}
 	else if (type == wxEVT_FIND_REPLACE)
 	{
-		
+		wxLogDebug("wxEVT_FIND_REPLACE");
 	}
 	else if (type == wxEVT_FIND_REPLACE_ALL)
 	{
-		
+		wxLogDebug("wxEVT_FIND_REPLACE_ALL");
 	}
 	else if (type == wxEVT_FIND_CLOSE)
 	{
+		wxLogDebug("wxEVT_FIND_CLOSE");
 		event.GetDialog()->Destroy();
 	}
 }
