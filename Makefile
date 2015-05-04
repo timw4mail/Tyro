@@ -31,6 +31,7 @@ endif
 # Platform compiler flags
 ifeq ($(OS),Darwin)
 	CXX = $(shell wx-config --cxx)
+	CXX += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.5.sdk
 	LDLIBS += /usr/local/lib/libssh2.a
 endif
 ifeq ($(OS),Linux)
@@ -43,9 +44,12 @@ ifeq ($(OS),Windows_NT)
 	LDLIBS += -L/lib -lwsock32 -lssh2
 endif
 
-CXX += -I include -I.
+CXX += -Iinclude -I. -I/usr/local/include
 
 all: build json_wrapper $(TYRO_LIB) $(PROGRAM)
+ifeq ($(OS),Darwin)
+all: Tyro.app
+endif
 
 dev: CXXFLAGS = $(DEV_CXXFLAGS)
 dev: all
@@ -71,7 +75,11 @@ $(PROGRAM):
 lib: $(OBJECTS) $(TYRO_LIB)
 
 run:
+ifneq ($(OS),Darwin)
 	./build/Tyro
+else
+	open -a $(PWD)/build/Tyro.app
+endif
 
 
 run-grind:
@@ -102,9 +110,8 @@ exe: LDLIBS += resource.res
 exe: json_wrapper_build json_wrapper $(TYRO_LIB)
 exe: msw_resource $(PROGRAM) 
 
-# OS X application bundle
-Tyro.app: CXXFLAGS += -static	
-Tyro.app: all
+# OS X application bundle	
+Tyro.app:
 	SetFile -t APPL $(TYRO_LIB)
 	-mkdir -p build/Tyro.app
 	-mkdir -p build/Tyro.app/Contents
