@@ -65,7 +65,7 @@
 			"active after before check checked disabled empty enabled first first-child first-letter first-line first-of-type focus hover indeterminate invalid lang last-child last-of-type left link not nth-child nth-last-child nth-of-type nth-last-of-type only-child only-of-type optional read-only read-write required right root selection target valid visited"
 		],
 		"lexer_map": [
-			"default", "comment", "comment_line", "comment_doc", "number", "keyword1", "string", "character", "uuid", "preprocessor", "operator", "identifier", "string_eol", "default", "regex", "comment_special", "keyword2", "keyword3", "error"
+			"default", "keyword1", "keyword2", "keyword3", "error", "operator", "identifier", "identifier", "value", "comment", "keyword4", "keyword5", "keyword6", "string", "string", "identifier", "keyword7", "identifier", "keyword8", "default", "default", "default", "keyword1", "variable"
 		]
 	},
 	"fortran": {
