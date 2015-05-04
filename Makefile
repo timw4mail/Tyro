@@ -30,7 +30,7 @@ endif
 
 # Platform compiler flags
 ifeq ($(OS),Darwin)
-	CXX = clang++ -std=c++98 -mmacosx-version-min=10.5
+	CXX = $(shell wx-config --cxx)
 	LDLIBS += /usr/local/lib/libssh2.a
 endif
 ifeq ($(OS),Linux)
