@@ -205,12 +205,22 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
 
+/**
+ * Create a new document
+ * 
+ * @return void
+ */ 
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 {
 	this->EnableEditControls();
 	notebook->AddTab();
 }
 
+/**
+ * Open existing document(s)
+ *
+ * @return void
+ */ 
 void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
 	wxArrayString filelist;
@@ -233,6 +243,12 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	this->EnableEditControls(true);
 }
 
+/**
+ * Event handler for file saving checks on tab close
+ *
+ * @param wxAuiNotebookEvent& event
+ * @return void
+ */ 
 void MainFrame::OnClose(wxAuiNotebookEvent &event)
 {
 	int current_tab = notebook->GetSelection();
@@ -244,8 +260,8 @@ void MainFrame::OnClose(wxAuiNotebookEvent &event)
 	if (editor->IsModified())
 	{
 		int Msgbox_Choice = wxMessageBox(
-			_T("File has not been saved, save file before closing?"), 
-			_T("Modified File"),
+			"File has not been saved, save file before closing?", 
+			"Modified File",
 			wxYES_NO | wxCANCEL | wxICON_QUESTION,
 			this
 		);
@@ -259,7 +275,7 @@ void MainFrame::OnClose(wxAuiNotebookEvent &event)
 			editor->SaveFile();
 			if (editor->IsModified())
 			{
-				wxMessageBox(_("File could not be saved"), _("Error"), wxOK | wxICON_EXCLAMATION);
+				wxMessageBox(TYRO_SAVE_ERROR, TYRO_SAVE_ERROR_CAPTION, wxOK | wxICON_EXCLAMATION);
 				return event.Veto();
 			}
 		}
@@ -280,6 +296,11 @@ void MainFrame::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 	}
 }
 
+/**
+ * Close the current tab via the toolbar or menu
+ * 
+ * @return void
+ */ 
 void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 {
 	int current_tab = notebook->GetSelection();
@@ -292,12 +313,23 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 	}
 }
 
+/**
+ * Close all the open tabs
+ *
+ * @return void
+ */
 void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->DeleteAllPages();
 	this->EnableEditControls(false);
 }
 
+/**
+ * Save the current document
+ *
+ * @param wxCommandEvent& event
+ * @return void
+ */
 void MainFrame::OnSave(wxCommandEvent &event)
 {
 	EditPane *editor = notebook->GetCurrentEditor();
@@ -312,6 +344,11 @@ void MainFrame::OnSave(wxCommandEvent &event)
 	editor->SaveFile();
 }
 
+/**
+ * Save the current document with a new name
+ *
+ * @return void
+ */
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
 	EditPane *editor = notebook->GetCurrentEditor();
@@ -425,6 +462,11 @@ void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 	editor->SetViewWhiteSpace(flag);
 }
 
+/**
+ * Show the find dialog
+ * 
+ * @return void
+ */ 
 void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event)) 
 {
 	if (findDlg)
@@ -443,6 +485,11 @@ void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event))
 	}
 }
 
+/**
+ * Show the find/replace dialog
+ * 
+ * @return void
+ */ 
 void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event)) 
 {
 	if (replaceDlg)
@@ -464,7 +511,9 @@ void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event))
 
 /**
  * Handles events coming from find dialog
- * @param event
+ * 
+ * @param wxFindDialogEvent& event
+ * @return void 
  */
 void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 {
@@ -543,6 +592,12 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	}
 }
 
+/**
+ * Toggle line wrap
+ * 
+ * @param wxCommandEvent& event
+ * @return void
+ */ 
 void MainFrame::OnToggleLineWrap(wxCommandEvent &event)
 {
 	EditPane *editor = notebook->GetCurrentEditor();
