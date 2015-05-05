@@ -475,12 +475,7 @@ void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event))
 	}
 	else
 	{
-		findDlg = new wxFindReplaceDialog(
-			this,
-			findReplaceData,
-			"Find"
-		);
-		
+		findDlg = new wxFindReplaceDialog(this, findReplaceData, "Find");
 		findDlg->Show(true);
 	}
 }
@@ -498,12 +493,8 @@ void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event))
 	}
 	else
 	{
-		replaceDlg = new wxFindReplaceDialog(
-			this, 
-			findReplaceData,
-			"Find and Replace",
-			wxFR_REPLACEDIALOG
-		);
+		replaceDlg = new wxFindReplaceDialog(this, findReplaceData, 
+			"Find and Replace", wxFR_REPLACEDIALOG);
 		
 		replaceDlg->Show(true);
 	}
@@ -569,10 +560,7 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 		}
 		
 		if (new_pos >= 0)
-		{
-			/*editor->SetSelectionStart(editor->GetAnchor());
-			editor->SetSelectionEnd(new_pos);*/
-			
+		{	
 			new_line = editor->LineFromPosition(new_pos);
 			editor->ScrollToLine(new_line);
 		}

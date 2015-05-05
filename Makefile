@@ -31,7 +31,6 @@ endif
 # Platform compiler flags
 ifeq ($(OS),Darwin)
 	CXX = $(shell wx-config --cxx)
-	CXX += -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.5.sdk
 	LDLIBS += /usr/local/lib/libssh2.a
 endif
 ifeq ($(OS),Linux)
