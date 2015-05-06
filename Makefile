@@ -17,8 +17,6 @@ CXXFLAGS = -Os -DNDEBUG
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 
-DEV = false
-
 LDLIBS =
 
 OS ?= $(shell uname -s)
@@ -47,7 +45,7 @@ endif
 
 CXX += -Iinclude -I. -I/usr/local/include
 
-ifeq ($(DEV),true)
+ifdef $(DEV)
 all: CXXFLAGS = $(DEV_CXXFLAGS)
 endif
 all: build json_wrapper $(TYRO_LIB) $(PROGRAM)
@@ -56,6 +54,7 @@ all: Tyro.app
 endif
 
 dev: DEV = true
+dev: CXXFLAGS = $(DEV_CXXFLAGS)
 dev: all
 	
 json_wrapper: json_wrapper_build
@@ -90,17 +89,18 @@ run-grind:
 	valgrind $(PROGRAM)
 
 # Make optimized and striped executable
-release: DEV = false
-release:
+release: DEV=
 ifeq ($(OS),Darwin)
-	make all
+release: all
 endif
 ifeq ($(OS),Windows_NT)
-	make exe
+release: exe
+release:
 	strip -SXx $(PROGRAM).exe
 endif
 ifeq ($(OS),Linux)
-	make all
+release: all
+release:
 	strip -SXx $(PROGRAM)
 endif
 
@@ -115,7 +115,7 @@ exe: msw_resource $(PROGRAM)
 
 # OS X application bundle	
 Tyro.app:
-ifeq ($(DEV),false)
+ifndef DEV
 	strip -SXx $(PROGRAM)
 endif
 	SetFile -t APPL $(TYRO_LIB)
