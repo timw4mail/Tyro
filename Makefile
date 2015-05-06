@@ -17,6 +17,8 @@ CXXFLAGS = -Os -DNDEBUG
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
 
+DEV = false
+
 LDLIBS =
 
 OS ?= $(shell uname -s)
@@ -38,19 +40,22 @@ ifeq ($(OS),Linux)
 	LDLIBS += -lssh2
 endif
 ifeq ($(OS),Windows_NT)
-	CXXFLAGS = -DNDEBUG -static
+	CXXFLAGS += -DNDEBUG -static
 	CXX += -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32 -lssh2
 endif
 
 CXX += -Iinclude -I. -I/usr/local/include
 
+ifeq ($(DEV),true)
+all: CXXFLAGS = $(DEV_CXXFLAGS)
+endif
 all: build json_wrapper $(TYRO_LIB) $(PROGRAM)
 ifeq ($(OS),Darwin)
 all: Tyro.app
 endif
 
-dev: CXXFLAGS = $(DEV_CXXFLAGS)
+dev: DEV = true
 dev: all
 	
 json_wrapper: json_wrapper_build
@@ -85,11 +90,10 @@ run-grind:
 	valgrind $(PROGRAM)
 
 # Make optimized and striped executable
+release: DEV = false
 release:
 ifeq ($(OS),Darwin)
 	make all
-	strip -SXx $(PROGRAM)
-	make Tyro.app
 endif
 ifeq ($(OS),Windows_NT)
 	make exe
@@ -111,11 +115,11 @@ exe: msw_resource $(PROGRAM)
 
 # OS X application bundle	
 Tyro.app:
+ifeq ($(DEV),false)
+	strip -SXx $(PROGRAM)
+endif
 	SetFile -t APPL $(TYRO_LIB)
-	-mkdir -p build/Tyro.app
-	-mkdir -p build/Tyro.app/Contents
 	-mkdir -p build/Tyro.app/Contents/MacOS
-	-mkdir -p build/Tyro.app/Contents/Resources
 	-mkdir -p build/Tyro.app/Contents/Resources/English.lproj
 	cp resources/platform/osx/Info.plist build/Tyro.app/Contents/
 	echo -n 'APPL????' > build/Tyro.app/Contents/PkgInfo
