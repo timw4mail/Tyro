@@ -184,7 +184,7 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 		notebook->AddTab(filelist[i]);
 	}
 	
-	//this->EnableEditControls(true);
+	this->EnableEditControls(true);
 }
 
 /**
