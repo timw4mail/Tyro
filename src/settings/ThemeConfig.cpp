@@ -1,10 +1,14 @@
+/**
+ * Theme manager
+ */
+
 #include "ThemeConfig.h"
 #include <config/themes_json.h>
 
 ThemeConfig::ThemeConfig()
 {
 	this->LoadJson(themes_json);
-	this->current_theme = "Solarized";
+	this->SetTheme("Solarized");
 }
 
 ThemeConfig::~ThemeConfig() {}

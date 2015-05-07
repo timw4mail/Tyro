@@ -5,12 +5,10 @@
 #ifndef TABCONTAINER_H
 #define	TABCONTAINER_H
 
-#include "../wx_common.h"
-
+#include "EditPane.h"
+#include "MainFrame.h"
 #include <wx/aui/aui.h>
 #include <wx/filename.h>
-#include "EditPane.h"
-
 
 static long tab_style = wxBORDER_NONE | wxAUI_NB_TAB_SPLIT |wxAUI_NB_TAB_MOVE
 	| wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_WINDOWLIST_BUTTON
@@ -30,7 +28,13 @@ public:
 	void AddTab();
 	void AddTab(wxString filePath);
 	EditPane *GetCurrentEditor();
+	EditPane *GetEditor(size_t page_idx);
+	void OnCloseAll(wxCommandEvent &event);
 private:
+	void OnTabSwitch(wxAuiNotebookEvent &event);
+	void OnClose(wxAuiNotebookEvent &event);
+	void OnClosed(wxAuiNotebookEvent &event);
+	void OnTabContextMenu(wxAuiNotebookEvent &event);
 };
 
 #endif	/* TABCONTAINER_H */

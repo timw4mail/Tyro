@@ -1,4 +1,8 @@
-#include "EditPane.h"
+/**
+ * The editor widget
+ */
+
+#include "widget.h"
 
 EditPane::EditPane(
 	wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size
@@ -120,8 +124,11 @@ void EditPane::Highlight(wxString filePath)
  * @return void
  */
 void EditPane::ApplyTheme(string lang, string theme)
-{
-	theme_config->SetTheme(theme);
+{	
+	if (theme != "")
+	{
+		theme_config->SetTheme(theme);
+	}
 
 	// Get the keywords and mapping for the selected language
 	JsonValue lexer_map = lang_config->GetLexerMap(lang);

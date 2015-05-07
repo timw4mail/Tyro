@@ -1,7 +1,6 @@
 #ifndef TYROEDIT_PANE_H
 #define TYROEDIT_PANE_H
 
-#include "../wx_common.h"
 #include "../settings/LangConfig.h"
 #include "../settings/ThemeConfig.h"
 
@@ -22,7 +21,7 @@ public:
 	void Highlight(wxString filePath);
 	bool SaveFile();
 	bool SaveFile(const wxString &filename);
-	void ApplyTheme(string lang, string theme="Solarized");
+	void ApplyTheme(string lang, string theme="");
 private:
 	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;

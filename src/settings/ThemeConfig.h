@@ -1,8 +1,5 @@
-/* 
- * File:   ThemeConfig.h
- * Author: twarren
- *
- * Created on May 7, 2015, 9:39 AM
+/**
+ * Theme manager
  */
 
 #ifndef TYRO_THEME_CONFIG_H

@@ -57,7 +57,7 @@ string LangConfig::GetLangByFile(wxFileName &fileName)
 		}
 	}
 
-	this->SetLang(lang);
+	this->SetLang("");
 	return this->lang;
 }
 

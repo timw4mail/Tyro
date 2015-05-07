@@ -1,7 +1,10 @@
 /**
  * Main Application Frame
  */
-#include "MainFrame.h"
+#include "widget.h"
+
+extern TyroMenu *mbar;
+static TabContainer *notebook;
 
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
@@ -14,7 +17,11 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	this->SetIcon(app_icon);
 	
 	// Create menus and bars
-	this->SetupMenu();
+#ifdef __WXMAC__
+	wxMenuBar::MacSetCommonMenuBar(mbar);
+#endif // __WXMAC__
+	SetMenuBar(mbar);
+	
 	this->SetupStatusBar();
 	this->SetupToolbar();
 	
@@ -35,7 +42,11 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	SetSizerAndFit(base_sizer);
 }
 
-MainFrame::~MainFrame() {}
+MainFrame::~MainFrame() 
+{
+	wxLogDebug("Main Frame Destructor Called.");
+	//delete notebook;
+}
 
 void MainFrame::SetupStatusBar()
 {
@@ -97,68 +108,6 @@ void MainFrame::SetupToolbar()
 }
 
 /**
- * Create the main menu
- * 
- * @return void
- */
-void MainFrame::SetupMenu()
-{
-	// create a menu bar
-	this->mbar = new wxMenuBar();
-
-	// Create Base menus
-	fileMenu = new wxMenu();
-	editMenu = new wxMenu();
-	viewMenu = new wxMenu();
-	langMenu = new wxMenu();
-	helpMenu = new wxMenu();
-
-	// Add items to top-level menus
-	fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
-	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_OPEN, "&Open\tCtrl+O", "Opens an existing file");
-	fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S", "Save the content");
-	fileMenu->Append(wxID_SAVEAS, "Save &As...\tShift+Ctrl+S", "Save current file as...");
-	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current document");
-	fileMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
-	fileMenu->Append(wxID_EXIT, "&Quit\tCtrl+Q", "Quit the application");
-	
-	editMenu->Append(wxID_UNDO, "&Undo\tCtrl+Z", "Undo last action");
-	editMenu->Append(wxID_REDO, "&Redo\tCtrl+Y", "Redo last action");
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_CUT, "Cu&t\tCtrl+X", "Cut selected text");
-	editMenu->Append(wxID_COPY, "&Copy\tCtrl+C", "Copy selected text");
-	editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
-	editMenu->Append(wxID_CLEAR, "&Delete\tDel");
-	editMenu->AppendSeparator();
-	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
-	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
-	//editMenu->AppendSeparator();
-	//editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
-	//editMenu->AppendSeparator();
-	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
-
-	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
-	viewMenu->AppendCheckItem(myID_VIEW_LINE_ENDINGS, "Show line endings", "Toggle visibility of line ending characters");
-	viewMenu->AppendCheckItem(myID_LINE_WRAP, "Word Wrap", "Toggle wrapping of long lines");
-	
-	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
-
-	// Add the menus to the menubar
-	this->mbar->Append(fileMenu, "&File");
-	this->mbar->Append(editMenu, "&Edit");
-	this->mbar->Append(viewMenu, "&View");
-	this->mbar->Append(langMenu, "&Language");
-	this->mbar->Append(helpMenu, "&Help");
-
-#ifdef __WXMAC__
-	wxMenuBar::MacSetCommonMenuBar(mbar);
-#endif // __WXMAC__
-	SetMenuBar(mbar);
-}
-
-/**
  * Bind event handlers
  * 
  * @return void
@@ -171,7 +120,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSave, this, wxID_SAVE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseTab, this, wxID_CLOSE);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseAll, this, myID_CLOSE_ALL);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &TabContainer::OnCloseAll, notebook, myID_CLOSE_ALL);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
 	
 	// Edit Menu Events
@@ -188,12 +137,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineEndings, this, myID_VIEW_LINE_ENDINGS);
-	
-	// Notebook Events
-	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &MainFrame::OnClose, this, wxID_ANY);
-	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &MainFrame::OnClosed, this, wxID_ANY);
-	Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &MainFrame::OnTabContextMenu, this, wxID_ANY);
-	
+
 	// Find/Replace Events
 	Bind(wxEVT_FIND, &MainFrame::OnFindDialog, this, wxID_ANY);
 	Bind(wxEVT_FIND_NEXT, &MainFrame::OnFindDialog, this, wxID_ANY);
@@ -240,60 +184,7 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 		notebook->AddTab(filelist[i]);
 	}
 	
-	this->EnableEditControls(true);
-}
-
-/**
- * Event handler for file saving checks on tab close
- *
- * @param wxAuiNotebookEvent& event
- * @return void
- */ 
-void MainFrame::OnClose(wxAuiNotebookEvent &event)
-{
-	int current_tab = notebook->GetSelection();
-	EditPane *editor = notebook->GetCurrentEditor();
-	
-	// Sanity check
-	if (current_tab == -1) return;
-	
-	if (editor->IsModified())
-	{
-		int Msgbox_Choice = wxMessageBox(
-			"File has not been saved, save file before closing?", 
-			"Modified File",
-			wxYES_NO | wxCANCEL | wxICON_QUESTION,
-			this
-		);
-		
-		if (Msgbox_Choice == wxCANCEL)
-		{
-			return event.Veto();
-		}
-		else if (Msgbox_Choice == wxYES)
-		{
-			editor->SaveFile();
-			if (editor->IsModified())
-			{
-				wxMessageBox(TYRO_SAVE_ERROR, TYRO_SAVE_ERROR_CAPTION, wxOK | wxICON_EXCLAMATION);
-				return event.Veto();
-			}
-		}
-	};
-}
-
-/**
- * Event handler triggered after a tab is closed
- * 
- * @param WXUNUSED
- * @return void
- */
-void MainFrame::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
-{
-	if (notebook->GetPageCount() == 0)
-	{
-		this->EnableEditControls(false);
-	}
+	//this->EnableEditControls(true);
 }
 
 /**
@@ -615,59 +506,10 @@ void MainFrame::OnToggleLineEndings(wxCommandEvent &event)
  */
 void MainFrame::EnableEditControls(bool enable)
 {
-	this->fileMenu->Enable(wxID_SAVE, enable);
-	this->fileMenu->Enable(wxID_SAVEAS, enable);
-	this->fileMenu->Enable(wxID_CLOSE, enable);
-	this->fileMenu->Enable(myID_CLOSE_ALL, enable);
-	
-	// Enable/disable top level menus
-	this->EnableEntireMenu(myEDIT_MENU, this->editMenu, enable);
-	this->EnableEntireMenu(myVIEW_MENU, this->viewMenu, enable);
-	this->EnableEntireMenu(myLANG_MENU, this->langMenu, enable);
-	
+	mbar->EnableEditControls(enable);
 	this->toolBar->EnableTool(wxID_SAVE, enable);
 	this->toolBar->EnableTool(wxID_CLOSE, enable);
 	this->toolBar->EnableTool(wxID_COPY, enable);
 	this->toolBar->EnableTool(wxID_CUT, enable);
 	this->toolBar->EnableTool(wxID_PASTE, enable);
-}
-
-/**
- * Enable/disable all the items in the menu, for environments
- * that don't properly support disabling the menu by the parent label (like Ubuntu's Unity)
- *
- * @param size_t menuId
- * @param wxMenu* menu
- * @param bool enable
- * @return void
- */ 
-void MainFrame::EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable)
-{
-	// Toggle the top of the menu
-	this->mbar->EnableTop(menuId, enable);
-	
-	// Toggle the rest of the items in the menu
-	wxMenuItemList list = menu->GetMenuItems();
-	wxMenuItemList::iterator iter;
-	
-	for(iter = list.begin(); iter != list.end(); ++iter)
-	{
-		wxMenuItem *current = *iter;
-		current->Enable(enable);
-	}
-}
-
-/**
- * Displays a context menu on the current tab
- * 
- * @return void
- */ 
-void MainFrame::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
-{
-	// Create Menu
-	wxMenu *contextMenu = new wxMenu();
-	contextMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current tab");
-	contextMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
-
-	this->PopupMenu(contextMenu);
 }

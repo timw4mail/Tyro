@@ -20,10 +20,13 @@ private:
 wxConfigBase *Config;
 
 //**************************************************************
-
-#include "widgets/MainFrame.h"
+#include "widgets/widget.h"
 
 IMPLEMENT_APP(TyroApp);
+
+// Some global stuff
+TyroMenu *mbar;
+MainFrame *main_frame;
 
 /**
  * Start the event loop and create the main window
@@ -36,13 +39,14 @@ bool TyroApp::OnInit()
 	this->SetVendorName(APP_VENDOR);
 	
 	Config = wxConfigBase::Get();
-	MainFrame* frame = new MainFrame(0L, APP_NAME);
+	mbar = new TyroMenu();
+	main_frame = new MainFrame(0L, APP_NAME);
 
-	SetTopWindow(frame);
+	SetTopWindow(main_frame);
 	
-	frame->Layout();
-	frame->CenterOnScreen();
-	frame->Show(true);
+	main_frame->Layout();
+	main_frame->CenterOnScreen();
+	main_frame->Show(true);
 
 	return true;
 }

@@ -87,8 +87,14 @@ lib: $(OBJECTS) $(BASE_LIB)
 
 run:
 ifneq ($(OS),Darwin)
-	./build/Tyro
+	./$(PROGRAM)
 else
+	./build/Tyro.app/Contents/MacOS/Tyro
+endif
+
+
+ifeq ($(OS),Darwin)
+run-app:
 	open -a $(PWD)/build/Tyro.app
 endif
 
