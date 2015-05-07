@@ -1,12 +1,15 @@
 SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/base/**/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
-TYRO_LIB = build/Tyro.a
+BASE_LIB = build/Tyro.a
 
 JSON_FILES = $(patsubst config/%.json,%.json, $(wildcard config/*.json))
 
-PROGRAM_SRC = $(wildcard src/*.cpp src/widgets/*.cpp src/settings/*.cpp)
+PROGRAM_SRC = $(wildcard src/*.cpp)
 PROGRAM = build/Tyro
-PROGRAM_OBJECTS = $(patsubst %.cpp,%.o, $(PROGRAM_SRC)) 
+
+WIDGET_SRC = $(wildcard src/widgets/*.cpp src/settings/*.cpp)
+WIDGET_OBJ = $(patsubst %.cpp,%.o, $(WIDGET_SRC))
+WIDGET_LIB = build/widget.a
 
 WX_RES = $(shell wx-config --rescomp)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
@@ -38,7 +41,7 @@ ifeq ($(OS),Linux)
 	LDLIBS += -lssh2
 endif
 ifeq ($(OS),Windows_NT)
-	CXXFLAGS += -DNDEBUG -static
+	CXXFLAGS += -static
 	CXX += -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32 -lssh2
 endif
@@ -48,7 +51,7 @@ CXX += -Iinclude -I. -I/usr/local/include
 ifdef $(DEV)
 all: CXXFLAGS = $(DEV_CXXFLAGS)
 endif
-all: build json_wrapper $(TYRO_LIB) $(PROGRAM)
+all: build json_wrapper $(BASE_LIB) $(PROGRAM)
 ifeq ($(OS),Darwin)
 all: Tyro.app
 endif
@@ -66,16 +69,21 @@ json_wrapper_build:
 build:
 	@mkdir -p build
 
-$(TYRO_LIB): build $(OBJECTS)
+$(BASE_LIB): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
-
+	
+$(WIDGET_OBJ): CXXFLAGS += $(WX_CXXFLAGS)
+	
+$(WIDGET_LIB): $(WIDGET_OBJ)
+	ar rcs $@ $(WIDGET_OBJ)
+	ranlib $@
 
 $(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS)
-$(PROGRAM):
-	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(TYRO_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
+$(PROGRAM): $(WIDGET_LIB)
+	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(WIDGET_LIB) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
 	
-lib: $(OBJECTS) $(TYRO_LIB)
+lib: $(OBJECTS) $(BASE_LIB)
 
 run:
 ifneq ($(OS),Darwin)
@@ -83,7 +91,6 @@ ifneq ($(OS),Darwin)
 else
 	open -a $(PWD)/build/Tyro.app
 endif
-
 
 run-grind:
 	valgrind $(PROGRAM)
@@ -110,7 +117,7 @@ msw_resource:
 	$(WX_RES) resources/platform/msw/resource.rc -O coff -o resource.res
 
 exe: LDLIBS += resource.res
-exe: json_wrapper_build json_wrapper $(TYRO_LIB)
+exe: json_wrapper_build json_wrapper $(BASE_LIB)
 exe: msw_resource $(PROGRAM) 
 
 # OS X application bundle	
@@ -118,7 +125,7 @@ Tyro.app:
 ifndef DEV
 	strip -SXx $(PROGRAM)
 endif
-	SetFile -t APPL $(TYRO_LIB)
+	SetFile -t APPL $(BASE_LIB)
 	-mkdir -p build/Tyro.app/Contents/MacOS
 	-mkdir -p build/Tyro.app/Contents/Resources/English.lproj
 	cp resources/platform/osx/Info.plist build/Tyro.app/Contents/
@@ -126,8 +133,8 @@ endif
 	cp build/Tyro build/Tyro.app/Contents/MacOS/Tyro
 	cp resources/platform/osx/tyro.icns build/Tyro.app/Contents/Resources/
 
-$(TESTS): $(TYRO_LIB)
-	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(TYRO_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(patsubst %.cpp,%, $(var));)
+$(TESTS): $(BASE_LIB)
+	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(patsubst %.cpp,%, $(var));)
 
 .PHONY: tests	
 tests: $(TESTS)
@@ -139,7 +146,7 @@ clean:
 	rm -f config/json2c.exe
 	rm -f config/*_json.h
 	rm -rf *.o
-	rm -rf build/Tyro.app
-	rm -rf build $(OBJECTS) $(PROGRAM) $(TYRO_LIB) $(TESTS)
+	rm -rf build
+	rm -rf build $(OBJECTS) $(PROGRAM) $(BASE_LIB) $(TESTS)
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`

@@ -5,10 +5,7 @@ EditPane::EditPane(
 ) : wxStyledTextCtrl (parent, id, pos, size, wxBORDER_NONE)
 {
 	lang_config = new LangConfig();
-
-	#include <config/themes_json.h>
-	theme_config = new TyroConfig();
-	theme_config->LoadJson(themes_json);
+	theme_config = new ThemeConfig();
 
 	// Map language types to their lexers
 	lexerMap["batch"] = wxSTC_LEX_BATCH;
@@ -124,7 +121,7 @@ void EditPane::Highlight(wxString filePath)
  */
 void EditPane::ApplyTheme(string lang, string theme)
 {
-	this->SetTheme(theme);
+	theme_config->SetTheme(theme);
 
 	// Get the keywords and mapping for the selected language
 	JsonValue lexer_map = lang_config->GetLexerMap(lang);
@@ -320,46 +317,6 @@ void EditPane::OnCharAdded(wxStyledTextEvent& event)
 }
 
 /**
- * Retrieve a setting from the current theme
- * 
- * @param string type
- * @param string key
- * @return JsonValue
- */
-JsonValue EditPane::GetThemeValue(string type, string key)
-{
-	JsonValue value = this->current_theme
-		.get(type, JsonValue())
-		.get(key, JsonValue());
-
-	return value;
-}
-
-/**
- * Retrieve the configured color for the specified theme
- * @param type
- * @param key
- * @return 
- */
-wxColor EditPane::GetThemeColor(string type, string key)
-{
-	JsonValue color_value = this->GetThemeValue(type, key);
-
-	if (color_value.isArray())
-	{
-		return wxColor(
-			(unsigned char) color_value[0].asUInt(),
-			(unsigned char) color_value[1].asUInt(),
-			(unsigned char) color_value[2].asUInt()
-		);
-	}
-	else
-	{
-		return wxColor("black");
-	}
-}
-
-/**
  * Iterate through the theme settings and apply them
  *
  * @param JsonValue lexer_map - Maps token types to theme colors
@@ -383,14 +340,14 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 	);
 #endif
 
-	static const wxColor default_background = this->GetThemeColor("background", "default");
-	static const wxColor default_foreground = this->GetThemeColor("foreground", "default");
-	wxColor line_number_background = ( ! this->GetThemeValue("line_numbers", "background").isNull())
-		? (this->GetThemeColor("line_numbers", "background"))
+	static const wxColor default_background = theme_config->GetThemeColor("background", "default");
+	static const wxColor default_foreground = theme_config->GetThemeColor("foreground", "default");
+	wxColor line_number_background = ( ! theme_config->GetThemeValue("line_numbers", "background").isNull())
+		? (theme_config->GetThemeColor("line_numbers", "background"))
 		: default_background;
 
-	wxColor line_number_foreground = ( ! this->GetThemeValue("line_numbers", "foreground").isNull())
-		? (this->GetThemeColor("line_numbers", "foreground"))
+	wxColor line_number_foreground = ( ! theme_config->GetThemeValue("line_numbers", "foreground").isNull())
+		? (theme_config->GetThemeColor("line_numbers", "foreground"))
 		: default_foreground;
 
 	// Set default colors/ fonts
@@ -419,40 +376,33 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		//wxLogDebug("Lexer constant: %i", i);
 
 		// Set the foreground color, if it exists
-		if ( ! this->GetThemeValue("foreground", key).isNull())
+		if ( ! theme_config->GetThemeValue("foreground", key).isNull())
 		{
-			this->StyleSetForeground(i, this->GetThemeColor("foreground", key));
+			this->StyleSetForeground(i, theme_config->GetThemeColor("foreground", key));
 		}
 
 		// Set the background color, if it exists
-		if ( ! this->GetThemeValue("background", key).isNull())
+		if ( ! theme_config->GetThemeValue("background", key).isNull())
 		{
-			this->StyleSetBackground(i, this->GetThemeColor("background", key));
+			this->StyleSetBackground(i, theme_config->GetThemeColor("background", key));
 		}
 
 		// Set bold, if it applies
-		if (this->GetThemeValue("bold", key).isBool())
+		if (theme_config->GetThemeValue("bold", key).isBool())
 		{
-			this->StyleSetBold(i, this->GetThemeValue("bold", key).asBool());
+			this->StyleSetBold(i, theme_config->GetThemeValue("bold", key).asBool());
 		}
 		
 		// Italic
-		if (this->GetThemeValue("italic", key).isBool())
+		if (theme_config->GetThemeValue("italic", key).isBool())
 		{
-			this->StyleSetItalic(i, this->GetThemeValue("italic", key).asBool());
+			this->StyleSetItalic(i, theme_config->GetThemeValue("italic", key).asBool());
 		}
 		
 		// Underline
-		if (this->GetThemeValue("underline", key).isBool())
+		if (theme_config->GetThemeValue("underline", key).isBool())
 		{
-			this->StyleSetUnderline(i, this->GetThemeValue("underline", key).asBool());
+			this->StyleSetUnderline(i, theme_config->GetThemeValue("underline", key).asBool());
 		}
 	}
-}
-
-void EditPane::SetTheme(string theme_name)
-{
-	JsonValue theme_list = this->theme_config->GetRoot();
-
-	this->current_theme = theme_list.get(theme_name, JsonValue());
 }

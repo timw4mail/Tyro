@@ -2,8 +2,8 @@
 #define TYROEDIT_PANE_H
 
 #include "../wx_common.h"
-#include "../base/settings/Config.h"
 #include "../settings/LangConfig.h"
+#include "../settings/ThemeConfig.h"
 
 #include <wx/stc/stc.h>
 
@@ -27,8 +27,7 @@ private:
 	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;
 	LangConfig *lang_config;
-	TyroConfig *theme_config;
-	JsonValue current_theme;
+	ThemeConfig *theme_config;
 	enum myMargins
 	{
 		MARGIN_FOLD,
@@ -41,8 +40,6 @@ private:
 	void OnMarginClick(wxStyledTextEvent &event);
 	void OnCharAdded(wxStyledTextEvent &event);
 	void SetTheme(string theme_name);
-	JsonValue GetThemeValue(string type, string key);
-	wxColor GetThemeColor(string type, string key);
 	void _ApplyTheme(JsonValue &lexer_map);
 };
 
