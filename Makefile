@@ -1,15 +1,11 @@
 SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/base/**/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
-BASE_LIB = build/Tyro.a
+BASE_LIB = build/base.a
 
 JSON_FILES = $(patsubst config/%.json,%.json, $(wildcard config/*.json))
 
-PROGRAM_SRC = $(wildcard src/*.cpp)
+PROGRAM_SRC = $(wildcard src/widgets/*.cpp src/settings/*.cpp src/*.cpp)
 PROGRAM = build/Tyro
-
-WIDGET_SRC = $(wildcard src/widgets/*.cpp src/settings/*.cpp)
-WIDGET_OBJ = $(patsubst %.cpp,%.o, $(WIDGET_SRC))
-WIDGET_LIB = build/widget.a
 
 WX_RES = $(shell wx-config --rescomp)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
@@ -72,16 +68,10 @@ build:
 $(BASE_LIB): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
-	
-$(WIDGET_OBJ): CXXFLAGS += $(WX_CXXFLAGS)
-	
-$(WIDGET_LIB): $(WIDGET_OBJ)
-	ar rcs $@ $(WIDGET_OBJ)
-	ranlib $@
 
 $(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS)
-$(PROGRAM): $(WIDGET_LIB)
-	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(WIDGET_LIB) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
+$(PROGRAM):
+	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
 	
 lib: $(OBJECTS) $(BASE_LIB)
 
