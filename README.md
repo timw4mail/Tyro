@@ -29,6 +29,10 @@ After these packages are installed, the project should build with a simple `make
 ### OS X
 Building wxWidgets:
 
+If you want maximum compatibility with older versions of OS X, 
+view [the guide](./Mac-compatibility-build.md). Otherwise, these simpler 
+steps should work fine for a local build.
+
 1. Download the latest wxWidgets source
 2. Make a new directory in the source tree, like `wxmac`
 3. Run `../configure --disable-shared --disable-webviewwebkit` in the new directory
