@@ -13,7 +13,10 @@ LangConfig::LangConfig()
 	this->lang = "";
 }
 
-LangConfig::~LangConfig() {}
+LangConfig::~LangConfig()
+{
+	wxLogDebug("Called LangConfig Destructor");
+}
 
 /**
  * Determine the format of the current file by
@@ -99,4 +102,20 @@ void LangConfig::SetLang(string lang)
 string LangConfig::GetLang()
 {
 	return this->lang;
+}
+
+StringMap LangConfig::GetLangList()
+{
+	JsonValue langList = this->GetRoot();
+	JsonValue::iterator it;
+
+	StringMap outputList;
+
+	for (it = langList.begin(); it != langList.end(); ++it)
+	{
+		JsonValue langObj = *it;
+		outputList[it.key().asString()] = langObj.get("name", JsonValue()).asString();
+	}
+
+	return outputList;
 }

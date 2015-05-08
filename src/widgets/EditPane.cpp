@@ -77,6 +77,7 @@ EditPane::EditPane(
 
 EditPane::~EditPane()
 {
+	wxLogDebug("Called EditPane Destructor");
 	delete lang_config;
 	delete theme_config;
 }
@@ -143,14 +144,17 @@ void EditPane::ApplyTheme(string lang, string theme)
 	}
 	else
 	{
-		string typeMap[] = {"null", "int", "unsigned int", "double", "string", "boolean", "array", "object"};
-		stringstream output;
+		if (lang != "")
+		{
+			string typeMap[] = {"null", "int", "unsigned int", "double", "string", "boolean", "array", "object"};
+			stringstream output;
 
-		output << "current lang is:" << lang << endl;
-		output << "keywords array is not an array" << endl;
-		output << "keyword array is a " << typeMap[keywords_array.type()] << endl;
+			output << "current lang is:" << lang << endl;
+			output << "keywords array is not an array" << endl;
+			output << "keyword array is a " << typeMap[keywords_array.type()] << endl;
 
-		wxLogDebug(output.str().c_str());
+			wxLogDebug(output.str().c_str());
+		}
 	}
 
 	// Do the appropriate mappings to load the selected theme

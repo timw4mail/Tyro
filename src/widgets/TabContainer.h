@@ -7,8 +7,6 @@
 
 #include "EditPane.h"
 #include "MainFrame.h"
-#include <wx/aui/aui.h>
-#include <wx/filename.h>
 
 static long tab_style = wxBORDER_NONE | wxAUI_NB_TAB_SPLIT |wxAUI_NB_TAB_MOVE
 	| wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_WINDOWLIST_BUTTON

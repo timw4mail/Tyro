@@ -1,4 +1,7 @@
 #include "widget.h"
+#include "../settings/LangConfig.h"
+
+static LangConfig *lang_config;
 
 TyroMenu::TyroMenu()
 {
@@ -7,8 +10,11 @@ TyroMenu::TyroMenu()
 	viewMenu = new wxMenu();
 	langMenu = new wxMenu();
 	helpMenu = new wxMenu();
-	
+
+	lang_config = new LangConfig();
+
 	this->SetupMainMenus();
+	this->SetupLangMenu();
 	
 	// Add the menus to the menubar
 	this->Insert(myFILE_MENU, fileMenu, "&File");
@@ -21,12 +27,6 @@ TyroMenu::TyroMenu()
 TyroMenu::~TyroMenu()
 {
 	wxLogDebug("TyroMenu Destructor Called.");
-	
-	//delete fileMenu;
-	//delete editMenu;
-	//delete viewMenu;
-	//delete langMenu;
-	//delete helpMenu;
 }
 
 void TyroMenu::SetupMainMenus()
@@ -66,7 +66,15 @@ void TyroMenu::SetupMainMenus()
 
 void TyroMenu::SetupLangMenu()
 {
+	StringMap langs = lang_config->GetLangList();
+	StringMap::iterator it;
 	
+	StringMap::iterator last = langs.end();
+	
+	for (it = langs.begin(); it != last; ++it)
+	{
+		langMenu->Append(wxID_ANY, it->second, "Hightlight file as " + it->second, wxITEM_CHECK);
+	}
 }
 
 void TyroMenu::EnableEditControls(bool enable)
@@ -95,11 +103,11 @@ void TyroMenu::EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable)
 {
 	// Toggle the top of the menu
 	this->EnableTop(menuId, enable);
-	
+
 	// Toggle the rest of the items in the menu
 	wxMenuItemList list = menu->GetMenuItems();
 	wxMenuItemList::iterator iter;
-	
+
 	for(iter = list.begin(); iter != list.end(); ++iter)
 	{
 		wxMenuItem *current = *iter;

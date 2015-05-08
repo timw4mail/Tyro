@@ -5,10 +5,6 @@
 #ifndef TYROMAIN_H
 #define TYROMAIN_H
 
-#include <wx/cmdline.h>
-#include <wx/config.h>
-#include <wx/aboutdlg.h>
-#include <wx/fdrepdlg.h>
 #include "TabContainer.h"
 
 class MainFrame: public wxFrame

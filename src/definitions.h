@@ -30,7 +30,7 @@ enum myMenuIds {
 	myHELP_MENU
 };
 
-// Menu ids
+// General Menu ids
 enum myMenuItemIds {
 	myID_VIEW_WHITESPACE = wxID_HIGHEST,
 	myID_VIEW_LINE_ENDINGS,

@@ -1,12 +1,10 @@
-/* 
- * File:   TyroMenu.h
- * Author: twarren
- *
- * Created on May 7, 2015, 3:10 PM
+/**
+ * Main Menu class
  */
-
 #ifndef TYRO_MENU_H
 #define	TYRO_MENU_H
+
+#include "widget.h"
 
 class TyroMenu : public wxMenuBar {
 public:

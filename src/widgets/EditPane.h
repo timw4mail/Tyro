@@ -4,8 +4,6 @@
 #include "../settings/LangConfig.h"
 #include "../settings/ThemeConfig.h"
 
-#include <wx/stc/stc.h>
-
 class EditPane: public wxStyledTextCtrl
 {
 public:

@@ -13,6 +13,7 @@ public:
 	string GetLangByFile(wxFileName &fileName);
 	JsonValue GetKeywordList(string lang="none");
 	JsonValue GetLexerMap(string lang="none");
+	StringMap GetLangList();
 private:
 	string lang;
 };

@@ -45,7 +45,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 MainFrame::~MainFrame() 
 {
 	wxLogDebug("Main Frame Destructor Called.");
-	//delete notebook;
+	delete notebook;
 }
 
 void MainFrame::SetupStatusBar()

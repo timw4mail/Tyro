@@ -11,7 +11,10 @@ ThemeConfig::ThemeConfig()
 	this->SetTheme("Solarized");
 }
 
-ThemeConfig::~ThemeConfig() {}
+ThemeConfig::~ThemeConfig()
+{
+	wxLogDebug("Called ThemeConfig Destructor");
+}
 
 void ThemeConfig::SetTheme(string theme_name)
 {

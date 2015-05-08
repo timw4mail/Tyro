@@ -16,7 +16,6 @@ Use [this script](http://devernay.free.fr/hacks/xcodelegacy/) to install older S
 ## Recommended flags for development/debugging (Assuming OS X > 10.7)
 * --enable-debug_gdb
 * --enable-profile
-* --enable-arttango
 * --disable-compat28
 * --disable-shared
 * --without-webviewwebkit

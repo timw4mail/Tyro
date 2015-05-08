@@ -3,9 +3,9 @@
  */
 
 #include "wx_common.h"
+#include "widgets/widget.h"
 
 #include <wx/app.h>
-#include <wx/config.h>
 #include <wx/debug.h>
 
 class TyroApp : public wxApp
@@ -17,14 +17,12 @@ public:
 private:
 };
 
-wxConfigBase *Config;
-
 //**************************************************************
-#include "widgets/widget.h"
 
 IMPLEMENT_APP(TyroApp);
 
 // Some global stuff
+wxConfigBase *Config;
 TyroMenu *mbar;
 MainFrame *main_frame;
 
