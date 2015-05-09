@@ -41,6 +41,10 @@ ifeq ($(OS),Windows_NT)
 	LDLIBS += -L/lib -lwsock32
 endif
 
+ifeq ($(CXX),clang++)
+	CXX += -std=c++11
+endif
+
 CXX += -Iinclude -I. -I/usr/local/include
 
 ifdef $(DEV)
