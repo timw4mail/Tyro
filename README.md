@@ -2,6 +2,8 @@
 
 A Cross-platform Code Editor
 
+[![Build Status](https://travis-ci.org/timw4mail/Tyro.svg?branch=master)](https://travis-ci.org/timw4mail/Tyro) (Linux Build Only)
+
 ## Planned Features
 
 * Syntax Highlighting

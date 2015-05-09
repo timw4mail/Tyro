@@ -35,12 +35,6 @@ else
 	LDLIBS += -lssh2
 endif
 
-ifeq ($(OS),Linux)
-ifeq ($(CXX),clang++)
-	CXX += -std=c++11 -Wno-potentially-evaluated-expression
-endif
-endif
-
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS += -static
 	CXX += -I/include -DWIN32
