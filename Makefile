@@ -31,15 +31,20 @@ endif
 ifeq ($(OS),Darwin)
 	CXX = $(shell wx-config --cxx)
 	LDLIBS += /usr/local/lib/libssh2.a
-endif
-ifeq ($(OS),Linux)
-	CXX += -std=c++11
+else
 	LDLIBS += -lssh2
 endif
+
+ifeq ($(OS),Linux)
+ifeq ($(CXX),clang++)
+	CXX += -std=c++11 -Wno-potentially-evaluated-expression
+endif
+endif
+
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS += -static
 	CXX += -I/include -DWIN32
-	LDLIBS += -L/lib -lwsock32 -lssh2
+	LDLIBS += -L/lib -lwsock32
 endif
 
 CXX += -Iinclude -I. -I/usr/local/include
