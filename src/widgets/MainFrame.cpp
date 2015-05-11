@@ -64,26 +64,39 @@ void MainFrame::SetupToolbar()
 {
 	// Icon files
 #ifdef __WXMAC__
-	#include "../../resources/xpm/file_add.xpm"
-	#include "../../resources/xpm/folder.xpm"
-	#include "../../resources/xpm/diskette.xpm"
-	#include "../../resources/xpm/close.xpm"
-	#include "../../resources/xpm/copy.xpm"
-	#include "../../resources/xpm/scissors.xpm"
-	#include "../../resources/xpm/clipboard.xpm"
+	#include "../../resources/xpm/128/new.xpm"
+	#include "../../resources/xpm/128/open.xpm"
+	#include "../../resources/xpm/128/save.xpm"
+	#include "../../resources/xpm/128/cut.xpm"
+	#include "../../resources/xpm/128/copy.xpm"
+	#include "../../resources/xpm/128/paste.xpm"
 
-	wxBitmap new_file_icon(file_add);
-	wxBitmap open_file_icon(folder);
-	wxBitmap save_file_icon(diskette);
-	wxBitmap close_file_icon(close);
+	wxBitmap new_file_icon(new_file);
+	wxBitmap open_file_icon(open);
+	wxBitmap save_file_icon(save);
 	wxBitmap copy_icon(copy);
-	wxBitmap cut_icon(scissors);
-	wxBitmap paste_icon(clipboard);
-#else
+	wxBitmap cut_icon(cut);
+	wxBitmap paste_icon(paste);
+#endif
+#ifdef __WXWIN__
+	#include "../../resources/xpm/48/new.xpm"
+	#include "../../resources/xpm/48/open.xpm"
+	#include "../../resources/xpm/48/save.xpm"
+	#include "../../resources/xpm/48/cut.xpm"
+	#include "../../resources/xpm/48/copy.xpm"
+	#include "../../resources/xpm/48/paste.xpm"
+
+	wxBitmap new_file_icon(new_file);
+	wxBitmap open_file_icon(open);
+	wxBitmap save_file_icon(save);
+	wxBitmap copy_icon(copy);
+	wxBitmap cut_icon(cut);
+	wxBitmap paste_icon(paste);
+#endif
+#ifdef __WXGTK__
 	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR);
 	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR);
 	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR);
-	wxBitmap close_file_icon = wxArtProvider::GetBitmap(wxART_CLOSE, wxART_TOOLBAR);
 	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY, wxART_TOOLBAR);
 	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR);
 	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR);
@@ -96,9 +109,6 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
-#ifndef __WXMSW__
-	toolBar->AddTool(wxID_CLOSE, "Close", close_file_icon, "Close file");
-#endif
 	toolBar->AddSeparator();
 	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
 	toolBar->AddTool(wxID_CUT, "Cut", cut_icon, "Cut");

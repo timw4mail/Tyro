@@ -48,7 +48,7 @@ void TyroMenu::SetupMainMenus()
 	editMenu->Append(wxID_CUT, "Cu&t\tCtrl+X", "Cut selected text");
 	editMenu->Append(wxID_COPY, "&Copy\tCtrl+C", "Copy selected text");
 	editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
-	editMenu->Append(wxID_CLEAR, "&Delete\tDel");
+	//editMenu->Append(wxID_DELETE, "&Delete\tDel");
 	editMenu->AppendSeparator();
 	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
 	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
