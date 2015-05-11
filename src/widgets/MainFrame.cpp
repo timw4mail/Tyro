@@ -3,10 +3,13 @@
  */
 #include "widget.h"
 
+// Nasty globals
 extern TyroMenu *mbar;
-static wxAuiManager *manager;
 static TabContainer *notebook;
 
+/**
+ * Constructor
+ */
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
 {
@@ -17,7 +20,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	wxIcon app_icon(tyro_icon);
 	this->SetIcon(app_icon);
 	
-	// Create menus and bars
+	// Apply the menu bar to the current frame
 #ifdef __WXMAC__
 	wxMenuBar::MacSetCommonMenuBar(mbar);
 #endif // __WXMAC__
@@ -28,33 +31,49 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	// Create the tab container
 	notebook = new TabContainer(this);
 	
-	// Setup control layout
-	wxAuiManager *manager = new wxAuiManager(this);
-	this->SetupToolbar();
-	
-	wxAuiPaneInfo toolBarPaneInfo;
-	toolBarPaneInfo.ToolbarPane().Top();
-	manager->AddPane(toolBar, toolBarPaneInfo);
-	
-	wxAuiPaneInfo notebookPaneInfo;
-	notebookPaneInfo.CenterPane();
-	manager->AddPane(notebook, notebookPaneInfo);
-	
-	this->EnableEditControls(false);
+	this->DoLayout();
 	this->BindEvents();
-	
-	// Do the layout
-	manager->Update();
 }
 
+/**
+ * Time to clean up!
+ */ 
 MainFrame::~MainFrame() 
 {
 	wxLogDebug("Main Frame Destructor Called.");
-	//delete toolBar;
-	//delete notebook;
-	//delete manager;
+	delete notebook;
+	delete toolBar;
+	manager->UnInit();
 }
 
+/**
+ * Layout the widgets on the main frame
+ *
+ * @return void
+ */ 
+void MainFrame::DoLayout()
+{
+	this->manager = new wxAuiManager(this);
+	this->SetupToolbar();
+	
+	// Setup properties for each AUI pane
+	wxAuiPaneInfo toolBarPaneInfo;
+	toolBarPaneInfo.ToolbarPane().Top();
+	this->manager->AddPane(toolBar, toolBarPaneInfo);
+	
+	wxAuiPaneInfo notebookPaneInfo;
+	notebookPaneInfo.CenterPane();
+	this->manager->AddPane(notebook, notebookPaneInfo);
+	
+	// Update everything
+	this->EnableEditControls(false);
+}
+
+/**
+ * Create the status bar
+ *
+ * @return void
+ */ 
 void MainFrame::SetupStatusBar()
 {
 	CreateStatusBar(2);
@@ -174,6 +193,9 @@ void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 {
 	this->EnableEditControls();
 	notebook->AddTab();
+	
+	// Make sure the layout is updated immediately
+	this->manager->Update();
 }
 
 /**
@@ -218,6 +240,8 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 	{
 		this->EnableEditControls(false);
 	}
+	
+	this->manager->Update();
 }
 
 /**
@@ -291,23 +315,46 @@ void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 		// Update the editor highlighting
 		editor->Highlight(filePath);
 	}
+	
+	// Update the main view
+	this->manager->Update();
 }	
 
+/**
+ * Close Tyro
+ *
+ * @return void
+ */ 
 void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
 	Destroy();
 }
 
+/**
+ * Cut to the clipboard
+ * 
+ * @return void
+ */ 
 void MainFrame::OnEditCut(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->GetCurrentEditor()->Cut();
 }
 
+/**
+ * Copy to the clipboard
+ * 
+ * @return void
+ */ 
 void MainFrame::OnEditCopy(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->GetCurrentEditor()->Copy();
 }
 
+/**
+ * Paste from the clipboard
+ * 
+ * @return void
+ */ 
 void MainFrame::OnEditPaste(wxCommandEvent &WXUNUSED(event))
 {
 	if (notebook->GetCurrentEditor()->CanPaste())
@@ -316,11 +363,21 @@ void MainFrame::OnEditPaste(wxCommandEvent &WXUNUSED(event))
 	}
 }
 
+/**
+ * Select all the text in the current document
+ *
+ * @return void
+ */ 
 void MainFrame::OnEditSelectAll(wxCommandEvent &WXUNUSED(event))
 {
 	notebook->GetCurrentEditor()->SelectAll();
 }
 
+/**
+ * Undo recent change(s)
+ * 
+ * @return void
+ */ 
 void MainFrame::OnEditUndo(wxCommandEvent &WXUNUSED(event))
 {
 	if (notebook->GetCurrentEditor()->CanUndo())
@@ -329,6 +386,11 @@ void MainFrame::OnEditUndo(wxCommandEvent &WXUNUSED(event))
 	}
 }
 
+/**
+ * Redo recent change(s)
+ *
+ * @return void
+ */ 
 void MainFrame::OnEditRedo(wxCommandEvent &WXUNUSED(event))
 {
 	if (notebook->GetCurrentEditor()->CanRedo())
@@ -337,6 +399,11 @@ void MainFrame::OnEditRedo(wxCommandEvent &WXUNUSED(event))
 	}
 }
 
+/**
+ * Create and show about dialog
+ *
+ * @return void
+ */ 
 void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
 	wxAboutDialogInfo info;
@@ -344,8 +411,8 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetName(APP_NAME);
 	info.SetVersion(APP_VERSION, APP_VERSION_MORE);
 	
-	info.AddDeveloper("Tim Warren, Programmer");
-	info.AddArtist("Brian Smith, Icon");
+	info.AddDeveloper("Tim Warren");
+	info.AddArtist("Brian Smith");
 	
 	info.SetDescription("Tyro, a text editor for all development");
 	info.SetCopyright(" (C) 2015");
@@ -522,10 +589,16 @@ void MainFrame::OnToggleLineEndings(wxCommandEvent &event)
  */
 void MainFrame::EnableEditControls(bool enable)
 {
+	// Update menu items
 	mbar->EnableEditControls(enable);
+	
+	// Toggle toolbar items
 	this->toolBar->EnableTool(wxID_SAVE, enable);
 	this->toolBar->EnableTool(wxID_CLOSE, enable);
 	this->toolBar->EnableTool(wxID_COPY, enable);
 	this->toolBar->EnableTool(wxID_CUT, enable);
 	this->toolBar->EnableTool(wxID_PASTE, enable);
+	
+	// Make sure the toolbar is refreshed instantly
+	this->manager->Update();
 }

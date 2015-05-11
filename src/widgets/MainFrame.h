@@ -14,6 +14,7 @@ class MainFrame: public wxFrame
 		~MainFrame();
 		void EnableEditControls(bool enable=true);
 	private:
+		wxAuiManager *manager;
 		wxAuiToolBar *toolBar;
 		wxFindReplaceData *findReplaceData;
 		wxFindReplaceDialog *findDlg;
@@ -21,6 +22,7 @@ class MainFrame: public wxFrame
 		void SetupToolbar();
 		void SetupStatusBar();
 		void BindEvents();
+		void DoLayout();
 		
 		// Main Menu Event handlers
 		void OnNew(wxCommandEvent &event);
