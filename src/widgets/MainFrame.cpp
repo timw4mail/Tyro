@@ -78,13 +78,13 @@ void MainFrame::SetupToolbar()
 	wxBitmap cut_icon(cut);
 	wxBitmap paste_icon(paste);
 #endif
-#ifdef __WXWIN__
-	#include "../../resources/xpm/48/new.xpm"
-	#include "../../resources/xpm/48/open.xpm"
-	#include "../../resources/xpm/48/save.xpm"
-	#include "../../resources/xpm/48/cut.xpm"
-	#include "../../resources/xpm/48/copy.xpm"
-	#include "../../resources/xpm/48/paste.xpm"
+#ifdef __WXMSW__
+	#include "../../resources/xpm/24/new.xpm"
+	#include "../../resources/xpm/24/open.xpm"
+	#include "../../resources/xpm/24/save.xpm"
+	#include "../../resources/xpm/24/cut.xpm"
+	#include "../../resources/xpm/24/copy.xpm"
+	#include "../../resources/xpm/24/paste.xpm"
 
 	wxBitmap new_file_icon(new_file);
 	wxBitmap open_file_icon(open);
