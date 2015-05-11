@@ -4,6 +4,7 @@
 #include "widget.h"
 
 extern TyroMenu *mbar;
+static wxAuiManager *manager;
 static TabContainer *notebook;
 
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
@@ -23,29 +24,35 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	SetMenuBar(mbar);
 	
 	this->SetupStatusBar();
-	this->SetupToolbar();
 	
 	// Create the tab container
 	notebook = new TabContainer(this);
-
-	// Set up control layout
-	wxBoxSizer *base_sizer = new wxBoxSizer(wxVERTICAL);
-
-	base_sizer->Add(notebook, 1, wxEXPAND | wxALL, 5);
-	base_sizer->SetContainingWindow(this);
-	base_sizer->SetMinSize(800,600);
+	
+	// Setup control layout
+	wxAuiManager *manager = new wxAuiManager(this);
+	this->SetupToolbar();
+	
+	wxAuiPaneInfo toolBarPaneInfo;
+	toolBarPaneInfo.ToolbarPane().Top();
+	manager->AddPane(toolBar, toolBarPaneInfo);
+	
+	wxAuiPaneInfo notebookPaneInfo;
+	notebookPaneInfo.CenterPane();
+	manager->AddPane(notebook, notebookPaneInfo);
 	
 	this->EnableEditControls(false);
 	this->BindEvents();
 	
 	// Do the layout
-	SetSizerAndFit(base_sizer);
+	manager->Update();
 }
 
 MainFrame::~MainFrame() 
 {
 	wxLogDebug("Main Frame Destructor Called.");
-	delete notebook;
+	//delete toolBar;
+	//delete notebook;
+	//delete manager;
 }
 
 void MainFrame::SetupStatusBar()
@@ -64,12 +71,12 @@ void MainFrame::SetupToolbar()
 {
 	// Icon files
 #ifdef __WXMAC__
-	#include "../../resources/xpm/128/new.xpm"
-	#include "../../resources/xpm/128/open.xpm"
-	#include "../../resources/xpm/128/save.xpm"
-	#include "../../resources/xpm/128/cut.xpm"
-	#include "../../resources/xpm/128/copy.xpm"
-	#include "../../resources/xpm/128/paste.xpm"
+	#include "../../resources/xpm/32/new.xpm"
+	#include "../../resources/xpm/32/open.xpm"
+	#include "../../resources/xpm/32/save.xpm"
+	#include "../../resources/xpm/32/cut.xpm"
+	#include "../../resources/xpm/32/copy.xpm"
+	#include "../../resources/xpm/32/paste.xpm"
 
 	wxBitmap new_file_icon(new_file);
 	wxBitmap open_file_icon(open);
@@ -102,9 +109,7 @@ void MainFrame::SetupToolbar()
 	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR);
 #endif 
 	
-	CreateToolBar(wxNO_BORDER | wxTB_FLAT | wxTB_HORIZONTAL);
-
-	toolBar = GetToolBar();
+	toolBar = new wxAuiToolBar(this);
 
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
@@ -113,7 +118,8 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
 	toolBar->AddTool(wxID_CUT, "Cut", cut_icon, "Cut");
 	toolBar->AddTool(wxID_PASTE, "Paste", paste_icon, "Paste");
-
+	toolBar->AddStretchSpacer();
+	
 	toolBar->Realize();
 }
 

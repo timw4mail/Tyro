@@ -14,7 +14,7 @@ class MainFrame: public wxFrame
 		~MainFrame();
 		void EnableEditControls(bool enable=true);
 	private:
-		wxToolBar *toolBar;
+		wxAuiToolBar *toolBar;
 		wxFindReplaceData *findReplaceData;
 		wxFindReplaceDialog *findDlg;
 		wxFindReplaceDialog *replaceDlg;
