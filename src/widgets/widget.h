@@ -1,10 +1,6 @@
-/* 
- * File:   widget.h
- * Author: twarren
- *
- * Created on May 7, 2015, 2:35 PM
+/**
+ * Common header for widgets
  */
-
 #ifndef TYRO_WIDGET_H
 #define	TYRO_WIDGET_H
 
@@ -12,9 +8,6 @@
 #include "../wx_common.h"
 
 // Base widgets
-#include <wx/cmdline.h>
-#include <wx/config.h>
-#include <wx/filename.h>
 #include <wx/aboutdlg.h>
 #include <wx/fdrepdlg.h>
 #include <wx/aui/aui.h>

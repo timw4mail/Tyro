@@ -11,6 +11,8 @@ public:
 	TyroMenu();
 	~TyroMenu();
 	void EnableEditControls(bool enable);
+	void SetIdChecked(int id, bool checked);
+	void SetCurrentLanguage(string lang);
 private:
 	wxMenu *fileMenu;
 	wxMenu *editMenu;

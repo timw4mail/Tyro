@@ -27,6 +27,7 @@ TyroMenu::TyroMenu()
 TyroMenu::~TyroMenu()
 {
 	wxLogDebug("TyroMenu Destructor Called.");
+	delete lang_config;
 }
 
 void TyroMenu::SetupMainMenus()
@@ -71,9 +72,11 @@ void TyroMenu::SetupLangMenu()
 	
 	StringMap::iterator last = langs.end();
 	
+	langMenu->Append(wxID_ANY, "Plain Text", "Don't highlight file", wxITEM_CHECK);
+	
 	for (it = langs.begin(); it != last; ++it)
 	{
-		langMenu->Append(wxID_ANY, it->second, "Hightlight file as " + it->second, wxITEM_CHECK);
+		langMenu->Append(wxID_ANY, it->second, "Highlight file as " + it->second, wxITEM_CHECK);
 	}
 }
 
@@ -88,6 +91,18 @@ void TyroMenu::EnableEditControls(bool enable)
 	this->EnableEntireMenu(myEDIT_MENU, this->editMenu, enable);
 	this->EnableEntireMenu(myVIEW_MENU, this->viewMenu, enable);
 	this->EnableEntireMenu(myLANG_MENU, this->langMenu, enable);
+}
+
+/**
+ * Check the menu item associated with the specified id
+ * 
+ * @param int id
+ * @param bool checked
+ * @return void
+ */
+void TyroMenu::SetIdChecked(int id, bool checked)
+{
+	this->FindItem(id)->Check(checked);
 }
 
 /**
@@ -112,5 +127,30 @@ void TyroMenu::EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable)
 	{
 		wxMenuItem *current = *iter;
 		current->Enable(enable);
+		
+		// Uncheck all the items
+		if (current->IsCheckable())
+		{
+			current->Check(false);
+		}
 	}
+}
+
+/**
+ * Change the language used for highlighting
+ * 
+ * @param string lang
+ * @return void
+ */
+void TyroMenu::SetCurrentLanguage(string lang)
+{
+	if (lang == "")
+	{
+		lang = "Plain Text";
+	}
+	
+	// Clear checks in the current menu
+	this->EnableEntireMenu(myLANG_MENU, langMenu, true);
+	
+	this->Check(this->FindMenuItem("&Language", lang), true);
 }

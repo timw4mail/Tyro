@@ -417,3 +417,14 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		}
 	}
 }
+
+/**
+ * Get the display name of the currently selected 
+ * language used for highlighting
+ * 
+ * @return string
+ */
+string EditPane::GetCurrentLang()
+{
+	return lang_config->GetCurrentLangName();
+}

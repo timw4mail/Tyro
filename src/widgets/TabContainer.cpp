@@ -4,9 +4,19 @@
 
 #include "widget.h"
 
-extern MainFrame *main_frame;
+extern MainFrame *Glob_main_frame;
+extern TyroMenu *Glob_menu_bar;
 static unsigned long untitled_document_count = 0;
 
+/**
+ * Constructor
+ * 
+ * @param wxWindow* parent
+ * @param wxWindowID id
+ * @param const wxPoint& pos
+ * @param const wxSize& size
+ * @param long style
+ */
 TabContainer::TabContainer(
 		wxWindow* parent,
 		wxWindowID id,
@@ -21,6 +31,9 @@ TabContainer::TabContainer(
 	Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &TabContainer::OnTabSwitch, this, wxID_ANY);
 }
 
+/**
+ * Destructor
+ */
 TabContainer::~TabContainer() 
 {
 	wxLogDebug("TabContainer destructor called");
@@ -63,6 +76,9 @@ void TabContainer::AddTab(wxString filePath)
 		
 		this->SetPageToolTip(this->GetPageIndex(this->GetCurrentPage()), fileName.GetFullPath());
 
+		// Select the appropriate language in the language menu
+		Glob_menu_bar->SetCurrentLanguage(editor->GetCurrentLang());
+		
 		return;
 	}
 	
@@ -139,7 +155,7 @@ void TabContainer::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	if (this->GetPageCount() == 0)
 	{
-		main_frame->EnableEditControls(false);
+		Glob_main_frame->EnableEditControls(false);
 	}
 }
 
@@ -166,7 +182,7 @@ void TabContainer::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 void TabContainer::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
 	this->DeleteAllPages();
-	main_frame->EnableEditControls(false);
+	Glob_main_frame->EnableEditControls(false);
 }
 
 /**
@@ -175,9 +191,15 @@ void TabContainer::OnCloseAll(wxCommandEvent &WXUNUSED(event))
  * @param wxAuiNotebookEvent& event
  * @return void
  */
-void TabContainer::OnTabSwitch(wxAuiNotebookEvent &WXUNUSED(event))
+void TabContainer::OnTabSwitch(wxAuiNotebookEvent &event)
 {
-	//EditPane *editor = this->GetEditor(event.GetSelection());
+	EditPane *editor = this->GetEditor(event.GetSelection());
 	
-	// @TODO: Update menu item checkboxes based on the state of the current editor
+	// Update view menu options
+	Glob_menu_bar->SetIdChecked(myID_VIEW_WHITESPACE, (editor->GetViewWhiteSpace() == wxSTC_WS_VISIBLEALWAYS));
+	Glob_menu_bar->SetIdChecked(myID_VIEW_LINE_ENDINGS, editor->GetViewEOL());
+	Glob_menu_bar->SetIdChecked(myID_LINE_WRAP, (editor->GetWrapMode() == wxSTC_WRAP_WORD));
+	
+	// Update language menu selection
+	Glob_menu_bar->SetCurrentLanguage(editor->GetCurrentLang());
 }

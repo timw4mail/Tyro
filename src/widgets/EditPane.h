@@ -20,6 +20,7 @@ public:
 	bool SaveFile();
 	bool SaveFile(const wxString &filename);
 	void ApplyTheme(string lang, string theme="");
+	string GetCurrentLang();
 private:
 	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;
@@ -28,7 +29,6 @@ private:
 	enum myMargins
 	{
 		MARGIN_FOLD,
-		MARGIN_SYMBOL,
 		MARGIN_LINE_NUMBERS
 	};
 	bool FileReadable();

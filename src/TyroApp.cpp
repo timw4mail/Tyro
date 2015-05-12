@@ -6,12 +6,12 @@
 #include "widgets/widget.h"
 
 #include <wx/app.h>
-#include <wx/debug.h>
+
 
 // Some global stuff
-wxConfigBase *Config;
-TyroMenu *mbar;
-MainFrame *main_frame;
+wxConfigBase *Glob_config;
+TyroMenu *Glob_menu_bar;
+MainFrame *Glob_main_frame;
 
 /**
  * Class with main method
@@ -29,15 +29,17 @@ public:
 	   this->SetAppName(APP_NAME);
 	   this->SetVendorName(APP_VENDOR);
 
-	   Config = wxConfigBase::Get();
-	   mbar = new TyroMenu();
-	   main_frame = new MainFrame(0L, APP_NAME);
+	   // Initialize globals
+	   Glob_config = wxConfigBase::Get();
+	   Glob_menu_bar = new TyroMenu();
+	   Glob_main_frame = new MainFrame(0L, APP_NAME);
 
-	   SetTopWindow(main_frame);
+	   SetTopWindow(Glob_main_frame);
 
-	   main_frame->Layout();
-	   main_frame->CenterOnScreen();
-	   main_frame->Show(true);
+	   // Setup Main Window
+	   Glob_main_frame->Layout();
+	   Glob_main_frame->CenterOnScreen();
+	   Glob_main_frame->Show(true);
 
 	   return true;
 	}

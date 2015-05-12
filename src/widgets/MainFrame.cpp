@@ -4,7 +4,7 @@
 #include "widget.h"
 
 // Nasty globals
-extern TyroMenu *mbar;
+extern TyroMenu *Glob_menu_bar;
 static TabContainer *notebook;
 
 /**
@@ -13,23 +13,17 @@ static TabContainer *notebook;
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
 {
-	#include "../../resources/xpm/tyro.xpm"
-
 	findReplaceData = new wxFindReplaceData(wxFR_DOWN);
 	
+	// Set the frame icon
+#include "../../resources/xpm/tyro.xpm"
 	wxIcon app_icon(tyro_icon);
 	this->SetIcon(app_icon);
 	
 	// Apply the menu bar to the current frame
-#ifdef __WXMAC__
-	wxMenuBar::MacSetCommonMenuBar(mbar);
-#endif // __WXMAC__
-	SetMenuBar(mbar);
+	this->SetMenuBar(Glob_menu_bar);
 	
 	this->SetupStatusBar();
-	
-	// Create the tab container
-	notebook = new TabContainer(this);
 	
 	this->DoLayout();
 	this->BindEvents();
@@ -53,6 +47,9 @@ MainFrame::~MainFrame()
  */ 
 void MainFrame::DoLayout()
 {
+	// Create the tab container
+	notebook = new TabContainer(this);
+	
 	this->manager = new wxAuiManager(this);
 	this->SetupToolbar();
 	
@@ -81,9 +78,7 @@ void MainFrame::DoLayout()
  */ 
 void MainFrame::SetupStatusBar()
 {
-	CreateStatusBar(2);
-	SetStatusText(_(""), 0);
-	SetStatusText(_(""), 1);
+	CreateStatusBar(3);
 }
 
 /**
@@ -94,7 +89,7 @@ void MainFrame::SetupStatusBar()
 void MainFrame::SetupToolbar()
 {
 	// Icon files
-#ifdef __WXMAC__
+#ifndef __WXGTK__
 	#include "../../resources/xpm/32/new.xpm"
 	#include "../../resources/xpm/32/open.xpm"
 	#include "../../resources/xpm/32/save.xpm"
@@ -108,23 +103,7 @@ void MainFrame::SetupToolbar()
 	wxBitmap copy_icon(copy);
 	wxBitmap cut_icon(cut);
 	wxBitmap paste_icon(paste);
-#endif
-#ifdef __WXMSW__
-	#include "../../resources/xpm/24/new.xpm"
-	#include "../../resources/xpm/24/open.xpm"
-	#include "../../resources/xpm/24/save.xpm"
-	#include "../../resources/xpm/24/cut.xpm"
-	#include "../../resources/xpm/24/copy.xpm"
-	#include "../../resources/xpm/24/paste.xpm"
-
-	wxBitmap new_file_icon(new_file);
-	wxBitmap open_file_icon(open);
-	wxBitmap save_file_icon(save);
-	wxBitmap copy_icon(copy);
-	wxBitmap cut_icon(cut);
-	wxBitmap paste_icon(paste);
-#endif
-#ifdef __WXGTK__
+#else
 	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR);
 	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR);
 	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR);
@@ -139,7 +118,6 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
 
-	
 	toolBar->AddSeparator();
 	
 	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
@@ -225,10 +203,12 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	listcount = filelist.GetCount();
 	
 	// Open a new tab for each file
+	notebook->Hide();
 	for (int i = 0; i < listcount; i++)
 	{
 		notebook->AddTab(filelist[i]);
 	}
+	notebook->Show();
 	
 	this->EnableEditControls(true);
 }
@@ -242,6 +222,7 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 {
 	int current_tab = notebook->GetSelection();
 
+	notebook->Hide();
 	notebook->DeletePage(current_tab);
 	
 	if (notebook->GetPageCount() == 0)
@@ -249,6 +230,7 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 		this->EnableEditControls(false);
 	}
 	
+	notebook->Show();
 	this->manager->Update();
 }
 
@@ -259,8 +241,10 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
+	notebook->Hide();
 	notebook->DeleteAllPages();
 	this->EnableEditControls(false);
+	notebook->Show();
 }
 
 /**
@@ -598,7 +582,7 @@ void MainFrame::OnToggleLineEndings(wxCommandEvent &event)
 void MainFrame::EnableEditControls(bool enable)
 {
 	// Update menu items
-	mbar->EnableEditControls(enable);
+	Glob_menu_bar->EnableEditControls(enable);
 	
 	// Toggle toolbar items
 	this->toolBar->EnableTool(wxID_SAVE, enable);

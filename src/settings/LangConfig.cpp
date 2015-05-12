@@ -11,6 +11,16 @@ LangConfig::LangConfig()
 {
 	this->LoadJson(languages_json);
 	this->lang = "";
+	
+	// "cache" reverse map of languages to their keys
+	JsonValue langList = this->GetRoot();
+	JsonValue::iterator it;
+	
+	for (it = langList.begin(); it != langList.end(); ++it)
+	{
+		JsonValue langObj = *it;
+		reverseMap[langObj.get("name", JsonValue()).asString()] = it.key().asString();
+	}
 }
 
 LangConfig::~LangConfig()
@@ -99,22 +109,42 @@ void LangConfig::SetLang(string lang)
 	this->lang = lang;
 }
 
+/**
+ * Get the current language key
+ */
 string LangConfig::GetLang()
 {
 	return this->lang;
 }
 
+/**
+ * Get the name attribute of the currently selected language
+ * 
+ * @return string
+ */
+string LangConfig::GetCurrentLangName()
+{
+	return this->GetRoot()
+		.get(this->lang, JsonValue())
+		.get("name", JsonValue())
+		.asString();
+}
+
+/**
+ * Gets the list of languages available
+ * 
+ * @return StringMap
+ */
 StringMap LangConfig::GetLangList()
 {
-	JsonValue langList = this->GetRoot();
-	JsonValue::iterator it;
+	StringMap revList = this->reverseMap;
+	StringMap::iterator it;
 
 	StringMap outputList;
 
-	for (it = langList.begin(); it != langList.end(); ++it)
+	for (it = revList.begin(); it != revList.end(); ++it)
 	{
-		JsonValue langObj = *it;
-		outputList[it.key().asString()] = langObj.get("name", JsonValue()).asString();
+		outputList[it->second] = it->first;
 	}
 
 	return outputList;

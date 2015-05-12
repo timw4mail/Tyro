@@ -14,10 +14,15 @@
 	#include <wx/wx.h>
 #endif
 
+// Common helpers/functionality
+#include <wx/debug.h>
+#include <wx/cmdline.h>
+#include <wx/config.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <wx/artprov.h>
 
+// Tyro-specific variables
 #include "definitions.h"
 
 #endif	/* WX_COMMON_H */
