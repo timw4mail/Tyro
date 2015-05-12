@@ -58,7 +58,12 @@ void MainFrame::DoLayout()
 	
 	// Setup properties for each AUI pane
 	wxAuiPaneInfo toolBarPaneInfo;
-	toolBarPaneInfo.ToolbarPane().Top();
+	toolBarPaneInfo
+		.Top()
+		.ToolbarPane()
+		.Gripper(false)
+		.DockFixed(true)
+		.Resizable(true);
 	this->manager->AddPane(toolBar, toolBarPaneInfo);
 	
 	wxAuiPaneInfo notebookPaneInfo;
@@ -133,7 +138,10 @@ void MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
+
+	
 	toolBar->AddSeparator();
+	
 	toolBar->AddTool(wxID_COPY, "Copy", copy_icon, "Copy");
 	toolBar->AddTool(wxID_CUT, "Cut", cut_icon, "Cut");
 	toolBar->AddTool(wxID_PASTE, "Paste", paste_icon, "Paste");

@@ -8,56 +8,52 @@
 #include <wx/app.h>
 #include <wx/debug.h>
 
-class TyroApp : public wxApp
-{
-	friend class MainFrame;
-public:
-	virtual bool OnInit();
-	virtual int OnExit();
-private:
-};
-
-//**************************************************************
-
-IMPLEMENT_APP(TyroApp);
-
 // Some global stuff
 wxConfigBase *Config;
 TyroMenu *mbar;
 MainFrame *main_frame;
 
 /**
- * Start the event loop and create the main window
- * 
- * @return bool 
+ * Class with main method
  */
-bool TyroApp::OnInit()
+class TyroApp : public wxApp
 {
-	this->SetAppName(APP_NAME);
-	this->SetVendorName(APP_VENDOR);
-	
-	Config = wxConfigBase::Get();
-	mbar = new TyroMenu();
-	main_frame = new MainFrame(0L, APP_NAME);
+public:
+	/**
+	 * Start the event loop and create the main window
+	 * 
+	 * @return bool 
+	 */
+	bool OnInit()
+	{
+	   this->SetAppName(APP_NAME);
+	   this->SetVendorName(APP_VENDOR);
 
-	SetTopWindow(main_frame);
-	
-	main_frame->Layout();
-	main_frame->CenterOnScreen();
-	main_frame->Show(true);
+	   Config = wxConfigBase::Get();
+	   mbar = new TyroMenu();
+	   main_frame = new MainFrame(0L, APP_NAME);
 
-	return true;
-}
+	   SetTopWindow(main_frame);
 
-/**
- * Exit handler
- * 
- * @return int 
- */
-int TyroApp::OnExit()
-{
-	// Deallocate config object
-	delete wxConfigBase::Set((wxConfigBase *) NULL);
+	   main_frame->Layout();
+	   main_frame->CenterOnScreen();
+	   main_frame->Show(true);
+
+	   return true;
+	}
 	
-	return close(true);
-}
+	/**
+	 * Exit handler
+	 * 
+	 * @return int 
+	 */
+	int OnExit()
+	{
+	   // Deallocate config object
+	   delete wxConfigBase::Set((wxConfigBase *) NULL);
+
+	   return close(true);
+	}
+};
+
+IMPLEMENT_APP(TyroApp);
