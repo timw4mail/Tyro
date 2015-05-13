@@ -404,7 +404,8 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetVersion(APP_VERSION, APP_VERSION_MORE);
 	
 	info.AddDeveloper("Tim Warren");
-	info.AddArtist("Brian Smith");
+	info.AddArtist("Main icon by Brian Smith");
+	info.AddArtist("Other icons by http://dryicons.com");
 	
 	info.SetDescription("Tyro, a text editor for all development");
 	info.SetCopyright(" (C) 2015");
