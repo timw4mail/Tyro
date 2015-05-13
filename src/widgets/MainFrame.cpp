@@ -166,6 +166,9 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_FIND_REPLACE_ALL, &MainFrame::OnFindDialog, this, wxID_ANY);
 	Bind(wxEVT_FIND_CLOSE, &MainFrame::OnFindDialog, this, wxID_ANY);
 	
+	// Language Selection
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnLangSelect, this, wxID_ANY);
+	
 	// Help Menu Events
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
@@ -404,8 +407,8 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetVersion(APP_VERSION, APP_VERSION_MORE);
 	
 	info.AddDeveloper("Tim Warren");
-	info.AddArtist("Main icon by Brian Smith");
-	info.AddArtist("Other icons by http://dryicons.com");
+	info.AddArtist("Brian Smith: Main icon");
+	info.AddArtist("http://dryicons.com: Other icons");
 	
 	info.SetDescription("Tyro, a text editor for all development");
 	info.SetCopyright(" (C) 2015");
@@ -594,4 +597,31 @@ void MainFrame::EnableEditControls(bool enable)
 	
 	// Make sure the toolbar is refreshed instantly
 	this->manager->Update();
+}
+
+/**
+ * Handle selection of highlighting language
+ * 
+ * @param wxCommandEvent& event
+ * @return void
+ */
+void MainFrame::OnLangSelect(wxCommandEvent &event)
+{
+	int selection = event.GetSelection();
+	
+	wxMenu *langMenu = Glob_menu_bar->GetMenu(myLANG_MENU);
+	wxMenuItem *sel_item = langMenu->FindItem(selection);
+	
+	if (sel_item != NULL)
+	{
+		wxLogDebug("New language selection");
+		
+		wxString itemLabel = sel_item->GetItemLabelText();
+		notebook->GetCurrentEditor()->SetCurrentLang(itemLabel.ToStdString());
+	}
+	else
+	{
+		// Go to the more specific event handlers
+		event.Skip(true);
+	}
 }

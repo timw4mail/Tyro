@@ -72,11 +72,9 @@ void TyroMenu::SetupLangMenu()
 	
 	StringMap::iterator last = langs.end();
 	
-	langMenu->Append(wxID_ANY, "Plain Text", "Don't highlight file", wxITEM_CHECK);
-	
 	for (it = langs.begin(); it != last; ++it)
 	{
-		langMenu->Append(wxID_ANY, it->second, "Highlight file as " + it->second, wxITEM_CHECK);
+		langMenu->Append(wxID_ANY, it->second, "Highlight file as " + it->second, wxITEM_RADIO);
 	}
 }
 
@@ -148,9 +146,6 @@ void TyroMenu::SetCurrentLanguage(string lang)
 	{
 		lang = "Plain Text";
 	}
-	
-	// Clear checks in the current menu
-	this->EnableEntireMenu(myLANG_MENU, langMenu, true);
 	
 	this->Check(this->FindMenuItem("&Language", lang), true);
 }

@@ -4,38 +4,22 @@
 
 #include "widget.h"
 
+extern StringConstMap Glob_lexer_map;
+
+/**
+ * Constructor
+ * 
+ * @param wxWindow* parent
+ * @param wxWindowID id
+ * @param const wxPoint& pos
+ * @param const wxSize& size
+ */
 EditPane::EditPane(
 	wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size
 ) : wxStyledTextCtrl (parent, id, pos, size, wxBORDER_NONE)
 {
 	lang_config = new LangConfig();
 	theme_config = new ThemeConfig();
-
-	// Map language types to their lexers
-	lexerMap["batch"] = wxSTC_LEX_BATCH;
-	lexerMap["caml"] = wxSTC_LEX_CAML;
-	lexerMap["cmake"] = wxSTC_LEX_CMAKE;
-	lexerMap["coffeescript"] = wxSTC_LEX_COFFEESCRIPT;
-	lexerMap["cpp"] = wxSTC_LEX_CPP;
-	lexerMap["css"] = wxSTC_LEX_CSS;
-	lexerMap["fortran"] = wxSTC_LEX_FORTRAN;
-	lexerMap["haskell"] = wxSTC_LEX_HASKELL;
-	lexerMap["html"] = wxSTC_LEX_HTML;
-	lexerMap["java"] = wxSTC_LEX_CPP;
-	lexerMap["js"] = wxSTC_LEX_CPP;
-	lexerMap["lisp"] = wxSTC_LEX_LISP;
-	lexerMap["lua"] = wxSTC_LEX_LUA;
-	lexerMap["makefile"] = wxSTC_LEX_MAKEFILE;
-	lexerMap["markdown"] = wxSTC_LEX_MARKDOWN;
-	lexerMap["php"] = wxSTC_LEX_HTML;
-	lexerMap["perl"] = wxSTC_LEX_PERL;
-	lexerMap["python"] = wxSTC_LEX_PYTHON;
-	lexerMap["ruby"] = wxSTC_LEX_RUBY;
-	lexerMap["rust"] = wxSTC_LEX_CPP;
-	lexerMap["shell"] = wxSTC_LEX_BASH;
-	lexerMap["sql"] = wxSTC_LEX_SQL;
-	lexerMap["xml"] = wxSTC_LEX_XML;
-	lexerMap["yaml"] = wxSTC_LEX_YAML;
 
 	this->BindEvents();
 	
@@ -66,7 +50,7 @@ EditPane::EditPane(
 	this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
 	this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
 	
-	this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
+	//this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
 
 	// set spaces and indention
 	this->SetTabWidth(4);
@@ -75,6 +59,9 @@ EditPane::EditPane(
 	this->Highlight("");
 }
 
+/**
+ * Destructor
+ */
 EditPane::~EditPane()
 {
 	wxLogDebug("Called EditPane Destructor");
@@ -96,17 +83,6 @@ void EditPane::Highlight(wxString filePath)
 	// Get the configuration name for the selected language
 	string lang = lang_config->GetLangByFile(this->fileName);
 
-	this->StyleClearAll();
-
-	if (lexerMap.count(lang) > 0)
-	{
-		this->SetLexer(lexerMap[lang]);
-	}
-	else
-	{
-		this->SetLexer(wxSTC_LEX_NULL);
-	}
-
 	// Apply the theme
 	this->ApplyTheme(lang);
 
@@ -125,7 +101,18 @@ void EditPane::Highlight(wxString filePath)
  * @return void
  */
 void EditPane::ApplyTheme(string lang, string theme)
-{	
+{
+	this->StyleClearAll();
+
+	if (Glob_lexer_map.count(lang) > 0)
+	{
+		this->SetLexer(Glob_lexer_map[lang]);
+	}
+	else
+	{
+		this->SetLexer(wxSTC_LEX_NULL);
+	}
+	
 	if (theme != "")
 	{
 		theme_config->SetTheme(theme);
@@ -184,11 +171,16 @@ bool EditPane::Load(wxString filePath)
 	return false;
 }
 
+/**
+ * Save the current file
+ * 
+ * @return bool
+ */
 bool EditPane::SaveFile()
 {
 	wxString fname;
 
-	if ( ! this->fileName.IsOk())
+	/*if ( ! this->fileName.IsOk())
 	{
 		wxFileDialog dlg (
 			this,
@@ -202,7 +194,7 @@ bool EditPane::SaveFile()
 		if (dlg.ShowModal() != wxID_OK) return false;
 		fname = dlg.GetPath();
 	}
-	else
+	else*/
 	{
 		fname = this->fileName.GetFullPath();
 	}
@@ -212,6 +204,12 @@ bool EditPane::SaveFile()
 	return this->SaveFile(cfname);
 }
 
+/**
+ * Save the current file with the specified filename
+ * 
+ * @param const wxString filename
+ * @return bool
+ */
 bool EditPane::SaveFile(const wxString &filename)
 {
 	if ( ! this->IsModified()) return true;
@@ -279,6 +277,11 @@ bool EditPane::FileWritable()
 	return false;
 }
 
+/**
+ * Wire Event handlers
+ * 
+ * @return void
+ */
 void EditPane::BindEvents()
 {
 	Bind(wxEVT_STC_MARGINCLICK, &EditPane::OnMarginClick, this, wxID_ANY);
@@ -427,4 +430,20 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 string EditPane::GetCurrentLang()
 {
 	return lang_config->GetCurrentLangName();
+}
+
+/**
+ * Set the highlighting language
+ * 
+ * @param string name
+ * @return void
+ */
+void EditPane::SetCurrentLang(string name)
+{
+	// Update the current lang in the config
+	string langKey = lang_config->GetLangByName(name);
+	lang_config->SetLang(langKey);
+	
+	// Re-highlight the page with the new langauge
+	this->ApplyTheme(langKey);
 }

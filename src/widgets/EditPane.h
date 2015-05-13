@@ -21,8 +21,8 @@ public:
 	bool SaveFile(const wxString &filename);
 	void ApplyTheme(string lang, string theme="");
 	string GetCurrentLang();
+	void SetCurrentLang(string name);
 private:
-	StringConstMap lexerMap;
 	StringConstMap::iterator lexerMapIt;
 	LangConfig *lang_config;
 	ThemeConfig *theme_config;

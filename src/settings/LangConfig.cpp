@@ -16,6 +16,9 @@ LangConfig::LangConfig()
 	JsonValue langList = this->GetRoot();
 	JsonValue::iterator it;
 	
+	// Special case for non-recognized language
+	reverseMap["Plain Text"] = "";
+	
 	for (it = langList.begin(); it != langList.end(); ++it)
 	{
 		JsonValue langObj = *it;
@@ -128,6 +131,26 @@ string LangConfig::GetCurrentLangName()
 		.get(this->lang, JsonValue())
 		.get("name", JsonValue())
 		.asString();
+}
+
+/**
+ * Get the "key" of the language based on its name attribute
+ * 
+ * @param string name
+ * @return string
+ */
+string LangConfig::GetLangByName(string name)
+{
+	StringMap::iterator it;
+	
+	it = this->reverseMap.find(name);
+	
+	if (it != reverseMap.end())
+	{
+		return it->second;
+	}
+	
+	return "";
 }
 
 /**

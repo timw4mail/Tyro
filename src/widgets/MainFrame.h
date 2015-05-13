@@ -46,6 +46,8 @@ class MainFrame: public wxFrame
 		void OnToggleLineWrap(wxCommandEvent &event);
 		void OnToggleLineEndings(wxCommandEvent &event);
 		
+		void OnLangSelect(wxCommandEvent &event);
+		
 		void OnCloseTab(wxCommandEvent &event);
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);

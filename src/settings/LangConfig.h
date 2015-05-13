@@ -15,6 +15,7 @@ public:
 	JsonValue GetLexerMap(string lang="none");
 	StringMap GetLangList();
 	string GetCurrentLangName();
+	string GetLangByName(string name);
 private:
 	string lang;
 	StringMap reverseMap;
