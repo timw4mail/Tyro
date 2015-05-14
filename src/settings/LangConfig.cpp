@@ -141,16 +141,8 @@ string LangConfig::GetCurrentLangName()
  */
 string LangConfig::GetLangByName(string name)
 {
-	StringMap::iterator it;
-	
-	it = this->reverseMap.find(name);
-	
-	if (it != reverseMap.end())
-	{
-		return it->second;
-	}
-	
-	return "";
+	int count = this->reverseMap.count(name);
+	return (count > 0) ? this->reverseMap[name] : "";
 }
 
 /**

@@ -17,7 +17,7 @@ const wxString TYRO_SAVE_ERROR_CAPTION = "Saving Failed";
 const wxString TYRO_OPEN_ERROR = "Failed to open the file. Check that it exists, and that you have read permissions.";
 const wxString TYRO_OPEN_ERROR_CAPTION = "Open Failed";
 
-// EditPane file extension to lexer mapping
+// Typedef some common templates
 typedef map<string, int> StringConstMap;
 typedef map<string, string> StringMap;
 
@@ -32,7 +32,7 @@ enum myMenuIds {
 
 // General Menu ids
 enum myMenuItemIds {
-	myID_VIEW_WHITESPACE = wxID_HIGHEST,
+	myID_VIEW_WHITESPACE = wxID_HIGHEST + 1,
 	myID_VIEW_LINE_ENDINGS,
 	myID_CLOSE_ALL,
 	myID_CLOSE_ALL_BUT_THIS,

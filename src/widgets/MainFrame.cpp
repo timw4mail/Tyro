@@ -136,28 +136,28 @@ void MainFrame::SetupToolbar()
 void MainFrame::BindEvents()
 {
 	// File Menu Events
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnNew, this, wxID_NEW);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnOpen, this, wxID_OPEN);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSave, this, wxID_SAVE);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnCloseTab, this, wxID_CLOSE);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &TabContainer::OnCloseAll, notebook, myID_CLOSE_ALL);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnQuit, this, wxID_EXIT);
+	Bind(wxEVT_MENU, &MainFrame::OnNew, this, wxID_NEW);
+	Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
+	Bind(wxEVT_MENU, &MainFrame::OnSave, this, wxID_SAVE);
+	Bind(wxEVT_MENU, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
+	Bind(wxEVT_MENU, &MainFrame::OnCloseTab, this, wxID_CLOSE);
+	Bind(wxEVT_MENU, &TabContainer::OnCloseAll, notebook, myID_CLOSE_ALL);
+	Bind(wxEVT_MENU, &MainFrame::OnQuit, this, wxID_EXIT);
 	
 	// Edit Menu Events
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCut, this, wxID_CUT);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditCopy, this, wxID_COPY);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditPaste, this, wxID_PASTE);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditSelectAll, this, wxID_SELECTALL);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditUndo, this, wxID_UNDO);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditRedo, this, wxID_REDO);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditFind, this, wxID_FIND);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnEditReplace, this, wxID_REPLACE);
+	Bind(wxEVT_MENU, &MainFrame::OnEditCut, this, wxID_CUT);
+	Bind(wxEVT_MENU, &MainFrame::OnEditCopy, this, wxID_COPY);
+	Bind(wxEVT_MENU, &MainFrame::OnEditPaste, this, wxID_PASTE);
+	Bind(wxEVT_MENU, &MainFrame::OnEditSelectAll, this, wxID_SELECTALL);
+	Bind(wxEVT_MENU, &MainFrame::OnEditUndo, this, wxID_UNDO);
+	Bind(wxEVT_MENU, &MainFrame::OnEditRedo, this, wxID_REDO);
+	Bind(wxEVT_MENU, &MainFrame::OnEditFind, this, wxID_FIND);
+	Bind(wxEVT_MENU, &MainFrame::OnEditReplace, this, wxID_REPLACE);
 	
 	// View Menu Events
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnToggleLineEndings, this, myID_VIEW_LINE_ENDINGS);
+	Bind(wxEVT_MENU, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
+	Bind(wxEVT_MENU, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
+	Bind(wxEVT_MENU, &MainFrame::OnToggleLineEndings, this, myID_VIEW_LINE_ENDINGS);
 
 	// Find/Replace Events
 	Bind(wxEVT_FIND, &MainFrame::OnFindDialog, this, wxID_ANY);
@@ -167,10 +167,10 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_FIND_CLOSE, &MainFrame::OnFindDialog, this, wxID_ANY);
 	
 	// Language Selection
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnLangSelect, this, wxID_ANY);
+	Bind(wxEVT_MENU, &MainFrame::OnLangSelect, this, wxID_ANY);
 	
 	// Help Menu Events
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
+	Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
 
 /**
@@ -607,16 +607,15 @@ void MainFrame::EnableEditControls(bool enable)
  */
 void MainFrame::OnLangSelect(wxCommandEvent &event)
 {
-	int selection = event.GetSelection();
-	
+	wxMenu *selectedMenu = (wxMenu *) event.GetEventObject();
 	wxMenu *langMenu = Glob_menu_bar->GetMenu(myLANG_MENU);
-	wxMenuItem *sel_item = langMenu->FindItem(selection);
-	
-	if (sel_item != NULL)
+	if (langMenu == NULL) wxLogDebug("Couldn't get lang menu");
+
+	if (selectedMenu == langMenu)
 	{
-		wxLogDebug("New language selection");
-		
+		wxMenuItem *sel_item = langMenu->FindChildItem(event.GetId());
 		wxString itemLabel = sel_item->GetItemLabelText();
+
 		notebook->GetCurrentEditor()->SetCurrentLang(itemLabel.ToStdString());
 	}
 	else

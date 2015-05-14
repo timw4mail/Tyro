@@ -18,6 +18,7 @@ Use [this script](http://devernay.free.fr/hacks/xcodelegacy/) to install older S
 * --enable-profile
 * --disable-compat28
 * --disable-shared
+* --without-liblzma
 * --without-webviewwebkit
 * --with-macosx-version-min=10.5
 * --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.5.sdk
