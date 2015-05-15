@@ -3,6 +3,9 @@
 
 static LangConfig *lang_config;
 
+/**
+ * Constructor
+ */ 
 TyroMenu::TyroMenu()
 {
 	fileMenu = new wxMenu();
@@ -24,12 +27,20 @@ TyroMenu::TyroMenu()
 	this->Insert(myHELP_MENU, helpMenu, "&Help");
 }
 
+/**
+ * Destructor
+ */ 
 TyroMenu::~TyroMenu()
 {
 	wxLogDebug("TyroMenu Destructor Called.");
 	delete lang_config;
 }
 
+/**
+ * Setup basic menu items
+ * 
+ * @return void
+ */ 
 void TyroMenu::SetupMainMenus()
 {
 	// Add items to top-level menus
@@ -65,6 +76,11 @@ void TyroMenu::SetupMainMenus()
 	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
 }
 
+/**
+ * Create the language selection menu
+ *
+ * @return void
+ */ 
 void TyroMenu::SetupLangMenu()
 {
 	StringMap langs = lang_config->GetLangList();
@@ -78,6 +94,12 @@ void TyroMenu::SetupLangMenu()
 	}
 }
 
+/**
+ * Enable/disable controls that require a file to be open
+ *
+ * @param bool enable 
+ * @return void
+ */ 
 void TyroMenu::EnableEditControls(bool enable)
 {
 	this->fileMenu->Enable(wxID_SAVE, enable);

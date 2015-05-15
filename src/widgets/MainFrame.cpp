@@ -7,6 +7,9 @@
 extern TyroMenu *Glob_menu_bar;
 static TabContainer *notebook;
 
+// Frame icon
+#include "../../resources/xpm/tyro.xpm"
+
 /**
  * Constructor
  */
@@ -19,7 +22,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	notebook = new TabContainer(this);
 	
 	// Set the frame icon
-#include "../../resources/xpm/tyro.xpm"
+
 	wxIcon app_icon(tyro_icon);
 	this->SetIcon(app_icon);
 	

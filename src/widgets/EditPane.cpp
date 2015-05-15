@@ -385,9 +385,6 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 	for (int i = 0; i < max; i++)
 	{
 		string key = lexer_map[i].asString();
-		
-		//wxLogDebug("Token type: %s", key);
-		//wxLogDebug("Lexer constant: %i", i);
 
 		// Set the foreground color, if it exists
 		if ( ! theme_config->GetThemeValue("foreground", key).isNull())
