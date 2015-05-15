@@ -27,23 +27,25 @@ public:
 	 */
 	bool OnInit()
 	{
-	   this->SetAppName(APP_NAME);
-	   this->SetVendorName(APP_VENDOR);
+		if ( ! wxApp::OnInit()) return false;
 
-	   // Initialize globals
-	   this->InitLexerMap();
-	   Glob_config = wxConfigBase::Get();
-	   Glob_menu_bar = new TyroMenu();
-	   Glob_main_frame = new MainFrame(0L, APP_NAME);
+		this->SetAppName(APP_NAME);
+		this->SetVendorName(APP_VENDOR);
 
-	   SetTopWindow(Glob_main_frame);
+		// Initialize globals
+		this->InitLexerMap();
+		Glob_config = wxConfigBase::Get();
+		Glob_menu_bar = new TyroMenu();
+		Glob_main_frame = new MainFrame(0L, APP_NAME);
 
-	   // Setup Main Window
-	   Glob_main_frame->Layout();
-	   Glob_main_frame->CenterOnScreen();
-	   Glob_main_frame->Show(true);
+		// Setup Main Window
+		Glob_main_frame->Layout();
+		Glob_main_frame->CenterOnScreen();
+		Glob_main_frame->Show(true);
 
-	   return true;
+		SetTopWindow(Glob_main_frame);
+
+		return true;
 	}
 	
 	/**
@@ -53,15 +55,58 @@ public:
 	 */
 	int OnExit()
 	{
-	   // Deallocate config object
-	   delete wxConfigBase::Set((wxConfigBase *) NULL);
+		// Deallocate config object
+		delete wxConfigBase::Set((wxConfigBase *) NULL);
 
-	   return close(true);
+		return close(true);
+	}
+	
+	/**
+	 * Set up Command Line options
+	 * 
+	 * @param wxCmdLineParser& parser
+	 * @return void
+	 */
+	void OnInitCmdLine(wxCmdLineParser &parser)
+	{
+		parser.SetDesc(Glob_cmdLineDesc);
+
+		// Set - as parameter delimeter, so raw file paths can be used
+		parser.SetSwitchChars("-");
+	}
+	
+	/**
+	 * Handler for command line options
+	 * 
+	 * @param wxCmdLineParser& parser
+	 * @return bool
+	 */
+	bool OnCmdLineParsed(wxCmdLineParser &parser)
+	{
+		// Get un-named parameters
+		wxArrayString files;
+		int i;
+		int param_count = parser.GetParamCount();
+
+		wxLogDebug("%i Parameters", param_count);
+
+		for (i = 0; i < param_count; i++)
+		{
+			files.Add(parser.GetParam(i));
+		}
+
+		// Open files in editor, if any are passed
+		if (param_count > 0)
+		{
+			Glob_main_frame->OpenFiles(files);	
+		}
+
+		return true;
 	}
 private:
 	/**
 	 * Set up mapping for lexers
-     */
+	 */
 	void InitLexerMap()
 	{
 		Glob_lexer_map[""] = wxSTC_LEX_NULL;

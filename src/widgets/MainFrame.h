@@ -13,6 +13,7 @@ class MainFrame: public wxFrame
 		MainFrame(wxFrame *frame, const wxString &title);
 		~MainFrame();
 		void EnableEditControls(bool enable=true);
+		void OpenFiles(wxArrayString filelist);
 	private:
 		wxAuiManager *manager;
 		wxAuiToolBar *toolBar;

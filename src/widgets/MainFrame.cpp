@@ -15,6 +15,9 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 {
 	findReplaceData = new wxFindReplaceData(wxFR_DOWN);
 	
+	// Create the tab container
+	notebook = new TabContainer(this);
+	
 	// Set the frame icon
 #include "../../resources/xpm/tyro.xpm"
 	wxIcon app_icon(tyro_icon);
@@ -35,7 +38,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 MainFrame::~MainFrame() 
 {
 	wxLogDebug("Main Frame Destructor Called.");
-	delete notebook;
+	//delete notebook;
 	delete toolBar;
 	manager->UnInit();
 }
@@ -46,10 +49,7 @@ MainFrame::~MainFrame()
  * @return void
  */ 
 void MainFrame::DoLayout()
-{
-	// Create the tab container
-	notebook = new TabContainer(this);
-	
+{	
 	this->manager = new wxAuiManager(this);
 	this->SetupToolbar();
 	
@@ -188,14 +188,13 @@ void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 }
 
 /**
- * Open existing document(s)
+ * Display a file open dialog, and open the selected files
  *
  * @return void
  */ 
 void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
 	wxArrayString filelist;
-	int listcount;
 	
 	wxFileDialog dlg (this, "Open file(s)", wxEmptyString, wxEmptyString,
 		TYRO_FILE_OPEN_WILDCARDS, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR | wxFD_MULTIPLE);
@@ -203,15 +202,29 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	if (dlg.ShowModal() != wxID_OK) return;
 	
 	dlg.GetPaths(filelist);
-	listcount = filelist.GetCount();
+	
+	this->OpenFiles(filelist);
+}
+
+/**
+ * Open tabs containing the files passed
+ * 
+ * @param wxArrayString& filelist
+ * @return void
+ */
+void MainFrame::OpenFiles(wxArrayString filelist)
+{
+	int listcount = filelist.GetCount();
+	
+	if (listcount < 1) return;
 	
 	// Open a new tab for each file
-	notebook->Hide();
+	//notebook->Freeze();
 	for (int i = 0; i < listcount; i++)
 	{
 		notebook->AddTab(filelist[i]);
 	}
-	notebook->Show();
+	//notebook->Thaw();
 	
 	this->EnableEditControls(true);
 }
@@ -225,7 +238,7 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 {
 	int current_tab = notebook->GetSelection();
 
-	notebook->Hide();
+	notebook->Freeze();
 	notebook->DeletePage(current_tab);
 	
 	if (notebook->GetPageCount() == 0)
@@ -233,7 +246,7 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 		this->EnableEditControls(false);
 	}
 	
-	notebook->Show();
+	notebook->Thaw();
 	this->manager->Update();
 }
 
@@ -244,10 +257,10 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
-	notebook->Hide();
+	notebook->Freeze();
 	notebook->DeleteAllPages();
 	this->EnableEditControls(false);
-	notebook->Show();
+	notebook->Thaw();
 }
 
 /**

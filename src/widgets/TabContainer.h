@@ -29,6 +29,7 @@ public:
 	EditPane *GetEditor(size_t page_idx);
 	void OnCloseAll(wxCommandEvent &event);
 private:
+	MainFrame *parent;
 	void OnTabSwitch(wxAuiNotebookEvent &event);
 	void OnClose(wxAuiNotebookEvent &event);
 	void OnClosed(wxAuiNotebookEvent &event);

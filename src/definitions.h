@@ -8,8 +8,21 @@
 // Application config
 const wxString APP_NAME = "Tyro";
 const wxString APP_VENDOR = "Aviat Ion";
-const wxString APP_VERSION = "0.1.0";
+const wxString APP_VERSION = "0.5.0";
 const wxString APP_VERSION_MORE = "Pre-release";
+
+// Command-line arguments
+const wxCmdLineEntryDesc Glob_cmdLineDesc[] = {
+	{
+		wxCMD_LINE_PARAM, 
+		NULL,
+		NULL, 
+		"input file(s)",
+		wxCMD_LINE_VAL_STRING,
+		wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE 
+	},
+	{wxCMD_LINE_NONE}
+};
 
 // Some boilerplate text
 const wxString TYRO_SAVE_ERROR = "Failed to save the file. Maybe you lack the permissions.";

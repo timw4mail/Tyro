@@ -4,7 +4,6 @@
 
 #include "widget.h"
 
-extern MainFrame *Glob_main_frame;
 extern TyroMenu *Glob_menu_bar;
 static unsigned long untitled_document_count = 0;
 
@@ -25,6 +24,8 @@ TabContainer::TabContainer(
 		long style
 ) : wxAuiNotebook(parent, id, pos, size, style)
 {
+	this->parent = (MainFrame *) parent;
+	
 	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &TabContainer::OnClose, this, wxID_ANY);
 	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &TabContainer::OnClosed, this, wxID_ANY);
 	Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &TabContainer::OnTabContextMenu, this, wxID_ANY);
@@ -52,7 +53,7 @@ void TabContainer::AddTab()
 
 	caption.Printf("Untitled %lu", untitled_document_count);
 
-	EditPane *editor = new EditPane(this, wxID_ANY);
+	EditPane *editor = new EditPane(this);
 
 	this->AddPage(editor, caption, true);
 }
@@ -64,11 +65,17 @@ void TabContainer::AddTab()
  * @return void
  */
 void TabContainer::AddTab(wxString filePath)
-{
+{	
 	wxFileName fileName(filePath);
 	
+	if ( ! (fileName.IsOk() && fileName.FileExists()))
+	{
+		wxLogDebug("Invalid file name.");
+		return;
+	}
+	
 	wxString caption= fileName.GetFullName();
-	EditPane *editor = new EditPane(this, wxID_ANY);
+	EditPane *editor = new EditPane(this);
 	
 	if (editor->Load(filePath))
 	{
@@ -155,7 +162,7 @@ void TabContainer::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	if (this->GetPageCount() == 0)
 	{
-		Glob_main_frame->EnableEditControls(false);
+		this->parent->EnableEditControls(false);
 	}
 }
 
@@ -182,7 +189,7 @@ void TabContainer::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 void TabContainer::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
 	this->DeleteAllPages();
-	Glob_main_frame->EnableEditControls(false);
+	this->parent->EnableEditControls(false);
 }
 
 /**
