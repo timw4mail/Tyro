@@ -14,6 +14,10 @@ TyroMenu *Glob_menu_bar;
 MainFrame *Glob_main_frame;
 StringConstMap Glob_lexer_map;
 
+// Static app loading variables
+static wxArrayString files;
+static int param_count;
+
 /**
  * Class with main method
  */
@@ -42,6 +46,12 @@ public:
 		Glob_main_frame->Layout();
 		Glob_main_frame->CenterOnScreen();
 		Glob_main_frame->Show(true);
+		
+		// Open passed files
+		if (param_count > 0)
+		{
+			Glob_main_frame->OpenFiles(files);
+		}
 
 		SetTopWindow(Glob_main_frame);
 
@@ -86,19 +96,13 @@ public:
 		// Get un-named parameters
 		wxArrayString files;
 		int i;
-		int param_count = parser.GetParamCount();
+		param_count = parser.GetParamCount();
 
 		wxLogDebug("%i Parameters", param_count);
 
 		for (i = 0; i < param_count; i++)
 		{
-			files.Add(parser.GetParam(i));
-		}
-
-		// Open files in editor, if any are passed
-		if (param_count > 0)
-		{
-			Glob_main_frame->OpenFiles(files);	
+			Glob_files.Add(parser.GetParam(i));
 		}
 
 		return true;
