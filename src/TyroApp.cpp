@@ -94,7 +94,6 @@ public:
 	bool OnCmdLineParsed(wxCmdLineParser &parser)
 	{
 		// Get un-named parameters
-		wxArrayString files;
 		int i;
 		param_count = parser.GetParamCount();
 
@@ -102,7 +101,7 @@ public:
 
 		for (i = 0; i < param_count; i++)
 		{
-			Glob_files.Add(parser.GetParam(i));
+			files.Add(parser.GetParam(i));
 		}
 
 		return true;
