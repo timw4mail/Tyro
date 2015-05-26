@@ -5,6 +5,7 @@
 
 // Nasty globals
 extern TyroMenu *Glob_menu_bar;
+extern PrefPane *Glob_pref_pane;
 static TabContainer *notebook;
 
 // Frame icon
@@ -16,7 +17,7 @@ static TabContainer *notebook;
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	: wxFrame(frame, -1, title)
 {
-	findReplaceData = new wxFindReplaceData(wxFR_DOWN);
+	this->findReplaceData = new wxFindReplaceData(wxFR_DOWN);
 	
 	// Create the tab container
 	notebook = new TabContainer(this);
@@ -41,7 +42,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 MainFrame::~MainFrame() 
 {
 	wxLogDebug("Main Frame Destructor Called.");
-	//delete notebook;
+	delete notebook;
 	delete toolBar;
 	manager->UnInit();
 }
@@ -156,6 +157,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_MENU, &MainFrame::OnEditRedo, this, wxID_REDO);
 	Bind(wxEVT_MENU, &MainFrame::OnEditFind, this, wxID_FIND);
 	Bind(wxEVT_MENU, &MainFrame::OnEditReplace, this, wxID_REPLACE);
+	Bind(wxEVT_MENU, &MainFrame::OnEditPreferences, this, wxID_PREFERENCES);
 	
 	// View Menu Events
 	Bind(wxEVT_MENU, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
@@ -461,7 +463,8 @@ void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event))
 	}
 	else
 	{
-		findDlg = new wxFindReplaceDialog(this, findReplaceData, "Find");
+		this->findReplaceData = new wxFindReplaceData(wxFR_DOWN);
+		findDlg = new wxFindReplaceDialog(this, this->findReplaceData, "Find");
 		findDlg->Show(true);
 	}
 }
@@ -479,7 +482,8 @@ void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event))
 	}
 	else
 	{
-		replaceDlg = new wxFindReplaceDialog(this, findReplaceData, 
+		this->findReplaceData = new wxFindReplaceData(wxFR_DOWN);
+		replaceDlg = new wxFindReplaceDialog(this, this->findReplaceData, 
 			"Find and Replace", wxFR_REPLACEDIALOG);
 		
 		replaceDlg->Show(true);
@@ -515,27 +519,12 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	{
 		wxLogDebug("wxEVT_FIND");
 		
+		editor->SetAnchor(0);
 		editor->SearchAnchor();
-		
-		if ((fr_flags & wxFR_DOWN) != 0)
-		{
-			new_pos = editor->SearchNext(stc_flags, event.GetFindString());
-		}
-		else
-		{
-			new_pos = editor->SearchPrev(stc_flags, event.GetFindString());
-		}
-		
-		if (new_pos >= 0)
-		{
-			new_line = editor->LineFromPosition(new_pos);
-			editor->ScrollToLine(new_line);
-		}
 	}
-	else if (type == wxEVT_FIND_NEXT)
-	{
-		wxLogDebug("wxEVT_FIND_NEXT");
-		
+	
+	if (type == wxEVT_FIND_NEXT || type == wxEVT_FIND)
+	{	
 		if ((fr_flags & wxFR_DOWN) != 0)
 		{
 			new_pos = editor->SearchNext(stc_flags, event.GetFindString());
@@ -545,15 +534,20 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 			new_pos = editor->SearchPrev(stc_flags, event.GetFindString());
 		}
 		
-		if (new_pos >= 0)
+		if (new_pos > 0)
 		{	
 			new_line = editor->LineFromPosition(new_pos);
 			editor->ScrollToLine(new_line);
+			//editor->SetAnchor(new_pos);
+			editor->SearchAnchor();
 		}
+		
+		return;
 	}
 	else if (type == wxEVT_FIND_REPLACE)
 	{
 		wxLogDebug("wxEVT_FIND_REPLACE");
+		editor->ReplaceSelection(event.GetReplaceString());
 	}
 	else if (type == wxEVT_FIND_REPLACE_ALL)
 	{
@@ -639,4 +633,9 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
 		// Go to the more specific event handlers
 		event.Skip(true);
 	}
+}
+
+void MainFrame::OnEditPreferences(wxCommandEvent &WXUNUSED(event))
+{
+	Glob_pref_pane->Show(this);
 }

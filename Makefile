@@ -22,16 +22,17 @@ OS ?= $(shell uname -s)
 
 # Get static version of libs to link to on platforms that support it
 ifneq ($(OS),Linux)
-	WX_LDLIBS = $(shell wx-config --static --libs base core aui stc adv)
+	WX_LDLIBS = $(shell wx-config --static --libs base core aui stc adv) 
 else
 	WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 endif
 
 # Platform compiler flags
 ifeq ($(OS),Darwin)
-	CXX = $(shell wx-config --cxx)
+	CXX = $(shell wx-config --cxx) -no-cpp-precomp -Xpreprocessor -Wno-missing-field-initializers
 	LDLIBS += /usr/local/lib/libssh2.a
 else
+	CXX += -Wno-missing-field-initializers
 	LDLIBS += -lssh2
 endif
 

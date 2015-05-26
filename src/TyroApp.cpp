@@ -13,6 +13,7 @@ wxConfigBase *Glob_config;
 TyroMenu *Glob_menu_bar;
 MainFrame *Glob_main_frame;
 StringConstMap Glob_lexer_map;
+PrefPane *Glob_pref_pane;
 
 // Static app loading variables
 static wxArrayString files;
@@ -41,6 +42,7 @@ public:
 		Glob_config = wxConfigBase::Get();
 		Glob_menu_bar = new TyroMenu();
 		Glob_main_frame = new MainFrame(0L, APP_NAME);
+		Glob_pref_pane = new PrefPane();
 
 		// Setup Main Window
 		Glob_main_frame->Layout();

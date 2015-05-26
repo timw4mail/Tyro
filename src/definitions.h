@@ -45,11 +45,17 @@ enum myMenuIds {
 
 // General Menu ids
 enum myMenuItemIds {
+	// Menu options for immediate file
 	myID_VIEW_WHITESPACE = wxID_HIGHEST + 1,
 	myID_VIEW_LINE_ENDINGS,
 	myID_CLOSE_ALL,
 	myID_CLOSE_ALL_BUT_THIS,
-	myID_LINE_WRAP
+	myID_LINE_WRAP,
+	
+	// Preferences, to apply to all files
+	myID_PREFS_LINE_NUMBERS,
+	myID_PREFS_CODE_FOLDING,
+	myID_PREFS_IDENT_GUIDES
 };
 
 const wxString TYRO_FILE_OPEN_WILDCARDS =

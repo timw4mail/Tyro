@@ -12,12 +12,14 @@
 #include <wx/fdrepdlg.h>
 #include <wx/aui/aui.h>
 #include <wx/stc/stc.h>
+#include <wx/preferences.h>
 
 // Tyro includes
 #include "TyroMenu.h"
 #include "EditPane.h"
 #include "TabContainer.h"
 #include "MainFrame.h"
+#include "PrefPane.h"
 
 #endif	/* TYRO_WIDGET_H */
 

@@ -39,6 +39,7 @@ class MainFrame: public wxFrame
 		void OnEditSelectAll(wxCommandEvent &event);
 		void OnEditUndo(wxCommandEvent &event);
 		void OnEditRedo(wxCommandEvent &event);
+		void OnEditPreferences(wxCommandEvent &event);
 		
 		void OnEditFind(wxCommandEvent &event);
 		void OnEditReplace(wxCommandEvent &event);

@@ -61,11 +61,11 @@ void TyroMenu::SetupMainMenus()
 	editMenu->Append(wxID_COPY, "&Copy\tCtrl+C", "Copy selected text");
 	editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
 	//editMenu->Append(wxID_DELETE, "&Delete\tDel");
-	editMenu->AppendSeparator();
+	//editMenu->AppendSeparator();
 	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
 	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
-	//editMenu->AppendSeparator();
-	//editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
+	editMenu->AppendSeparator();
+	editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
 	//editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
 
@@ -107,8 +107,14 @@ void TyroMenu::EnableEditControls(bool enable)
 	this->fileMenu->Enable(wxID_CLOSE, enable);
 	this->fileMenu->Enable(myID_CLOSE_ALL, enable);
 	
+	this->editMenu->Enable(wxID_UNDO, enable);
+	this->editMenu->Enable(wxID_REDO, enable);
+	this->editMenu->Enable(wxID_CUT, enable);
+	this->editMenu->Enable(wxID_COPY, enable);
+	this->editMenu->Enable(wxID_PASTE, enable);
+	this->editMenu->Enable(wxID_SELECTALL, enable);
+	
 	// Enable/disable top level menus
-	this->EnableEntireMenu(myEDIT_MENU, this->editMenu, enable);
 	this->EnableEntireMenu(myVIEW_MENU, this->viewMenu, enable);
 	this->EnableEntireMenu(myLANG_MENU, this->langMenu, enable);
 }
