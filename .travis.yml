@@ -6,7 +6,7 @@ before_install:
     - sh -e /etc/init.d/xvfb start
     # Install dependencies
     - sudo apt-get update -qq
-    - sudo apt-get install -qq libwxgtk3.0-dev libssh2-1-dev
+    - sudo apt-get install -qq libwxgtk3.0-dev libwxgtk3.0-0 libssh2-1-dev
 
 # Build with both gcc and clang
 compiler:
