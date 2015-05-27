@@ -5,6 +5,7 @@
 #include "widget.h"
 
 extern StringConstMap Glob_lexer_map;
+extern wxConfig *Glob_config;
 
 /**
  * Constructor
@@ -31,25 +32,7 @@ EditPane::EditPane(
 	this->SetProperty("styling.within.preprocessor", "1");
 	this->SetProperty("lexer.cpp.track.preprocessor", "1");
 	this->SetProperty("font.quality", "3"); // LCD Optimized
-	
-	// Set up Code folding
-	this->SetProperty("fold", "1");
-	this->SetProperty("fold.comment", "1");
-	this->SetProperty("fold.compact", "1");
-	this->SetProperty("fold.html", "1");
-	this->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
-	this->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
-	this->SetMarginWidth(MARGIN_FOLD, 16);
-	this->SetMarginSensitive(MARGIN_FOLD, true);
-	this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
-	this->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
-	this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
-	this->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,     "BLACK", "BLACK");
-	this->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
-	this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
-	this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
-	this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
-	
+		
 	//this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
 
 	// set spaces and indention
@@ -149,6 +132,18 @@ void EditPane::ApplyTheme(string lang, string theme)
 }
 
 /**
+ * Re-style the control based on changed preferences
+ * 
+ * @param string [theme]
+ * @return void
+ */
+void EditPane::ReApplyTheme(string theme)
+{
+	wxLogDebug("Current lang: %s", lang_config->GetLangByName(this->GetCurrentLang()));
+	this->ApplyTheme(lang_config->GetLangByName(this->GetCurrentLang()), theme);
+}
+
+/**
  * Check file path and open the selected file
  *
  * @param wxString filePath
@@ -178,26 +173,7 @@ bool EditPane::Load(wxString filePath)
  */
 bool EditPane::SaveFile()
 {
-	wxString fname;
-
-	/*if ( ! this->fileName.IsOk())
-	{
-		wxFileDialog dlg (
-			this,
-			_T("Save file"),
-			wxEmptyString,
-			wxEmptyString,
-			TYRO_FILE_SAVE_WILDCARDS,
-			wxFD_SAVE | wxFD_OVERWRITE_PROMPT
-		);
-
-		if (dlg.ShowModal() != wxID_OK) return false;
-		fname = dlg.GetPath();
-	}
-	else*/
-	{
-		fname = this->fileName.GetFullPath();
-	}
+	wxString fname = this->fileName.GetFullPath();
 
 	const wxString cfname(fname);
 
@@ -371,14 +347,62 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		this->StyleSetForeground(i, default_foreground);
 		this->StyleSetFont(i, *defaultFont);
 	}
+	
+	// Set up Code folding
+	if (Glob_config->ReadBool("show_code_folding", false))
+	{
+		this->SetProperty("fold", "1");
+		this->SetProperty("fold.comment", "1");
+		this->SetProperty("fold.compact", "1");
+		this->SetProperty("fold.html", "1");
+		this->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
+		
+		this->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
+		this->SetMarginWidth(MARGIN_FOLD, 16);
+		this->SetMarginSensitive(MARGIN_FOLD, true);
+		this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
+		
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,     "BLACK", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
+	}
+	else
+	{
+		this->SetProperty("fold", "0");
+		this->SetProperty("fold.comment", "0");
+		this->SetProperty("fold.compact", "0");
+		this->SetProperty("fold.html", "0");
+		this->SetMarginWidth(MARGIN_FOLD, 0);
+	}
+	
+	// Setup indent guides
+	if (Glob_config->ReadBool("show_indent_guides", false))
+	{
+		this->StyleSetForeground(wxSTC_STYLE_DEFAULT, default_foreground);
+		this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, default_foreground);
+		this->SetIndentationGuides(1);
+	}
+	else
+	{
+		this->SetIndentationGuides(0);
+	}
 
-	this->StyleSetForeground (wxSTC_STYLE_DEFAULT, default_foreground);
-	this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColor(147, 161, 161));
-
-	this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, "_999"));
-	this->StyleSetForeground (wxSTC_STYLE_LINENUMBER, line_number_foreground);
-	this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
-	this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
+	// Setup line numbers
+	if (Glob_config->ReadBool("show_line_numbers", true))
+	{
+		this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, "_999"));
+		this->StyleSetForeground (wxSTC_STYLE_LINENUMBER, line_number_foreground);
+		this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
+		this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
+	}
+	else
+	{
+		this->SetMarginWidth (MARGIN_LINE_NUMBERS, 0);
+	}
 
 	int max = lexer_map.size();
 	

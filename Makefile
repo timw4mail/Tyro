@@ -27,12 +27,15 @@ else
 	WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 endif
 
+ifeq ($(CXX),clang++)
+	CXX += -std=c++11
+endif
+
 # Platform compiler flags
 ifeq ($(OS),Darwin)
-	CXX = $(shell wx-config --cxx) -no-cpp-precomp -Xpreprocessor -Wno-missing-field-initializers
+	CXX = $(shell wx-config --cxx) -D__WXMAC__
 	LDLIBS += /usr/local/lib/libssh2.a
 else
-	CXX += -Wno-missing-field-initializers
 	LDLIBS += -lssh2
 endif
 
@@ -42,11 +45,7 @@ ifeq ($(OS),Windows_NT)
 	LDLIBS += -L/lib -lwsock32
 endif
 
-ifeq ($(CXX),clang++)
-	CXX += -std=c++11
-endif
-
-CXX += -Iinclude -I. -I/usr/local/include
+CXX += -Wno-unknown-pragmas -Wno-unknown-warning-option -Wno-potentially-evaluated-expression -Wno-missing-field-initializers -Iinclude -I. -I/usr/local/include
 
 ifdef $(DEV)
 all: CXXFLAGS = $(DEV_CXXFLAGS)

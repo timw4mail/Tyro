@@ -23,7 +23,6 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	notebook = new TabContainer(this);
 	
 	// Set the frame icon
-
 	wxIcon app_icon(tyro_icon);
 	this->SetIcon(app_icon);
 	
@@ -635,7 +634,30 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
 	}
 }
 
+/**
+ * Show the preferences dialog
+ *
+ * @return void
+ */
 void MainFrame::OnEditPreferences(wxCommandEvent &WXUNUSED(event))
 {
 	Glob_pref_pane->Show(this);
+}
+
+/**
+ * Applies settings when prefs are changed
+ *
+ * @return void
+ */
+void MainFrame::OnPrefsChanged(wxCommandEvent &WXUNUSED(event))
+{
+	wxLogDebug("In OnPrefsChanged method");
+	
+	EditPane *editor;
+	
+	for(size_t i = 0; i < notebook->GetPageCount(); i++)
+	{
+		editor = notebook->GetEditor(i);
+		editor->ReApplyTheme();
+	}
 }

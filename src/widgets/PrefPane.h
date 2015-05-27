@@ -13,8 +13,6 @@ public:
 	
 protected:
 	wxPreferencesEditor *pref_window;
-private:
-	void setupGeneral();
 };
 
 #endif	/* TYRO_PREF_PANE_H */

@@ -14,6 +14,7 @@ class MainFrame: public wxFrame
 		~MainFrame();
 		void EnableEditControls(bool enable=true);
 		void OpenFiles(wxArrayString filelist);
+		void OnPrefsChanged(wxCommandEvent &event);
 	private:
 		wxAuiManager *manager;
 		wxAuiToolBar *toolBar;

@@ -1,10 +1,14 @@
 #include "widget.h"
 
+extern wxConfigBase *Glob_config;
+
 class GeneralPrefPanePage : public wxPanel {
 public:
 	GeneralPrefPanePage(wxWindow *parent)
 	: wxPanel(parent)
 	{
+		this->frame = (MainFrame *) parent;
+		
 		showLineNumbers = new wxCheckBox(this, myID_PREFS_LINE_NUMBERS, "Show line numbers");
 		showIndentGuides = new wxCheckBox(this, myID_PREFS_IDENT_GUIDES, "Show indent guides");
 		showCodeFolding = new wxCheckBox(this, myID_PREFS_CODE_FOLDING, "Show code folding");
@@ -21,8 +25,17 @@ public:
 		// On supported platforms
 		if (wxPreferencesEditor::ShouldApplyChangesImmediately())
 		{
-			// @TODO add event handlers
+			showLineNumbers->Bind(wxEVT_CHECKBOX, &GeneralPrefPanePage::ToggleShowLineNumbers, this, myID_PREFS_LINE_NUMBERS);
+			showIndentGuides->Bind(wxEVT_CHECKBOX, &GeneralPrefPanePage::ToggleShowIndentGuides, this, myID_PREFS_IDENT_GUIDES);
+			showCodeFolding->Bind(wxEVT_CHECKBOX, &GeneralPrefPanePage::ToggleShowCodeFolding, this, myID_PREFS_CODE_FOLDING);
 		}
+	}
+	
+	~GeneralPrefPanePage()
+	{
+		delete showLineNumbers;
+		delete showIndentGuides;
+		delete showCodeFolding;
 	}
 	
 	/**
@@ -32,7 +45,10 @@ public:
      */
 	virtual bool TransferDataToWindow()
 	{
-		showLineNumbers->SetValue(true);
+		showLineNumbers->SetValue(Glob_config->ReadBool("show_line_numbers", true));
+		showIndentGuides->SetValue(Glob_config->ReadBool("show_indent_guides", false));
+		showCodeFolding->SetValue(Glob_config->ReadBool("show_code_folding", false));
+		
 		return true;
 	}
 	
@@ -44,17 +60,45 @@ public:
      */
 	virtual bool TransferDataFromWindow()
 	{
+		Glob_config->Write("show_line_numbers", showLineNumbers->IsChecked());
+		Glob_config->Write("show_indent_guides", showIndentGuides->IsChecked());
+		Glob_config->Write("show_code_folding", showCodeFolding->IsChecked());
+		
+		wxCommandEvent evt = wxCommandEvent();
+		this->frame->OnPrefsChanged(evt);
+		
+		Glob_config->Flush();
+		
 		return true;
 	}
 	
-	~GeneralPrefPanePage()
-	{
-		
-	}
 private:
+	MainFrame *frame;
 	wxCheckBox *showLineNumbers;
 	wxCheckBox *showIndentGuides;
 	wxCheckBox *showCodeFolding;
+	
+	void ToggleShowLineNumbers(wxCommandEvent &event)
+	{
+		
+		Glob_config->Write("show_line_numbers", event.IsChecked());
+		this->frame->OnPrefsChanged(event);
+		Glob_config->Flush();
+	}
+	
+	void ToggleShowIndentGuides(wxCommandEvent &event)
+	{
+		Glob_config->Write("show_indent_guides", event.IsChecked());
+		this->frame->OnPrefsChanged(event);
+		Glob_config->Flush();
+	}
+	
+	void ToggleShowCodeFolding(wxCommandEvent &event)
+	{
+		Glob_config->Write("show_code_folding", event.IsChecked());
+		this->frame->OnPrefsChanged(event);
+		Glob_config->Flush();
+	}
 };
 
 class GeneralPrefPane: public wxStockPreferencesPage {
@@ -73,7 +117,7 @@ public:
 PrefPane::PrefPane()
 {
 	this->pref_window = new wxPreferencesEditor();
-	this->setupGeneral();
+	this->pref_window->AddPage(new GeneralPrefPane());
 }
 
 PrefPane::~PrefPane()
@@ -86,11 +130,6 @@ void PrefPane::Show(wxWindow *parent)
 	this->pref_window->Show(parent);
 }
 
-void PrefPane::setupGeneral()
-{
-	//this->pref_window.reset(new wxPreferencesEditor);
-	this->pref_window->AddPage(new GeneralPrefPane());
-}
 
 
 
