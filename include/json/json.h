@@ -69,7 +69,8 @@ license you like.
 // //////////////////////////////////////////////////////////////////////
 
 
-
+// Tell C++11 where to find std::unique_ptr
+#include <memory>
 
 
 #ifndef JSON_AMALGATED_H_INCLUDED
