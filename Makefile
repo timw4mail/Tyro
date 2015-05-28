@@ -4,8 +4,16 @@ BASE_LIB = build/base.a
 
 JSON_FILES = $(patsubst config/%.json,%.json, $(wildcard config/*.json))
 
-PROGRAM_SRC = $(wildcard src/widgets/*.cpp src/settings/*.cpp src/*.cpp)
+PROGRAM_SRC = $(wildcard src/*.cpp)
 PROGRAM = build/Tyro
+
+CONFIG_SRC = $(wildcard src/settings/*.cpp)
+CONFIG_OBJ = $(patsubst %.cpp,%.o, $(CONFIG_SRC))
+CONFIG_LIB = build/config.a
+
+WIDGET_SRC = $(wildcard src/settings/*.cpp src/widgets/*.cpp)
+WIDGET_OBJ = $(patsubst %.cpp,%.o, $(WIDGET_SRC))
+WIDGET_LIB = build/widget.a
 
 WX_RES = $(shell wx-config --rescomp)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
@@ -27,10 +35,6 @@ else
 	WX_LDLIBS = $(shell wx-config --libs base core aui stc adv)
 endif
 
-ifeq ($(CXX),clang++)
-	CXX += -std=c++11
-endif
-
 # Platform compiler flags
 ifeq ($(OS),Darwin)
 	CXX = $(shell wx-config --cxx) -D__WXMAC__
@@ -45,12 +49,12 @@ ifeq ($(OS),Windows_NT)
 	LDLIBS += -L/lib -lwsock32
 endif
 
-CXX += -Wno-unknown-pragmas -Wno-unknown-warning-option -Wno-potentially-evaluated-expression -Wno-missing-field-initializers -Iinclude -I. -I/usr/local/include
+CXX += -std=c++11 -Wno-unknown-pragmas -Wno-unknown-warning-option -Wno-potentially-evaluated-expression -Wno-missing-field-initializers -Iinclude -I. -I/usr/local/include
 
 ifdef $(DEV)
 all: CXXFLAGS = $(DEV_CXXFLAGS)
 endif
-all: build json_wrapper $(BASE_LIB) $(PROGRAM)
+all: build json_wrapper $(BASE_LIB) $(WIDGET_LIB) $(PROGRAM)
 ifeq ($(OS),Darwin)
 all: Tyro.app
 endif
@@ -72,11 +76,24 @@ $(BASE_LIB): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
 
-$(PROGRAM): CXXFLAGS += $(WX_CXXFLAGS)
-$(PROGRAM):
-	$(CXX) $(CXXFLAGS) $(PROGRAM_SRC) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
+
+$(CONFIG_LIB): build
+	$(foreach var, $(CONFIG_SRC), $(CXX) $(CXXFLAGS) $(WX_CXXFLAGS) -c -o $(patsubst %.cpp,%.o,$(var)) $(var);) 
+	ar rcs $@ $(CONFIG_OBJ)
+	ranlib $@
+
+
+$(WIDGET_LIB): build $(CONFIG_LIB)
+	$(foreach var, $(WIDGET_SRC), $(CXX) $(CXXFLAGS) $(WX_CXXFLAGS) -c -o $(patsubst %.cpp,%.o,$(var)) $(var);)
+	ar rcs $@ $(WIDGET_OBJ)
+	ranlib $@
+
+
+$(PROGRAM): $(WIDGET_LIB)
+	$(CXX) $(CXXFLAGS) $(WX_CXXFLAGS) $(PROGRAM_SRC) $(WIDGET_LIB) $(CONFIG_LIB) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(PROGRAM)
 	
-lib: $(OBJECTS) $(BASE_LIB)
+
+lib: $(OBJECTS) $(BASE_LIB) $(CONFIG_LIB) $(WIDGET_LIB)
 
 run:
 ifneq ($(OS),Darwin)
@@ -146,6 +163,6 @@ clean:
 	rm -f config/*_json.h
 	rm -rf *.o
 	rm -rf build
-	rm -rf build $(OBJECTS) $(PROGRAM) $(BASE_LIB) $(TESTS)
+	rm -rf build $(OBJECTS) $(PROGRAM) $(BASE_LIB) $(CONFIG_LIB) $(WIDGET_LIB) $(TESTS)
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`

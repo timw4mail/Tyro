@@ -200,7 +200,7 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 {
 	wxArrayString filelist;
 	
-	wxFileDialog dlg (this, "Open file(s)", wxEmptyString, wxEmptyString,
+	wxFileDialog dlg(this, "Open file(s)", wxEmptyString, wxEmptyString,
 		TYRO_FILE_OPEN_WILDCARDS, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR | wxFD_MULTIPLE);
 
 	if (dlg.ShowModal() != wxID_OK) return;
@@ -223,12 +223,12 @@ void MainFrame::OpenFiles(wxArrayString filelist)
 	if (listcount < 1) return;
 	
 	// Open a new tab for each file
-	//notebook->Freeze();
+	notebook->Freeze();
 	for (int i = 0; i < listcount; i++)
 	{
 		notebook->AddTab(filelist[i]);
 	}
-	//notebook->Thaw();
+	notebook->Thaw();
 	
 	this->EnableEditControls(true);
 }
@@ -650,14 +650,14 @@ void MainFrame::OnEditPreferences(wxCommandEvent &WXUNUSED(event))
  * @return void
  */
 void MainFrame::OnPrefsChanged(wxCommandEvent &WXUNUSED(event))
-{
-	wxLogDebug("In OnPrefsChanged method");
-	
+{	
 	EditPane *editor;
 	
+	notebook->Freeze();
 	for(size_t i = 0; i < notebook->GetPageCount(); i++)
 	{
 		editor = notebook->GetEditor(i);
 		editor->ReApplyTheme();
 	}
+	notebook->Thaw();
 }

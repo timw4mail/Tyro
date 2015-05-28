@@ -64,10 +64,11 @@ void TyroMenu::SetupMainMenus()
 	//editMenu->AppendSeparator();
 	//editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
 	//editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
+	
 	//editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
+	editMenu->AppendSeparator();
+	editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
 
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
 	viewMenu->AppendCheckItem(myID_VIEW_LINE_ENDINGS, "Show line endings", "Toggle visibility of line ending characters");
@@ -83,14 +84,11 @@ void TyroMenu::SetupMainMenus()
  */ 
 void TyroMenu::SetupLangMenu()
 {
-	StringMap langs = lang_config->GetLangList();
-	StringMap::iterator it;
+	StringMap languages = lang_config->GetLangList();
 	
-	StringMap::iterator last = langs.end();
-	
-	for (it = langs.begin(); it != last; ++it)
+	for (auto lang: languages)
 	{
-		langMenu->Append(wxID_ANY, it->second, "Highlight file as " + it->second, wxITEM_RADIO);
+		langMenu->Append(wxID_ANY, lang.second, "Highlight file as " + lang.second, wxITEM_RADIO);
 	}
 }
 
@@ -147,17 +145,15 @@ void TyroMenu::EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable)
 
 	// Toggle the rest of the items in the menu
 	wxMenuItemList list = menu->GetMenuItems();
-	wxMenuItemList::iterator iter;
 
-	for(iter = list.begin(); iter != list.end(); ++iter)
+	for(auto item: list)
 	{
-		wxMenuItem *current = *iter;
-		current->Enable(enable);
+		item->Enable(enable);
 		
 		// Uncheck all the items
-		if (current->IsCheckable())
+		if (item->IsCheckable())
 		{
-			current->Check(false);
+			item->Check(false);
 		}
 	}
 }

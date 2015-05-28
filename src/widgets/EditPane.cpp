@@ -139,7 +139,6 @@ void EditPane::ApplyTheme(string lang, string theme)
  */
 void EditPane::ReApplyTheme(string theme)
 {
-	wxLogDebug("Current lang: %s", lang_config->GetLangByName(this->GetCurrentLang()));
 	this->ApplyTheme(lang_config->GetLangByName(this->GetCurrentLang()), theme);
 }
 
@@ -403,9 +402,8 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 	{
 		this->SetMarginWidth (MARGIN_LINE_NUMBERS, 0);
 	}
-
-	int max = lexer_map.size();
 	
+	int max = lexer_map.size();
 	for (int i = 0; i < max; i++)
 	{
 		string key = lexer_map[i].asString();
