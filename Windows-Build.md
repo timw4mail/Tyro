@@ -21,7 +21,8 @@ In order to keep a consistent build system, Tyro is built with MinGW and Msys. T
 1. Download the windows [installer](https://www.wxwidgets.org/downloads/) for version 3
 2. Use the MSyS prompt to navigate to the wxWidgets directory
 3. Make a new folder, eg. msw-debug, and cd into it.
-4. Run `../configure --disable-shared --enable-debug --disable-compat28 --enable-arttango` in that new directory.
+4. Run `export CXXFLAGS="-std=gnu++11 $CXXFLAGS"` to allow usage of C++11 features
+5. Run `../configure --disable-shared --enable-debug --disable-compat28` in that new directory.
 5. After configure finishes, run `make && make install` in the same folder.
 
 

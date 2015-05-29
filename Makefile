@@ -37,7 +37,7 @@ endif
 
 # Platform compiler flags
 ifeq ($(OS),Darwin)
-	CXX = $(shell wx-config --cxx) -D__WXMAC__
+	CXX = $(shell wx-config --cxx) -D__WXMAC__ -std=c++11
 	LDLIBS += /usr/local/lib/libssh2.a
 else
 	LDLIBS += -lssh2
@@ -45,10 +45,17 @@ endif
 
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS += -static
-	CXX += -std=gnu++11 -I/include -DWIN32
+	CXX += -std=gnu++11 -Wno-unknown-pragmas -Wno-missing-field-initializers -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32
-else
-	CXX += -std=c++11
+endif
+
+ifeq ($(OS),Linux)
+    CXX += -std=c++11
+endif
+
+# Travis CI workaround
+ifeq ($(CI),true)
+	CXX += -std=gnu++11
 endif
 
 CXX += -Iinclude -I. -I/usr/local/include
