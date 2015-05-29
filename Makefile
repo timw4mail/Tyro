@@ -50,12 +50,7 @@ ifeq ($(OS),Windows_NT)
 endif
 
 ifeq ($(OS),Linux)
-    CXX += -std=c++11
-endif
-
-# Travis CI workaround
-ifeq ($(CI),true)
-	CXX += -std=gnu++11
+	CXX += -std=c++11
 endif
 
 CXX += -Iinclude -I. -I/usr/local/include
