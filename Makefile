@@ -45,11 +45,13 @@ endif
 
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS += -static
-	CXX += -I/include -DWIN32
+	CXX += -std=gnu++11 -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32
+else
+	CXX += -std=c++11
 endif
 
-CXX += -std=c++11 -Wno-unknown-pragmas -Wno-unknown-warning-option -Wno-potentially-evaluated-expression -Wno-missing-field-initializers -Iinclude -I. -I/usr/local/include
+CXX += -Iinclude -I. -I/usr/local/include
 
 ifdef $(DEV)
 all: CXXFLAGS = $(DEV_CXXFLAGS)
