@@ -475,7 +475,6 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	
 	// Position after search
 	int new_pos = 0;
-	int new_line = 1;
 	
 	// Send find flags to editor control
 	editor->SetSearchFlags(stc_flags);
@@ -484,27 +483,44 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	{
 		wxLogDebug("wxEVT_FIND");
 		
-		editor->SetAnchor(0);
+		/*if (editor->GetCurrentPos() < 1)
+		{
+			editor->GotoPos(1);
+		}*/
+		
 		editor->SearchAnchor();
 	}
 	
 	if (type == wxEVT_FIND_NEXT || type == wxEVT_FIND)
-	{	
-		if ((fr_flags & wxFR_DOWN) != 0)
+	{
+		if (type == wxEVT_FIND_NEXT)
 		{
-			new_pos = editor->SearchNext(stc_flags, event.GetFindString());
-		}
-		else
-		{
-			new_pos = editor->SearchPrev(stc_flags, event.GetFindString());
+			wxLogDebug("wxEVT_FIND_NEXT");
 		}
 		
+		new_pos = ((fr_flags & wxFR_DOWN) != 0)
+			? editor->SearchNext(stc_flags, event.GetFindString())
+			: editor->SearchPrev(stc_flags, event.GetFindString());
+		
+		int sel_start = editor->GetSelectionStart();
+		int sel_end = editor->GetSelectionEnd();
+		
 		if (new_pos > 0)
-		{	
-			new_line = editor->LineFromPosition(new_pos);
-			editor->ScrollToLine(new_line);
-			//editor->SetAnchor(new_pos);
+		{
+			if ((fr_flags & wxFR_DOWN) != 0)
+			{
+				editor->GotoPos(sel_end + 1);
+			}
+			else
+			{
+				((sel_start - 1) > 0) 
+					? editor->GotoPos(sel_start - 1)
+					: editor->GotoPos(sel_start);
+			}
+			
 			editor->SearchAnchor();
+			editor->SetSelectionStart(sel_start);
+			editor->SetSelectionEnd(sel_end);
 		}
 		
 		return;
