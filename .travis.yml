@@ -8,8 +8,8 @@ before_install:
     # Upgrade gcc
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     - sudo apt-get -qq update 
-    - sudo apt-get install -qq gcc-4.8
-    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 98
+    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+    - if [ "$CXX" = "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 98; fi
     
     # Install dependencies
     - sudo apt-get -qq install libwxgtk3.0-dev libwxgtk3.0-0 libssh2-1-dev
