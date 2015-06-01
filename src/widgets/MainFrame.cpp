@@ -15,10 +15,8 @@ static TabContainer *notebook;
  * Constructor
  */
 MainFrame::MainFrame(wxFrame *frame, const wxString &title)
-	: wxFrame(frame, -1, title)
+	: wxFrame(frame, -1, title, wxDefaultPosition, wxSize(800,600))
 {
-	this->findReplaceData = new wxFindReplaceData(wxFR_DOWN);
-	
 	// Create the tab container
 	notebook = new TabContainer(this);
 	
@@ -148,15 +146,52 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_MENU, &MainFrame::OnQuit, this, wxID_EXIT);
 	
 	// Edit Menu Events
-	Bind(wxEVT_MENU, &MainFrame::OnEditCut, this, wxID_CUT);
-	Bind(wxEVT_MENU, &MainFrame::OnEditCopy, this, wxID_COPY);
-	Bind(wxEVT_MENU, &MainFrame::OnEditPaste, this, wxID_PASTE);
-	Bind(wxEVT_MENU, &MainFrame::OnEditSelectAll, this, wxID_SELECTALL);
-	Bind(wxEVT_MENU, &MainFrame::OnEditUndo, this, wxID_UNDO);
-	Bind(wxEVT_MENU, &MainFrame::OnEditRedo, this, wxID_REDO);
-	Bind(wxEVT_MENU, &MainFrame::OnEditFind, this, wxID_FIND);
-	Bind(wxEVT_MENU, &MainFrame::OnEditReplace, this, wxID_REPLACE);
-	Bind(wxEVT_MENU, &MainFrame::OnEditPreferences, this, wxID_PREFERENCES);
+	this->Bind(wxEVT_MENU, [=](wxCommandEvent& event) {
+		EditPane *editor = notebook->GetCurrentEditor();
+		
+		switch(event.GetId())
+		{
+			case wxID_CUT:
+				editor->Cut();
+			break;
+			
+			case wxID_COPY:
+				editor->Copy();
+			break;
+			
+			case wxID_PASTE:
+				if (editor->CanPaste()) editor->Paste();
+			break;
+			
+			case wxID_SELECTALL:
+				editor->SelectAll();
+			break;
+			
+			case wxID_UNDO:
+				if (editor->CanUndo()) editor->Undo();
+			break;
+			
+			case wxID_REDO:
+				if (editor->CanRedo()) editor->Redo();
+			break;
+			
+			case wxID_PREFERENCES:
+				Glob_pref_pane->Show(this);
+			break;
+			
+			case wxID_FIND:
+				this->OnEditFind(event);
+			break;
+			
+			case wxID_REPLACE:
+				this->OnEditReplace(event);
+			break;
+			
+			default:
+				event.Skip(true);
+			break;
+		}
+	});
 	
 	// View Menu Events
 	Bind(wxEVT_MENU, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
@@ -339,76 +374,7 @@ void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
  */ 
 void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 {
-	Destroy();
-}
-
-/**
- * Cut to the clipboard
- * 
- * @return void
- */ 
-void MainFrame::OnEditCut(wxCommandEvent &WXUNUSED(event))
-{
-	notebook->GetCurrentEditor()->Cut();
-}
-
-/**
- * Copy to the clipboard
- * 
- * @return void
- */ 
-void MainFrame::OnEditCopy(wxCommandEvent &WXUNUSED(event))
-{
-	notebook->GetCurrentEditor()->Copy();
-}
-
-/**
- * Paste from the clipboard
- * 
- * @return void
- */ 
-void MainFrame::OnEditPaste(wxCommandEvent &WXUNUSED(event))
-{
-	if (notebook->GetCurrentEditor()->CanPaste())
-	{
-		notebook->GetCurrentEditor()->Paste();
-	}
-}
-
-/**
- * Select all the text in the current document
- *
- * @return void
- */ 
-void MainFrame::OnEditSelectAll(wxCommandEvent &WXUNUSED(event))
-{
-	notebook->GetCurrentEditor()->SelectAll();
-}
-
-/**
- * Undo recent change(s)
- * 
- * @return void
- */ 
-void MainFrame::OnEditUndo(wxCommandEvent &WXUNUSED(event))
-{
-	if (notebook->GetCurrentEditor()->CanUndo())
-	{
-		notebook->GetCurrentEditor()->Undo();
-	}
-}
-
-/**
- * Redo recent change(s)
- *
- * @return void
- */ 
-void MainFrame::OnEditRedo(wxCommandEvent &WXUNUSED(event))
-{
-	if (notebook->GetCurrentEditor()->CanRedo())
-	{
-		notebook->GetCurrentEditor()->Redo();
-	}
+	this->Destroy();
 }
 
 /**
@@ -462,9 +428,9 @@ void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event))
 	}
 	else
 	{
-		this->findReplaceData = new wxFindReplaceData(wxFR_DOWN);
-		findDlg = new wxFindReplaceDialog(this, this->findReplaceData, "Find");
-		findDlg->Show(true);
+		this->findData = new wxFindReplaceData(wxFR_DOWN);
+		this->findDlg = new wxFindReplaceDialog(this, this->findData, "Find");
+		this->findDlg->Show(true);
 	}
 }
 
@@ -482,10 +448,10 @@ void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event))
 	else
 	{
 		this->findReplaceData = new wxFindReplaceData(wxFR_DOWN);
-		replaceDlg = new wxFindReplaceDialog(this, this->findReplaceData, 
+		this->replaceDlg = new wxFindReplaceDialog(this, this->findReplaceData, 
 			"Find and Replace", wxFR_REPLACEDIALOG);
 		
-		replaceDlg->Show(true);
+		this->replaceDlg->Show(true);
 	}
 }
 
@@ -632,16 +598,6 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
 		// Go to the more specific event handlers
 		event.Skip(true);
 	}
-}
-
-/**
- * Show the preferences dialog
- *
- * @return void
- */
-void MainFrame::OnEditPreferences(wxCommandEvent &WXUNUSED(event))
-{
-	Glob_pref_pane->Show(this);
 }
 
 /**

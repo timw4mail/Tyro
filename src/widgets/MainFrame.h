@@ -19,6 +19,7 @@ class MainFrame: public wxFrame
 		wxAuiManager *manager;
 		wxAuiToolBar *toolBar;
 		wxFindReplaceData *findReplaceData;
+		wxFindReplaceData *findData;
 		wxFindReplaceDialog *findDlg;
 		wxFindReplaceDialog *replaceDlg;
 		void SetupToolbar();
@@ -34,17 +35,10 @@ class MainFrame: public wxFrame
 		void OnSave(wxCommandEvent &event);
 		void OnSaveAs(wxCommandEvent &event);
 		
-		void OnEditCut(wxCommandEvent &event);
-		void OnEditCopy(wxCommandEvent &event);
-		void OnEditPaste(wxCommandEvent &event);
-		void OnEditSelectAll(wxCommandEvent &event);
-		void OnEditUndo(wxCommandEvent &event);
-		void OnEditRedo(wxCommandEvent &event);
-		void OnEditPreferences(wxCommandEvent &event);
-		
 		void OnEditFind(wxCommandEvent &event);
 		void OnEditReplace(wxCommandEvent &event);
 		void OnFindDialog(wxFindDialogEvent &event);
+		
 		void OnToggleWhitespace(wxCommandEvent &event);
 		void OnToggleLineWrap(wxCommandEvent &event);
 		void OnToggleLineEndings(wxCommandEvent &event);

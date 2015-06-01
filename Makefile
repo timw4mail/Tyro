@@ -45,7 +45,7 @@ endif
 
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS += -static
-	CXX += -std=gnu++11 -Wno-unknown-pragmas -Wno-missing-field-initializers -DWIN32
+	CXX += -std=gnu++11 -Wno-unknown-pragmas -Wno-missing-field-initializers -I/include -DWIN32
 	LDLIBS += -L/lib -lwsock32
 endif
 
