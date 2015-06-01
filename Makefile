@@ -18,8 +18,9 @@ WIDGET_LIB = build/widget.a
 WX_RES = $(shell wx-config --rescomp)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 
-DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG
-CXXFLAGS = -Os -DNDEBUG
+INC_FLAGS = -Iinclude -I. -I/usr/local/include
+DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG $(INC_FLAGS)
+CXXFLAGS = -Os -DNDEBUG $(INC_FLAGS)
 
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
@@ -52,8 +53,6 @@ endif
 ifeq ($(OS),Linux)
 	CXX += -std=c++11 -Wno-unknown-pragmas -Wno-missing-field-initializers
 endif
-
-CXX += -Iinclude -I. -I/usr/local/include
 
 ifdef $(DEV)
 all: CXXFLAGS = $(DEV_CXXFLAGS)
