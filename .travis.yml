@@ -19,4 +19,4 @@ compiler:
     - gcc
     - clang
 
-script: make
+script: make clean dev
