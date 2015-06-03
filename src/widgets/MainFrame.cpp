@@ -41,6 +41,12 @@ MainFrame::~MainFrame()
 	wxLogDebug("Main Frame Destructor Called.");
 	delete notebook;
 	delete toolBar;
+	
+	wxDELETE(this->findDlg);
+	wxDELETE(this->findData);
+	wxDELETE(this->replaceDlg);
+	wxDELETE(this->findReplaceData);
+	
 	manager->UnInit();
 }
 
@@ -425,17 +431,13 @@ void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
  */ 
 void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event)) 
 {
-	if (this->findDlg != nullptr)
-	{
-		wxDELETE(this->findDlg);
-		wxDELETE(this->findData);
-	}
-	else
+	if (this->findDlg == nullptr)
 	{
 		this->findData = new wxFindReplaceData(wxFR_DOWN);
 		this->findDlg = new wxFindReplaceDialog(this, this->findData, "Find");
-		this->findDlg->Show(true);
 	}
+	
+	this->findDlg->Show(true);
 }
 
 /**
@@ -445,19 +447,14 @@ void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event))
  */ 
 void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event)) 
 {
-	if (this->replaceDlg != nullptr)
-	{
-		wxDELETE(this->replaceDlg);
-		wxDELETE(this->findReplaceData);
-	}
-	else
+	if (this->replaceDlg == nullptr)
 	{
 		this->findReplaceData = new wxFindReplaceData(wxFR_DOWN);
 		this->replaceDlg = new wxFindReplaceDialog(this, this->findReplaceData, 
 			"Find and Replace", wxFR_REPLACEDIALOG);
-		
-		this->replaceDlg->Show(true);
 	}
+	
+	this->replaceDlg->Show(true);
 }
 
 /**
@@ -538,6 +535,25 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	else if (type == wxEVT_FIND_REPLACE_ALL)
 	{
 		wxLogDebug("wxEVT_FIND_REPLACE_ALL");
+		
+		// Freeze editor drawing until replacement is finished
+		editor->Freeze();
+		
+		editor->GotoPos(0); // Go to the start of the document
+		editor->SearchAnchor();
+		
+		editor->BeginUndoAction();
+		
+		while (editor->SearchNext(stc_flags, event.GetFindString()) != -1)
+		{
+			editor->ReplaceSelection(event.GetReplaceString());
+		}
+		
+		editor->EndUndoAction();
+		
+		editor->ScrollToEnd();
+		
+		editor->Thaw();
 	}
 }
 

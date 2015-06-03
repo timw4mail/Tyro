@@ -142,4 +142,5 @@ private:
 	}
 };
 
+// Set up the main method and event loop
 IMPLEMENT_APP(TyroApp);

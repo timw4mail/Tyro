@@ -19,8 +19,8 @@ WX_RES = $(shell wx-config --rescomp)
 WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 
 INC_FLAGS = -Iinclude -I. -I/usr/local/include
-DEV_CXXFLAGS = -g -Wall -Wextra -DDEBUG $(INC_FLAGS)
-CXXFLAGS = -Os -DNDEBUG $(INC_FLAGS)
+DEV_CXXFLAGS =  -O0 -g -Wall -Wextra -pipe -DDEBUG $(INC_FLAGS)
+CXXFLAGS = -Os -pipe -DNDEBUG $(INC_FLAGS)
 
 TEST_SRC = $(wildcard tests/*.cpp)
 TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
