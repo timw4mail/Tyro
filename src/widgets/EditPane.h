@@ -25,8 +25,8 @@ public:
 	void SetCurrentLang(string name);
 private:
 	StringConstMap::iterator lexerMapIt;
-	LangConfig *lang_config;
-	ThemeConfig *theme_config;
+	LangConfig *lang_config = nullptr;
+	ThemeConfig *theme_config = nullptr;
 	bool FileReadable();
 	bool FileWritable();
 	void BindEvents();

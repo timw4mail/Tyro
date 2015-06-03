@@ -16,8 +16,8 @@ class MainFrame: public wxFrame
 		void OpenFiles(wxArrayString filelist);
 		void OnPrefsChanged(wxCommandEvent &event);
 	private:
-		wxAuiManager *manager;
-		wxAuiToolBar *toolBar;
+		wxAuiManager *manager = nullptr;
+		wxAuiToolBar *toolBar = nullptr;
 		wxFindReplaceData *findReplaceData = nullptr;
 		wxFindReplaceData *findData = nullptr;
 		wxFindReplaceDialog *findDlg = nullptr;

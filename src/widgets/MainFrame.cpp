@@ -6,7 +6,8 @@
 // Nasty globals
 extern TyroMenu *Glob_menu_bar;
 extern PrefPane *Glob_pref_pane;
-static TabContainer *notebook;
+extern wxStatusBar *Glob_status_bar;
+static TabContainer *notebook = nullptr;
 
 // Frame icon
 #include "../../resources/xpm/tyro.xpm"
@@ -27,9 +28,12 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	// Apply the menu bar to the current frame
 	this->SetMenuBar(Glob_menu_bar);
 	
-	this->SetupStatusBar();
+	// Setup StatusBar
+	Glob_status_bar = new wxStatusBar(this, wxID_ANY);
+	Glob_status_bar->SetFieldsCount(3);
 	
 	this->DoLayout();
+	
 	this->BindEvents();
 }
 
@@ -46,6 +50,8 @@ MainFrame::~MainFrame()
 	wxDELETE(this->findData);
 	wxDELETE(this->replaceDlg);
 	wxDELETE(this->findReplaceData);
+	
+	Glob_status_bar->Destroy();
 	
 	manager->UnInit();
 }
@@ -73,6 +79,14 @@ void MainFrame::DoLayout()
 	wxAuiPaneInfo notebookPaneInfo;
 	notebookPaneInfo.CenterPane();
 	this->manager->AddPane(notebook, notebookPaneInfo);
+	
+	wxAuiPaneInfo statusPaneInfo;
+	statusPaneInfo.Bottom()
+		.ToolbarPane()
+		.Gripper(false)
+		.DockFixed(true)
+		.Resizable(true);
+	this->manager->AddPane(Glob_status_bar, statusPaneInfo);
 	
 	// Update everything
 	this->EnableEditControls(false);

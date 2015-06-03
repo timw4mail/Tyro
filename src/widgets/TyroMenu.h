@@ -14,11 +14,11 @@ public:
 	void SetIdChecked(int id, bool checked);
 	void SetCurrentLanguage(string lang);
 private:
-	wxMenu *fileMenu;
-	wxMenu *editMenu;
-	wxMenu *viewMenu;
-	wxMenu *langMenu;
-	wxMenu *helpMenu;
+	wxMenu *fileMenu = nullptr;
+	wxMenu *editMenu = nullptr;
+	wxMenu *viewMenu = nullptr;
+	wxMenu *langMenu = nullptr;
+	wxMenu *helpMenu = nullptr;
 	void SetupMainMenus();
 	void SetupLangMenu();
 	void EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable);

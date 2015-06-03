@@ -12,7 +12,7 @@ public:
 	void Show(wxWindow *parent);
 	
 protected:
-	wxPreferencesEditor *pref_window;
+	wxPreferencesEditor *pref_window = nullptr;
 };
 
 #endif	/* TYRO_PREF_PANE_H */

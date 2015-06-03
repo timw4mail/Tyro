@@ -1,7 +1,7 @@
 #include "widget.h"
 #include "../settings/LangConfig.h"
 
-static LangConfig *lang_config;
+static LangConfig *lang_config = nullptr;
 
 /**
  * Constructor

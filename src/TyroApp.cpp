@@ -9,11 +9,12 @@
 
 
 // Some global stuff
-wxConfigBase *Glob_config;
-TyroMenu *Glob_menu_bar;
-MainFrame *Glob_main_frame;
+wxConfigBase *Glob_config = nullptr;
+TyroMenu *Glob_menu_bar = nullptr;
+wxStatusBar *Glob_status_bar = nullptr;
+MainFrame *Glob_main_frame = nullptr;
+PrefPane *Glob_pref_pane = nullptr;
 StringConstMap Glob_lexer_map;
-PrefPane *Glob_pref_pane;
 
 // Static app loading variables
 static wxArrayString files;
@@ -69,7 +70,7 @@ public:
 	{
 		// Deallocate config object
 		delete wxConfigBase::Set((wxConfigBase *) NULL);
-
+		
 		return close(true);
 	}
 	

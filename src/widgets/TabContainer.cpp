@@ -5,6 +5,7 @@
 #include "widget.h"
 
 extern TyroMenu *Glob_menu_bar;
+extern wxStatusBar *Glob_status_bar;
 static unsigned long untitled_document_count = 0;
 
 /**
@@ -163,6 +164,8 @@ void TabContainer::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 	if (this->GetPageCount() == 0)
 	{
 		this->parent->EnableEditControls(false);
+		Glob_status_bar->SetStatusText("", STATUS_CURSOR_LOCATION);
+		Glob_status_bar->SetStatusText("", STATUS_CURRENT_LANGUAGE);
 	}
 }
 
@@ -209,4 +212,7 @@ void TabContainer::OnTabSwitch(wxAuiNotebookEvent &event)
 	
 	// Update language menu selection
 	Glob_menu_bar->SetCurrentLanguage(editor->GetCurrentLang());
+	
+	// Update status bar 
+	Glob_status_bar->SetStatusText(editor->GetCurrentLang(), STATUS_CURRENT_LANGUAGE);
 }

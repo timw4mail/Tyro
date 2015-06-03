@@ -1,12 +1,9 @@
-/**
- * Lexer configuration object
- * 
- * @extends TyroConfig
- */
-
 #include "LangConfig.h"
 #include <config/languages_json.h>
 
+/**
+ * Constructor
+ */ 
 LangConfig::LangConfig()
 {
 	this->LoadJson(languages_json);
@@ -26,6 +23,9 @@ LangConfig::LangConfig()
 	}
 }
 
+/**
+ * Destructor
+ */ 
 LangConfig::~LangConfig()
 {
 	wxLogDebug("Called LangConfig Destructor");
@@ -107,6 +107,12 @@ JsonValue LangConfig::GetLexerMap(string lang)
 		.get("lexer_map", JsonValue());
 }
 
+/**
+ * Set the selected language key
+ * 
+ * @param string lang
+ * @return void
+ */ 
 void LangConfig::SetLang(string lang)
 {
 	this->lang = lang;

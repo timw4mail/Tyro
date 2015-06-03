@@ -8,7 +8,7 @@
 // Application config
 const wxString APP_NAME = "Tyro";
 const wxString APP_VENDOR = "Aviat Ion";
-const wxString APP_VERSION = "0.5.0";
+const wxString APP_VERSION = "0.9.0";
 const wxString APP_VERSION_MORE = "Pre-release";
 
 // Command-line arguments
@@ -46,6 +46,13 @@ enum myMargins
 {
 	MARGIN_FOLD,
 	MARGIN_LINE_NUMBERS
+};
+
+// Status bar sections
+enum myStatusBarSections {
+	STATUS_MESSAGES,
+	STATUS_CURSOR_LOCATION,
+	STATUS_CURRENT_LANGUAGE
 };
 
 // Top level menus

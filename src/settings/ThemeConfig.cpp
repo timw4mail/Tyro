@@ -5,23 +5,40 @@
 #include "ThemeConfig.h"
 #include <config/themes_json.h>
 
+/**
+ * Constructor
+ */ 
 ThemeConfig::ThemeConfig()
 {
 	this->LoadJson(themes_json);
 	this->SetTheme("Solarized");
 }
 
+/**
+ * Destructor
+ */ 
 ThemeConfig::~ThemeConfig()
 {
 	wxLogDebug("Called ThemeConfig Destructor");
 }
 
+/**
+ * Set the current theme
+ * 
+ * @param string theme_name
+ * @return void
+ */ 
 void ThemeConfig::SetTheme(string theme_name)
 {
 	JsonValue theme_list = this->GetRoot();
 	this->current_theme = theme_list.get(theme_name, JsonValue());
 }
 
+/**
+ * Get the name of the currently selected theme
+ *
+ * @return string
+ */ 
 JsonValue ThemeConfig::GetTheme()
 {
 	return this->current_theme;
