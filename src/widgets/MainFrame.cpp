@@ -203,7 +203,10 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_FIND_NEXT, &MainFrame::OnFindDialog, this, wxID_ANY);
 	Bind(wxEVT_FIND_REPLACE, &MainFrame::OnFindDialog, this, wxID_ANY);
 	Bind(wxEVT_FIND_REPLACE_ALL, &MainFrame::OnFindDialog, this, wxID_ANY);
-	Bind(wxEVT_FIND_CLOSE, &MainFrame::OnFindDialog, this, wxID_ANY);
+	this->Bind(wxEVT_FIND_CLOSE, [=](wxFindDialogEvent &event) {
+		wxLogDebug("wxEVT_FIND_CLOSE");
+		event.GetDialog()->Hide();
+	});
 	
 	// Language Selection
 	Bind(wxEVT_MENU, &MainFrame::OnLangSelect, this, wxID_ANY);
@@ -422,9 +425,10 @@ void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
  */ 
 void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event)) 
 {
-	if (findDlg)
+	if (this->findDlg != nullptr)
 	{
-		wxDELETE(findDlg);
+		wxDELETE(this->findDlg);
+		wxDELETE(this->findData);
 	}
 	else
 	{
@@ -441,9 +445,10 @@ void MainFrame::OnEditFind(wxCommandEvent &WXUNUSED(event))
  */ 
 void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event)) 
 {
-	if (replaceDlg)
+	if (this->replaceDlg != nullptr)
 	{
-		wxDELETE(replaceDlg);
+		wxDELETE(this->replaceDlg);
+		wxDELETE(this->findReplaceData);
 	}
 	else
 	{
@@ -478,15 +483,15 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	
 	// Send find flags to editor control
 	editor->SetSearchFlags(stc_flags);
-	  
+
 	if (type == wxEVT_FIND)
 	{
 		wxLogDebug("wxEVT_FIND");
 		
-		/*if (editor->GetCurrentPos() < 1)
+		if (editor->GetCurrentPos() < 0 || editor->GetCurrentPos() > editor->GetLastPosition())
 		{
 			editor->GotoPos(1);
-		}*/
+		}
 		
 		editor->SearchAnchor();
 	}
@@ -533,11 +538,6 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	else if (type == wxEVT_FIND_REPLACE_ALL)
 	{
 		wxLogDebug("wxEVT_FIND_REPLACE_ALL");
-	}
-	else if (type == wxEVT_FIND_CLOSE)
-	{
-		wxLogDebug("wxEVT_FIND_CLOSE");
-		event.GetDialog()->Destroy();
 	}
 }
 

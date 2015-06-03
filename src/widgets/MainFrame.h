@@ -18,10 +18,10 @@ class MainFrame: public wxFrame
 	private:
 		wxAuiManager *manager;
 		wxAuiToolBar *toolBar;
-		wxFindReplaceData *findReplaceData;
-		wxFindReplaceData *findData;
-		wxFindReplaceDialog *findDlg;
-		wxFindReplaceDialog *replaceDlg;
+		wxFindReplaceData *findReplaceData = nullptr;
+		wxFindReplaceData *findData = nullptr;
+		wxFindReplaceDialog *findDlg = nullptr;
+		wxFindReplaceDialog *replaceDlg = nullptr;
 		void SetupToolbar();
 		void SetupStatusBar();
 		void BindEvents();
