@@ -8,6 +8,7 @@ extern TyroMenu *Glob_menu_bar;
 extern PrefPane *Glob_pref_pane;
 extern wxStatusBar *Glob_status_bar;
 static TabContainer *notebook = nullptr;
+static FilePane *filePane = nullptr;
 
 // Frame icon
 #include "../../resources/xpm/tyro.xpm"
@@ -20,6 +21,8 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 {
 	// Create the tab container
 	notebook = new TabContainer(this);
+	
+	filePane = new FilePane(this);
 	
 	// Set the frame icon
 	wxIcon app_icon(tyro_icon);
@@ -45,6 +48,7 @@ MainFrame::~MainFrame()
 	wxLogDebug("Main Frame Destructor Called.");
 	delete notebook;
 	delete toolBar;
+	delete filePane;
 	
 	wxDELETE(this->findDlg);
 	wxDELETE(this->findData);
@@ -75,6 +79,16 @@ void MainFrame::DoLayout()
 		.DockFixed(true)
 		.Resizable(true);
 	this->manager->AddPane(toolBar, toolBarPaneInfo);
+	
+	wxAuiPaneInfo filePaneInfo;
+	filePaneInfo.Left()
+		.MinSize(225, 550)
+		.TopDockable(false)
+		.BottomDockable(false)
+		.RightDockable(true)
+		.LeftDockable(true)
+		.Resizable(true);
+	this->manager->AddPane(filePane, filePaneInfo);
 	
 	wxAuiPaneInfo notebookPaneInfo;
 	notebookPaneInfo.CenterPane();
@@ -162,6 +176,7 @@ void MainFrame::BindEvents()
 	Bind(wxEVT_MENU, &MainFrame::OnSave, this, wxID_SAVE);
 	Bind(wxEVT_MENU, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
 	Bind(wxEVT_MENU, &MainFrame::OnCloseTab, this, wxID_CLOSE);
+	Bind(wxEVT_MENU, &TabContainer::OnCloseAllButThis, notebook, myID_CLOSE_ALL_BUT_THIS);
 	Bind(wxEVT_MENU, &TabContainer::OnCloseAll, notebook, myID_CLOSE_ALL);
 	Bind(wxEVT_MENU, &MainFrame::OnQuit, this, wxID_EXIT);
 	

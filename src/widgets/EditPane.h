@@ -30,7 +30,6 @@ private:
 	bool FileReadable();
 	bool FileWritable();
 	void BindEvents();
-	void OnMarginClick(wxStyledTextEvent &event);
 	void OnCharAdded(wxStyledTextEvent &event);
 	void SetTheme(string theme_name);
 	void _ApplyTheme(JsonValue &lexer_map);

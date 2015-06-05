@@ -15,6 +15,13 @@ public:
 		
 		wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 		
+		// Font size will have to wait until wxWidgets 3.0.3, where font widgets 
+		// will actually work
+		/*wxFontPickerCtrl *fontPicker = new wxFontPickerCtrl(this, wxID_ANY);
+		wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
+		fontSizer->Add(fontPicker, wxSizerFlags().Border());
+		sizer->Add(fontSizer, wxSizerFlags().Border());*/
+		
 		sizer->Add(showLineNumbers, wxSizerFlags().Border());
 		sizer->Add(showIndentGuides, wxSizerFlags().Border());
 		sizer->Add(showCodeFolding, wxSizerFlags().Border());
@@ -25,9 +32,24 @@ public:
 		// On supported platforms
 		if (wxPreferencesEditor::ShouldApplyChangesImmediately())
 		{
-			showLineNumbers->Bind(wxEVT_CHECKBOX, &GeneralPrefPanePage::ToggleShowLineNumbers, this, myID_PREFS_LINE_NUMBERS);
-			showIndentGuides->Bind(wxEVT_CHECKBOX, &GeneralPrefPanePage::ToggleShowIndentGuides, this, myID_PREFS_IDENT_GUIDES);
-			showCodeFolding->Bind(wxEVT_CHECKBOX, &GeneralPrefPanePage::ToggleShowCodeFolding, this, myID_PREFS_CODE_FOLDING);
+			showLineNumbers->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
+				Glob_config->Write("show_line_numbers", event.IsChecked());
+				this->frame->OnPrefsChanged(event);
+				Glob_config->Flush();
+			}, myID_PREFS_LINE_NUMBERS);
+			
+			showIndentGuides->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
+				Glob_config->Write("show_indent_guides", event.IsChecked());
+				this->frame->OnPrefsChanged(event);
+				Glob_config->Flush();
+			}, myID_PREFS_IDENT_GUIDES);
+			
+			
+			showCodeFolding->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
+				Glob_config->Write("show_code_folding", event.IsChecked());
+				this->frame->OnPrefsChanged(event);
+				Glob_config->Flush();
+			}, myID_PREFS_CODE_FOLDING);
 		}
 	}
 	
@@ -74,31 +96,9 @@ public:
 	
 private:
 	MainFrame *frame;
-	wxCheckBox *showLineNumbers;
-	wxCheckBox *showIndentGuides;
-	wxCheckBox *showCodeFolding;
-	
-	void ToggleShowLineNumbers(wxCommandEvent &event)
-	{
-		
-		Glob_config->Write("show_line_numbers", event.IsChecked());
-		this->frame->OnPrefsChanged(event);
-		Glob_config->Flush();
-	}
-	
-	void ToggleShowIndentGuides(wxCommandEvent &event)
-	{
-		Glob_config->Write("show_indent_guides", event.IsChecked());
-		this->frame->OnPrefsChanged(event);
-		Glob_config->Flush();
-	}
-	
-	void ToggleShowCodeFolding(wxCommandEvent &event)
-	{
-		Glob_config->Write("show_code_folding", event.IsChecked());
-		this->frame->OnPrefsChanged(event);
-		Glob_config->Flush();
-	}
+	wxCheckBox *showLineNumbers = nullptr;
+	wxCheckBox *showIndentGuides = nullptr;
+	wxCheckBox *showCodeFolding = nullptr;
 };
 
 class GeneralPrefPane: public wxStockPreferencesPage {

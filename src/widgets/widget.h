@@ -13,6 +13,8 @@
 #include <wx/aui/aui.h>
 #include <wx/stc/stc.h>
 #include <wx/preferences.h>
+#include <wx/dirctrl.h>
+#include <wx/fontpicker.h>
 
 // Tyro includes
 #include "TyroMenu.h"
@@ -20,6 +22,7 @@
 #include "TabContainer.h"
 #include "MainFrame.h"
 #include "PrefPane.h"
+#include "FilePane.h"
 
 #endif	/* TYRO_WIDGET_H */
 

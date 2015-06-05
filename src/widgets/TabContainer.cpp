@@ -6,6 +6,8 @@
 
 extern TyroMenu *Glob_menu_bar;
 extern wxStatusBar *Glob_status_bar;
+
+static vector<EditPane *> editors;
 static unsigned long untitled_document_count = 0;
 
 /**
@@ -27,10 +29,10 @@ TabContainer::TabContainer(
 {
 	this->parent = (MainFrame *) parent;
 	
-	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &TabContainer::OnClose, this, wxID_ANY);
-	Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &TabContainer::OnClosed, this, wxID_ANY);
-	Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &TabContainer::OnTabContextMenu, this, wxID_ANY);
-	Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &TabContainer::OnTabSwitch, this, wxID_ANY);
+	this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &TabContainer::OnClose, this, wxID_ANY);
+	this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &TabContainer::OnClosed, this, wxID_ANY);
+	this->Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &TabContainer::OnTabContextMenu, this, wxID_ANY);
+	this->Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &TabContainer::OnTabSwitch, this, wxID_ANY);
 }
 
 /**
@@ -39,6 +41,16 @@ TabContainer::TabContainer(
 TabContainer::~TabContainer() 
 {
 	wxLogDebug("TabContainer destructor called");
+}
+
+/**
+ * Create a new editor instance for a new tab
+ * 
+ * @return EditPane*
+ */
+EditPane* TabContainer::NewEditor()
+{
+	return new EditPane(this);
 }
 
 /**
@@ -54,9 +66,7 @@ void TabContainer::AddTab()
 
 	caption.Printf("Untitled %lu", untitled_document_count);
 
-	EditPane *editor = new EditPane(this);
-
-	this->AddPage(editor, caption, true);
+	this->AddPage(this->NewEditor(), caption, true);
 }
 
 /**
@@ -76,7 +86,7 @@ void TabContainer::AddTab(wxString filePath)
 	}
 	
 	wxString caption= fileName.GetFullName();
-	EditPane *editor = new EditPane(this);
+	EditPane *editor = this->NewEditor();
 	
 	if (editor->Load(filePath))
 	{
@@ -150,7 +160,7 @@ void TabContainer::OnClose(wxAuiNotebookEvent &event)
 				return event.Veto();
 			}
 		}
-	};
+	}
 }
 
 /**
@@ -180,6 +190,7 @@ void TabContainer::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 	wxMenu *contextMenu = new wxMenu();
 	contextMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current tab");
 	contextMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
+	contextMenu->Append(myID_CLOSE_ALL_BUT_THIS, "Close All but this\tCtrl+Shift+Alt+W", "Close all open documents, except the one selected");
 
 	this->PopupMenu(contextMenu);
 }
@@ -193,6 +204,40 @@ void TabContainer::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
 	this->DeleteAllPages();
 	this->parent->EnableEditControls(false);
+}
+
+/**
+ * Close all tabs but the one selected
+ * 
+ * @param wxCommandEvent& event
+ * @return void
+ */
+void TabContainer::OnCloseAllButThis(wxCommandEvent &WXUNUSED(event))
+{
+	auto ind = this->GetSelection();
+	wxString curr_tooltip = this->GetPageToolTip(ind);
+	wxString curr_caption = this->GetPageText(ind);
+	size_t page_count = this->GetPageCount();
+	
+	this->Freeze();
+	
+	// Do the loop in this order, as the indices change
+	// when tabs are removed
+	size_t i = page_count;
+	
+	while(i > 0)
+	{	
+		i--;
+		// Identify the current tab by the caption and tooltip
+		// If they don't match, remove the tab
+		if (
+			curr_tooltip == this->GetPageToolTip(i) &&
+			curr_caption == this->GetPageText(i)
+		) continue;
+		
+		this->RemovePage(i);
+	}
+	this->Thaw();
 }
 
 /**

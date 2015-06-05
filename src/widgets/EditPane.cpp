@@ -259,25 +259,19 @@ bool EditPane::FileWritable()
  */
 void EditPane::BindEvents()
 {
-	Bind(wxEVT_STC_MARGINCLICK, &EditPane::OnMarginClick, this, wxID_ANY);
-	Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
-}
-
-/**
- * Code folding event handler
- * 
- * @param wxStyledTextEvent& event
- * @return void
- */
-void EditPane::OnMarginClick(wxStyledTextEvent& event)
-{
-	if (event.GetMargin() == MARGIN_FOLD) {
-		int lineClick = this->LineFromPosition (event.GetPosition());
-		int levelClick = this->GetFoldLevel (lineClick);
-		if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
-			this->ToggleFold (lineClick);
+	// Code folding event handler
+	this->Bind(wxEVT_STC_MARGINCLICK, [=](wxStyledTextEvent& event) {
+		if (event.GetMargin() == MARGIN_FOLD) 
+		{
+			int lineClick = this->LineFromPosition (event.GetPosition());
+			int levelClick = this->GetFoldLevel (lineClick);
+			if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
+				this->ToggleFold (lineClick);
+			}
 		}
-	}
+	}, wxID_ANY);
+
+	this->Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
 }
 
 /**

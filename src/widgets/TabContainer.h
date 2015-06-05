@@ -28,8 +28,10 @@ public:
 	EditPane *GetCurrentEditor();
 	EditPane *GetEditor(size_t page_idx);
 	void OnCloseAll(wxCommandEvent &event);
+	void OnCloseAllButThis(wxCommandEvent &event);
 private:
 	MainFrame *parent = nullptr;
+	EditPane *NewEditor();
 	void OnTabSwitch(wxAuiNotebookEvent &event);
 	void OnClose(wxAuiNotebookEvent &event);
 	void OnClosed(wxAuiNotebookEvent &event);
