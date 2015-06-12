@@ -31,8 +31,8 @@ FilePane::FilePane(
 	this->CreateContextMenu();
 	this->BindEvents();
 	
-	this->SetDefaultPath(wxStandardPaths::Get().GetDocumentsDir());
-	this->SetPath(this->GetDefaultPath());
+	//this->SetDefaultPath(wxStandardPaths::Get().GetDocumentsDir());
+	//this->SetPath(this->GetDefaultPath());
 }
 
 /**
@@ -91,4 +91,5 @@ void FilePane::OpenSelectedFiles()
 	wxArrayString paths;
 	this->GetPaths(paths);
 	Glob_main_frame->OpenFiles(paths);
+	this->UnselectAll();
 }

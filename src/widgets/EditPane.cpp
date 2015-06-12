@@ -309,19 +309,11 @@ void EditPane::OnCharAdded(wxStyledTextEvent& event)
 void EditPane::_ApplyTheme(JsonValue &lexer_map)
 {
 	// Font setup
-#ifdef __WXMAC__
 	wxFont *defaultFont = wxFont::New(
-		14,
+		TYRO_DEFAULT_FONT_SIZE,
 		wxFONTFAMILY_MODERN,
 		wxFONTFLAG_ANTIALIASED
 	);
-#else
-	wxFont *defaultFont = wxFont::New(
-		10,
-		wxFONTFAMILY_MODERN,
-		wxFONTFLAG_ANTIALIASED
-	);
-#endif
 
 	static const wxColor default_background = theme_config->GetThemeColor("background", "default");
 	static const wxColor default_foreground = theme_config->GetThemeColor("foreground", "default");
@@ -338,7 +330,27 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 	{
 		this->StyleSetBackground(i, default_background);
 		this->StyleSetForeground(i, default_foreground);
-		this->StyleSetFont(i, *defaultFont);
+		
+		if ( ! HAS_FONT_BUG())
+		{
+			wxString fontFace;
+			int fontFamily = TYRO_DEFAULT_FONT_FAMILY;
+			int pointSize = TYRO_DEFAULT_FONT_SIZE;
+			Glob_config->Read("global_font_face_name", fontFace);
+			Glob_config->Read("global_font_family", fontFamily);
+			Glob_config->Read("global_font_point_size", pointSize);
+			
+			wxFontInfo fInfo(pointSize);
+			fInfo.Family((wxFontFamily) fontFamily).FaceName(fontFace);
+			
+			wxFont *font = new wxFont(fInfo);
+			
+			this->StyleSetFont(i, *font);
+		}
+		else
+		{
+			this->StyleSetFont(i, *defaultFont);
+		}
 	}
 	
 	// Set up Code folding

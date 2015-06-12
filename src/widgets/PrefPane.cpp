@@ -9,22 +9,32 @@ public:
 	{
 		this->frame = (MainFrame *) parent;
 		
-		showLineNumbers = new wxCheckBox(this, myID_PREFS_LINE_NUMBERS, "Show line numbers");
-		showIndentGuides = new wxCheckBox(this, myID_PREFS_IDENT_GUIDES, "Show indent guides");
-		showCodeFolding = new wxCheckBox(this, myID_PREFS_CODE_FOLDING, "Show code folding");
+		this->showLineNumbers = new wxCheckBox(this, myID_PREFS_LINE_NUMBERS, "Show line numbers");
+		this->showIndentGuides = new wxCheckBox(this, myID_PREFS_IDENT_GUIDES, "Show indent guides");
+		this->showCodeFolding = new wxCheckBox(this, myID_PREFS_CODE_FOLDING, "Show code folding");
 		
 		wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 		
-		// Font size will have to wait until wxWidgets 3.0.3, where font widgets 
-		// will actually work
-		/*wxFontPickerCtrl *fontPicker = new wxFontPickerCtrl(this, wxID_ANY);
-		wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
-		fontSizer->Add(fontPicker, wxSizerFlags().Border());
-		sizer->Add(fontSizer, wxSizerFlags().Border());*/
+		// Check that version of OS X is less than 10.10 for wxWidgets < 3.0.3
+		// Otherwise the font control will segfault
+		if( ! HAS_FONT_BUG())
+		{
+			this->fontPicker = new wxFontPickerCtrl(
+				this, 
+				myID_PREFS_FONT,
+				wxNullFont,
+				wxDefaultPosition,
+				wxDefaultSize,
+				wxFNTP_USE_TEXTCTRL | wxFNTP_USEFONT_FOR_LABEL
+			);
+			wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
+			fontSizer->Add(this->fontPicker, wxSizerFlags().Border());
+			sizer->Add(fontSizer, wxSizerFlags().Border());
+		}
 		
-		sizer->Add(showLineNumbers, wxSizerFlags().Border());
-		sizer->Add(showIndentGuides, wxSizerFlags().Border());
-		sizer->Add(showCodeFolding, wxSizerFlags().Border());
+		sizer->Add(this->showLineNumbers, wxSizerFlags().Border());
+		sizer->Add(this->showIndentGuides, wxSizerFlags().Border());
+		sizer->Add(this->showCodeFolding, wxSizerFlags().Border());
 		
 		this->SetSizerAndFit(sizer);
 		
@@ -32,20 +42,32 @@ public:
 		// On supported platforms
 		if (wxPreferencesEditor::ShouldApplyChangesImmediately())
 		{
-			showLineNumbers->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
+			if ( ! HAS_FONT_BUG())
+			{
+				this->fontPicker->Bind(wxEVT_FONTPICKER_CHANGED, [=] (wxFontPickerEvent &event) {
+					wxFont font = event.GetFont();
+					
+					Glob_config->Write("global_font_family", (int)font.GetFamily());
+					Glob_config->Write("global_font_face_name", font.GetFaceName());
+					Glob_config->Write("global_font_point_size", font.GetPointSize());
+					this->frame->OnPrefsChanged(event);
+					Glob_config->Flush();
+				}, myID_PREFS_FONT);
+			}
+			
+			this->showLineNumbers->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_line_numbers", event.IsChecked());
 				this->frame->OnPrefsChanged(event);
 				Glob_config->Flush();
 			}, myID_PREFS_LINE_NUMBERS);
 			
-			showIndentGuides->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
+			this->showIndentGuides->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_indent_guides", event.IsChecked());
 				this->frame->OnPrefsChanged(event);
 				Glob_config->Flush();
 			}, myID_PREFS_IDENT_GUIDES);
 			
-			
-			showCodeFolding->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
+			this->showCodeFolding->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_code_folding", event.IsChecked());
 				this->frame->OnPrefsChanged(event);
 				Glob_config->Flush();
@@ -55,9 +77,6 @@ public:
 	
 	~GeneralPrefPanePage()
 	{
-		delete showLineNumbers;
-		delete showIndentGuides;
-		delete showCodeFolding;
 	}
 	
 	/**
@@ -67,9 +86,25 @@ public:
      */
 	virtual bool TransferDataToWindow()
 	{
-		showLineNumbers->SetValue(Glob_config->ReadBool("show_line_numbers", true));
-		showIndentGuides->SetValue(Glob_config->ReadBool("show_indent_guides", false));
-		showCodeFolding->SetValue(Glob_config->ReadBool("show_code_folding", false));
+		this->showLineNumbers->SetValue(Glob_config->ReadBool("show_line_numbers", true));
+		this->showIndentGuides->SetValue(Glob_config->ReadBool("show_indent_guides", false));
+		this->showCodeFolding->SetValue(Glob_config->ReadBool("show_code_folding", false));
+		
+		if ( ! HAS_FONT_BUG())
+		{
+			wxString fontFace;
+			int fontFamily = TYRO_DEFAULT_FONT_FAMILY;
+			int pointSize = TYRO_DEFAULT_FONT_SIZE;
+			Glob_config->Read("global_font_face_name", fontFace);
+			Glob_config->Read("global_font_family", fontFamily);
+			Glob_config->Read("global_font_point_size", pointSize);
+			
+			wxFontInfo fInfo(pointSize);
+			
+			fInfo.Family((wxFontFamily) fontFamily).FaceName(fontFace);
+			
+			this->fontPicker->SetSelectedFont(wxFont(fInfo));
+		}
 		
 		return true;
 	}
@@ -82,9 +117,17 @@ public:
      */
 	virtual bool TransferDataFromWindow()
 	{
-		Glob_config->Write("show_line_numbers", showLineNumbers->IsChecked());
-		Glob_config->Write("show_indent_guides", showIndentGuides->IsChecked());
-		Glob_config->Write("show_code_folding", showCodeFolding->IsChecked());
+		Glob_config->Write("show_line_numbers", this->showLineNumbers->IsChecked());
+		Glob_config->Write("show_indent_guides", this->showIndentGuides->IsChecked());
+		Glob_config->Write("show_code_folding", this->showCodeFolding->IsChecked());
+		
+		if ( ! HAS_FONT_BUG())
+		{
+			wxFont font = this->fontPicker->GetSelectedFont();
+			Glob_config->Write("global_font_family", (int)font.GetFamily());
+			Glob_config->Write("global_font_face_name", font.GetFaceName());
+			Glob_config->Write("global_font_point_size", font.GetPointSize());
+		}
 		
 		wxCommandEvent evt = wxCommandEvent();
 		this->frame->OnPrefsChanged(evt);
@@ -96,6 +139,7 @@ public:
 	
 private:
 	MainFrame *frame;
+	wxFontPickerCtrl *fontPicker = nullptr;
 	wxCheckBox *showLineNumbers = nullptr;
 	wxCheckBox *showIndentGuides = nullptr;
 	wxCheckBox *showCodeFolding = nullptr;

@@ -8,7 +8,7 @@
 // Application config
 const wxString APP_NAME = "Tyro";
 const wxString APP_VENDOR = "Aviat Ion";
-const wxString APP_VERSION = "0.9.0";
+const wxString APP_VERSION = "0.9.1";
 const wxString APP_VERSION_MORE = "Pre-release";
 
 // Command-line arguments
@@ -36,6 +36,14 @@ const wxString TYRO_SAVE_ERROR = "Failed to save the file. Maybe you lack the pe
 const wxString TYRO_SAVE_ERROR_CAPTION = "Saving Failed";
 const wxString TYRO_OPEN_ERROR = "Failed to open the file. Check that it exists, and that you have read permissions.";
 const wxString TYRO_OPEN_ERROR_CAPTION = "Open Failed";
+
+// Font defaults
+const int TYRO_DEFAULT_FONT_FAMILY = (int) wxFONTFAMILY_MODERN;
+#ifdef __WXMAC__
+const int TYRO_DEFAULT_FONT_SIZE = 14;
+#else
+const int TYRO_DEFAULT_FONT_SIZE = 10;
+#endif
 
 // Typedef some common templates
 typedef map<string, int> StringConstMap;
@@ -76,7 +84,8 @@ enum myMenuItemIds {
 	// Preferences, to apply to all files
 	myID_PREFS_LINE_NUMBERS,
 	myID_PREFS_CODE_FOLDING,
-	myID_PREFS_IDENT_GUIDES
+	myID_PREFS_IDENT_GUIDES,
+	myID_PREFS_FONT
 };
 
 const wxString TYRO_FILE_OPEN_WILDCARDS =

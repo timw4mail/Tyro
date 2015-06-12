@@ -6,6 +6,7 @@
 #include "widgets/widget.h"
 
 #include <wx/app.h>
+#include <wx/sysopt.h>
 
 
 // Some global stuff
@@ -35,6 +36,7 @@ public:
 	{
 		if ( ! wxApp::OnInit()) return false;
 
+		this->SetSystemOptions();
 		this->SetAppName(APP_NAME);
 		this->SetVendorName(APP_VENDOR);
 
@@ -140,6 +142,20 @@ private:
 		Glob_lexer_map["sql"] = wxSTC_LEX_SQL;
 		Glob_lexer_map["xml"] = wxSTC_LEX_XML;
 		Glob_lexer_map["yaml"] = wxSTC_LEX_YAML;
+	}
+	
+	/**
+	 * Toolkit-specific settings 
+     */
+	void SetSystemOptions()
+	{
+	#ifdef __WXMAC__
+		wxSystemOptions::SetOption("osx.openfiledialog.always-show-types", 1);
+	#endif
+
+	#ifdef __WXMSW__
+		wxSystemOptions::SetOption("msw.display.directdraw", 1);
+	#endif
 	}
 };
 

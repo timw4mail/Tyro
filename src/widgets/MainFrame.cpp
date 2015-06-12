@@ -22,7 +22,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 	// Create the tab container
 	notebook = new TabContainer(this);
 	
-	filePane = new FilePane(this);
+	filePane = new FilePane(this, wxID_ANY, wxStandardPaths::Get().GetDocumentsDir());
 	
 	// Set the frame icon
 	wxIcon app_icon(tyro_icon);
@@ -83,8 +83,6 @@ void MainFrame::DoLayout()
 	wxAuiPaneInfo filePaneInfo;
 	filePaneInfo.Left()
 		.MinSize(225, 550)
-		.TopDockable(false)
-		.BottomDockable(false)
 		.RightDockable(true)
 		.LeftDockable(true)
 		.Resizable(true);
@@ -171,14 +169,14 @@ void MainFrame::SetupToolbar()
 void MainFrame::BindEvents()
 {
 	// File Menu Events
-	Bind(wxEVT_MENU, &MainFrame::OnNew, this, wxID_NEW);
-	Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
-	Bind(wxEVT_MENU, &MainFrame::OnSave, this, wxID_SAVE);
-	Bind(wxEVT_MENU, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
-	Bind(wxEVT_MENU, &MainFrame::OnCloseTab, this, wxID_CLOSE);
-	Bind(wxEVT_MENU, &TabContainer::OnCloseAllButThis, notebook, myID_CLOSE_ALL_BUT_THIS);
-	Bind(wxEVT_MENU, &TabContainer::OnCloseAll, notebook, myID_CLOSE_ALL);
-	Bind(wxEVT_MENU, &MainFrame::OnQuit, this, wxID_EXIT);
+	this->Bind(wxEVT_MENU, &MainFrame::OnNew, this, wxID_NEW);
+	this->Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
+	this->Bind(wxEVT_MENU, &MainFrame::OnSave, this, wxID_SAVE);
+	this->Bind(wxEVT_MENU, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
+	this->Bind(wxEVT_MENU, &MainFrame::OnCloseTab, this, wxID_CLOSE);
+	this->Bind(wxEVT_MENU, &TabContainer::OnCloseAllButThis, notebook, myID_CLOSE_ALL_BUT_THIS);
+	this->Bind(wxEVT_MENU, &TabContainer::OnCloseAll, notebook, myID_CLOSE_ALL);
+	this->Bind(wxEVT_MENU, &MainFrame::OnQuit, this, wxID_EXIT);
 	
 	// Edit Menu Events
 	this->Bind(wxEVT_MENU, [=](wxCommandEvent& event) {
@@ -229,25 +227,25 @@ void MainFrame::BindEvents()
 	});
 	
 	// View Menu Events
-	Bind(wxEVT_MENU, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
-	Bind(wxEVT_MENU, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
-	Bind(wxEVT_MENU, &MainFrame::OnToggleLineEndings, this, myID_VIEW_LINE_ENDINGS);
+	this->Bind(wxEVT_MENU, &MainFrame::OnToggleWhitespace, this, myID_VIEW_WHITESPACE);
+	this->Bind(wxEVT_MENU, &MainFrame::OnToggleLineWrap, this, myID_LINE_WRAP);
+	this->Bind(wxEVT_MENU, &MainFrame::OnToggleLineEndings, this, myID_VIEW_LINE_ENDINGS);
 
 	// Find/Replace Events
-	Bind(wxEVT_FIND, &MainFrame::OnFindDialog, this, wxID_ANY);
-	Bind(wxEVT_FIND_NEXT, &MainFrame::OnFindDialog, this, wxID_ANY);
-	Bind(wxEVT_FIND_REPLACE, &MainFrame::OnFindDialog, this, wxID_ANY);
-	Bind(wxEVT_FIND_REPLACE_ALL, &MainFrame::OnFindDialog, this, wxID_ANY);
+	this->Bind(wxEVT_FIND, &MainFrame::OnFindDialog, this, wxID_ANY);
+	this->Bind(wxEVT_FIND_NEXT, &MainFrame::OnFindDialog, this, wxID_ANY);
+	this->Bind(wxEVT_FIND_REPLACE, &MainFrame::OnFindDialog, this, wxID_ANY);
+	this->Bind(wxEVT_FIND_REPLACE_ALL, &MainFrame::OnFindDialog, this, wxID_ANY);
 	this->Bind(wxEVT_FIND_CLOSE, [=](wxFindDialogEvent &event) {
 		wxLogDebug("wxEVT_FIND_CLOSE");
 		event.GetDialog()->Hide();
 	});
 	
 	// Language Selection
-	Bind(wxEVT_MENU, &MainFrame::OnLangSelect, this, wxID_ANY);
+	this->Bind(wxEVT_MENU, &MainFrame::OnLangSelect, this, wxID_ANY);
 	
 	// Help Menu Events
-	Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
+	this->Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
 
 /**
@@ -423,15 +421,55 @@ void MainFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
 void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 {
 	wxAboutDialogInfo info;
+	wxPlatformInfo plat_info;
 	
 	info.SetName(APP_NAME);
 	info.SetVersion(APP_VERSION, APP_VERSION_MORE);
 	
 	info.AddDeveloper("Tim Warren");
 	info.AddArtist("Brian Smith: Main icon");
-	info.AddArtist("http://dryicons.com: Other icons");
 	
-	info.SetDescription("Tyro, a text editor for all development");
+#ifndef __WXGTK__
+	info.AddArtist("http://dryicons.com: Other icons");
+#endif
+	
+	wxString desc = "Tyro, a text editor for all development\n\n" 
+		"System info: \n";
+	
+	desc += wxString::Format("Architecture: %s\n",  
+		wxPlatformInfo::GetArchName(plat_info.GetArchitecture()));
+	
+	desc += wxString::Format("Operating System:\n\t%s %i.%i\n",
+		wxPlatformInfo::GetOperatingSystemIdName(plat_info.GetOperatingSystemId()),
+		plat_info.GetOSMajorVersion(),
+		plat_info.GetOSMinorVersion());
+	
+	desc += wxString::Format("wxWidgets version: %s %i.%i.%i\n",
+		plat_info.GetPortIdName(),
+		wxMAJOR_VERSION,
+		wxMINOR_VERSION,
+		wxRELEASE_NUMBER
+	);
+	
+#ifdef __WXGTK__
+	wxLinuxDistributionInfo dist_info = wxGetLinuxDistributionInfo();
+	wxString desk = plat_info.GetDesktopEnvironment();
+	if (desk != "")
+	{
+		desc += wxString::Format("Desktop Environment:%s\n", desk);
+	}
+	
+	desc += "Distro: ";
+	desc += dist_info.Description;
+		
+	if (dist_info.CodeName != "")
+	{
+		desc += " (" + dist_info.CodeName + ")\n";
+	}
+#endif
+	
+	info.SetDescription(desc);
+	
 	info.SetCopyright(" (C) 2015");
 	
 	wxAboutBox(info);
