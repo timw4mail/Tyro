@@ -26,10 +26,7 @@ LangConfig::LangConfig()
 /**
  * Destructor
  */ 
-LangConfig::~LangConfig()
-{
-	wxLogDebug("Called LangConfig Destructor");
-}
+LangConfig::~LangConfig() {}
 
 /**
  * Determine the format of the current file by

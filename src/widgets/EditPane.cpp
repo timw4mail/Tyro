@@ -333,19 +333,16 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		
 		if ( ! HAS_FONT_BUG())
 		{
+			wxFont globalFont;
 			wxString fontFace;
-			int fontFamily = TYRO_DEFAULT_FONT_FAMILY;
-			int pointSize = TYRO_DEFAULT_FONT_SIZE;
-			Glob_config->Read("global_font_face_name", fontFace);
-			Glob_config->Read("global_font_family", fontFamily);
-			Glob_config->Read("global_font_point_size", pointSize);
-			
-			wxFontInfo fInfo(pointSize);
-			fInfo.Family((wxFontFamily) fontFamily).FaceName(fontFace);
-			
-			wxFont *font = new wxFont(fInfo);
-			
-			this->StyleSetFont(i, *font);
+			if ( ! Glob_config->Read("global_font", &globalFont))
+			{
+				this->StyleSetFont(i, *defaultFont);
+			}
+			else
+			{
+				this->StyleSetFont(i, globalFont);
+			}
 		}
 		else
 		{

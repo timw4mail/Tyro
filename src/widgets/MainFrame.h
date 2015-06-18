@@ -10,7 +10,7 @@
 class MainFrame: public wxFrame
 {
 	public:
-		MainFrame(wxFrame *frame, const wxString &title);
+		MainFrame(wxFrame *frame, const wxString &title, const wxSize &size);
 		~MainFrame();
 		void EnableEditControls(bool enable=true);
 		void OpenFiles(wxArrayString filelist);

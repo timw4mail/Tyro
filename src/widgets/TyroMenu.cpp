@@ -67,8 +67,10 @@ void TyroMenu::SetupMainMenus()
 	
 	editMenu->AppendSeparator();
 	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
+#ifndef TRAVIS
 	editMenu->AppendSeparator();
 	editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
+#endif
 
 	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
 	viewMenu->AppendCheckItem(myID_VIEW_LINE_ENDINGS, "Show line endings", "Toggle visibility of line ending characters");

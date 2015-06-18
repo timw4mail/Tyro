@@ -9,7 +9,8 @@ public:
 		const wxString &dir = wxDirDialogDefaultFolderStr,
 		const wxPoint &pos = wxDefaultPosition,
 		const wxSize &size = wxDefaultSize,
-		long style = wxDIRCTRL_EDIT_LABELS | wxDIRCTRL_MULTIPLE,
+		long style = wxDIRCTRL_3D_INTERNAL | wxDIRCTRL_EDIT_LABELS |
+			wxDIRCTRL_SHOW_FILTERS | wxDIRCTRL_MULTIPLE,
 		const wxString &filter = wxEmptyString
 	);
 	~FilePane();

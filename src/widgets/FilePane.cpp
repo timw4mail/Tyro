@@ -31,8 +31,10 @@ FilePane::FilePane(
 	this->CreateContextMenu();
 	this->BindEvents();
 	
-	//this->SetDefaultPath(wxStandardPaths::Get().GetDocumentsDir());
-	//this->SetPath(this->GetDefaultPath());
+	this->CollapseTree();
+	
+	this->SetDefaultPath(wxStandardPaths::Get().GetDocumentsDir() + "../");
+	this->SetPath(this->GetDefaultPath());
 }
 
 /**
@@ -40,6 +42,7 @@ FilePane::FilePane(
  */
 FilePane::~FilePane()
 {
+	wxLogDebug("File Pane Destructor Called.");
 	delete this->contextMenu;
 }
 

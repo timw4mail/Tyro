@@ -2,6 +2,7 @@
 
 extern wxConfigBase *Glob_config;
 
+#ifndef TRAVIS
 class GeneralPrefPanePage : public wxPanel {
 public:
 	GeneralPrefPanePage(wxWindow *parent)
@@ -25,7 +26,7 @@ public:
 				wxNullFont,
 				wxDefaultPosition,
 				wxDefaultSize,
-				wxFNTP_USE_TEXTCTRL | wxFNTP_USEFONT_FOR_LABEL
+				wxFNTP_USE_TEXTCTRL ^ wxFNTP_USEFONT_FOR_LABEL
 			);
 			wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
 			fontSizer->Add(this->fontPicker, wxSizerFlags().Border());
@@ -45,11 +46,7 @@ public:
 			if ( ! HAS_FONT_BUG())
 			{
 				this->fontPicker->Bind(wxEVT_FONTPICKER_CHANGED, [=] (wxFontPickerEvent &event) {
-					wxFont font = event.GetFont();
-					
-					Glob_config->Write("global_font_family", (int)font.GetFamily());
-					Glob_config->Write("global_font_face_name", font.GetFaceName());
-					Glob_config->Write("global_font_point_size", font.GetPointSize());
+					Glob_config->Write("global_font", event.GetFont());
 					this->frame->OnPrefsChanged(event);
 					Glob_config->Flush();
 				}, myID_PREFS_FONT);
@@ -92,18 +89,10 @@ public:
 		
 		if ( ! HAS_FONT_BUG())
 		{
-			wxString fontFace;
-			int fontFamily = TYRO_DEFAULT_FONT_FAMILY;
-			int pointSize = TYRO_DEFAULT_FONT_SIZE;
-			Glob_config->Read("global_font_face_name", fontFace);
-			Glob_config->Read("global_font_family", fontFamily);
-			Glob_config->Read("global_font_point_size", pointSize);
+			wxFont globalFont;
+			Glob_config->Read("global_font", &globalFont);
 			
-			wxFontInfo fInfo(pointSize);
-			
-			fInfo.Family((wxFontFamily) fontFamily).FaceName(fontFace);
-			
-			this->fontPicker->SetSelectedFont(wxFont(fInfo));
+			this->fontPicker->SetSelectedFont(globalFont);
 		}
 		
 		return true;
@@ -123,10 +112,7 @@ public:
 		
 		if ( ! HAS_FONT_BUG())
 		{
-			wxFont font = this->fontPicker->GetSelectedFont();
-			Glob_config->Write("global_font_family", (int)font.GetFamily());
-			Glob_config->Write("global_font_face_name", font.GetFaceName());
-			Glob_config->Write("global_font_point_size", font.GetPointSize());
+			Glob_config->Write("global_font", this->fontPicker->GetSelectedFont());
 		}
 		
 		wxCommandEvent evt = wxCommandEvent();
@@ -166,7 +152,7 @@ PrefPane::PrefPane()
 
 PrefPane::~PrefPane()
 {
-	delete this->pref_window;
+	//delete this->pref_window;
 }
 
 void PrefPane::Show(wxWindow *parent)
@@ -174,6 +160,5 @@ void PrefPane::Show(wxWindow *parent)
 	this->pref_window->Show(parent);
 }
 
-
-
+#endif // ifndef TRAVIS
 

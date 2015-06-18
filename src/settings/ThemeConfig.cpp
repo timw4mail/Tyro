@@ -17,10 +17,7 @@ ThemeConfig::ThemeConfig()
 /**
  * Destructor
  */ 
-ThemeConfig::~ThemeConfig()
-{
-	wxLogDebug("Called ThemeConfig Destructor");
-}
+ThemeConfig::~ThemeConfig() {}
 
 /**
  * Set the current theme

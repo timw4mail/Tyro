@@ -29,7 +29,6 @@
 #include <wx/font.h>
 #include <wx/stdpaths.h>
 #include <wx/platinfo.h>
-#include <wx/vidmode.h>
 #include <wx/filename.h>
 #include <wx/artprov.h>
 

@@ -7,6 +7,8 @@
 
 #include <wx/app.h>
 #include <wx/sysopt.h>
+#include <wx/vidmode.h>
+#include <wx/display.h>
 
 
 // Some global stuff
@@ -14,8 +16,11 @@ wxConfigBase *Glob_config = nullptr;
 TyroMenu *Glob_menu_bar = nullptr;
 wxStatusBar *Glob_status_bar = nullptr;
 MainFrame *Glob_main_frame = nullptr;
-PrefPane *Glob_pref_pane = nullptr;
 StringConstMap Glob_lexer_map;
+
+#ifndef TRAVIS
+PrefPane *Glob_pref_pane = nullptr;
+#endif
 
 // Static app loading variables
 static wxArrayString files;
@@ -44,8 +49,10 @@ public:
 		this->InitLexerMap();
 		Glob_config = wxConfigBase::Get();
 		Glob_menu_bar = new TyroMenu();
-		Glob_main_frame = new MainFrame(0L, APP_NAME);
+		Glob_main_frame = new MainFrame(0L, APP_NAME, this->CalculateWindowSize());
+#ifndef TRAVIS
 		Glob_pref_pane = new PrefPane();
+#endif
 
 		// Setup Main Window
 		Glob_main_frame->Layout();
@@ -142,6 +149,21 @@ private:
 		Glob_lexer_map["sql"] = wxSTC_LEX_SQL;
 		Glob_lexer_map["xml"] = wxSTC_LEX_XML;
 		Glob_lexer_map["yaml"] = wxSTC_LEX_YAML;
+	}
+	
+	/**
+	 * Calculate original window size based on size of the current monitor
+     */
+	wxSize CalculateWindowSize()
+	{
+		wxDisplay display;
+		wxVideoMode mode = display.GetCurrentMode();
+		
+		wxLogDebug("Current display: %ix%i", mode.w, mode.h);
+		
+		wxSize base((int)((float)mode.w * 0.8), (int)((float)mode.h * 0.8));
+		
+		return base;
 	}
 	
 	/**

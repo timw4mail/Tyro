@@ -20,10 +20,10 @@ WX_CXXFLAGS =  $(shell wx-config --cxxflags)
 
 INC_FLAGS = -Iinclude -I. -I/usr/local/include
 DEV_CXXFLAGS =  -O0 -g -Wall -Wextra -pipe -DDEBUG $(INC_FLAGS)
-CXXFLAGS = -Os -pipe -DNDEBUG $(INC_FLAGS)
+CXXFLAGS += -Os -pipe -DNDEBUG $(INC_FLAGS)
 
-TEST_SRC = $(wildcard tests/*.cpp)
-TESTS = $(patsubst %.cpp,%,$(TEST_SRC))
+TEST_SRC = $(wildcard tests/*Test.cpp)
+TESTS = $(patsubst %.cpp,%.o,$(TEST_SRC))
 
 LDLIBS =
 
@@ -38,7 +38,7 @@ endif
 
 # Platform compiler flags
 ifeq ($(OS),Darwin)
-	CXX = $(shell wx-config --cxx) -D__WXMAC__ -std=c++11
+	CXX = $(shell wx-config --cxx) -D__WXMAC__ -std=gnu++11
 	LDLIBS += /usr/local/lib/libssh2.a
 else
 	LDLIBS += -lssh2
@@ -63,7 +63,7 @@ all: Tyro.app
 endif
 
 dev: DEV = true
-dev: CXXFLAGS = $(DEV_CXXFLAGS)
+dev: CXXFLAGS += $(DEV_CXXFLAGS)
 dev: all
 	
 json_wrapper: json_wrapper_build
@@ -152,12 +152,18 @@ endif
 	cp build/Tyro build/Tyro.app/Contents/MacOS/Tyro
 	cp resources/platform/osx/tyro.icns build/Tyro.app/Contents/Resources/
 
-$(TESTS): $(BASE_LIB)
-	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(var) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o $(patsubst %.cpp,%, $(var));)
 
-.PHONY: tests	
-tests: $(TESTS)
-	sh ./tests/runtests.sh
+$(TESTS):
+	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(WX_CXXFLAGS) -c -o $(patsubst %.cpp,%.o,$(var)) $(var);)
+
+.PHONY: tests
+tests: LDLIBS += -lstdc++ -lCppUTestExt -lCppUTest
+tests: $(TESTS) json_wrapper $(BASE_LIB) $(WIDGET_LIB)
+	$(patsubst g++,clang++, $(CXX)) $(CXXFLAGS) $(WX_CXXFLAGS) tests/main.cpp $(TESTS) $(WIDGET_LIB) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o tests/runner
+
+
+run-tests: tests
+	./tests/runner -v
 
 clean:
 	rm -f *.res
@@ -166,6 +172,7 @@ clean:
 	rm -f config/*_json.h
 	rm -rf *.o
 	rm -rf build
-	rm -rf build $(OBJECTS) $(PROGRAM) $(BASE_LIB) $(CONFIG_LIB) $(WIDGET_LIB) $(TESTS)
+	rm -rf $(OBJECTS) $(TESTS)
+	rm -f tests/runner
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`

@@ -5,10 +5,14 @@
 
 // Nasty globals
 extern TyroMenu *Glob_menu_bar;
-extern PrefPane *Glob_pref_pane;
 extern wxStatusBar *Glob_status_bar;
 static TabContainer *notebook = nullptr;
 static FilePane *filePane = nullptr;
+
+#ifndef TRAVIS
+	extern PrefPane *Glob_pref_pane;
+#endif
+
 
 // Frame icon
 #include "../../resources/xpm/tyro.xpm"
@@ -16,13 +20,13 @@ static FilePane *filePane = nullptr;
 /**
  * Constructor
  */
-MainFrame::MainFrame(wxFrame *frame, const wxString &title)
-	: wxFrame(frame, -1, title, wxDefaultPosition, wxSize(800,600))
+MainFrame::MainFrame(wxFrame *frame, const wxString &title, const wxSize &size)
+	: wxFrame(frame, -1, title, wxDefaultPosition, size)
 {
 	// Create the tab container
 	notebook = new TabContainer(this);
 	
-	filePane = new FilePane(this, wxID_ANY, wxStandardPaths::Get().GetDocumentsDir());
+	filePane = new FilePane(this);
 	
 	// Set the frame icon
 	wxIcon app_icon(tyro_icon);
@@ -46,9 +50,9 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title)
 MainFrame::~MainFrame() 
 {
 	wxLogDebug("Main Frame Destructor Called.");
-	delete notebook;
-	delete toolBar;
-	delete filePane;
+	//delete notebook;
+	//delete toolBar;
+	//delete filePane;
 	
 	wxDELETE(this->findDlg);
 	wxDELETE(this->findData);
@@ -207,10 +211,11 @@ void MainFrame::BindEvents()
 			case wxID_REDO:
 				if (editor->CanRedo()) editor->Redo();
 			break;
-			
+#ifndef TRAVIS
 			case wxID_PREFERENCES:
 				Glob_pref_pane->Show(this);
 			break;
+#endif
 			
 			case wxID_FIND:
 				this->OnEditFind(event);
