@@ -133,7 +133,6 @@ private:
 		Glob_lexer_map["css"] = wxSTC_LEX_CSS;
 		Glob_lexer_map["fortran"] = wxSTC_LEX_FORTRAN;
 		Glob_lexer_map["haskell"] = wxSTC_LEX_HASKELL;
-		Glob_lexer_map["html"] = wxSTC_LEX_HTML;
 		Glob_lexer_map["java"] = wxSTC_LEX_CPP;
 		Glob_lexer_map["js"] = wxSTC_LEX_CPP;
 		Glob_lexer_map["lisp"] = wxSTC_LEX_LISP;

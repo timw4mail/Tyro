@@ -38,7 +38,7 @@ endif
 
 # Platform compiler flags
 ifeq ($(OS),Darwin)
-	CXX = $(shell wx-config --cxx) -D__WXMAC__ -std=gnu++11
+	CXX = $(shell wx-config --cxx) -D__WXMAC__ -D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_ -std=gnu++11
 	LDLIBS += /usr/local/lib/libssh2.a
 else
 	LDLIBS += -lssh2
@@ -157,13 +157,13 @@ $(TESTS):
 	$(foreach var, $(TEST_SRC), $(CXX) $(CXXFLAGS) $(WX_CXXFLAGS) -c -o $(patsubst %.cpp,%.o,$(var)) $(var);)
 
 .PHONY: tests
-tests: LDLIBS += -lstdc++ -lCppUTestExt -lCppUTest
 tests: $(TESTS) json_wrapper $(BASE_LIB) $(WIDGET_LIB)
-	$(patsubst g++,clang++, $(CXX)) $(CXXFLAGS) $(WX_CXXFLAGS) tests/main.cpp $(TESTS) $(WIDGET_LIB) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o tests/runner
+	$(CXX)  $(CXXFLAGS) $(WX_CXXFLAGS) tests/main.cpp $(TESTS) $(WIDGET_LIB) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o tests/runner
 
 
 run-tests: tests
-	./tests/runner -v
+	./tests/runner -s
+	./tests/runner -r compact
 
 clean:
 	rm -f *.res

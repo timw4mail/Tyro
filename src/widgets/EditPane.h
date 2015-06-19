@@ -23,7 +23,7 @@ public:
 	void ApplyTheme(string lang, string theme="");
 	string GetCurrentLang();
 	void SetCurrentLang(string name);
-private:
+protected:
 	StringConstMap::iterator lexerMapIt;
 	LangConfig *lang_config = nullptr;
 	ThemeConfig *theme_config = nullptr;

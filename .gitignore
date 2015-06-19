@@ -10,3 +10,4 @@ nbproject/*
 config/*_json.h
 config/json2c
 **/*.exe
+tests/runner

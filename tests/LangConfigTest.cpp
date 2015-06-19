@@ -1,51 +1,56 @@
 
-#include <CppUTest/TestHarness.h>
+#include "catch.hpp"
 #include "../src/settings/LangConfig.h"
-TEST_GROUP(LangConfig)
+
+TEST_CASE("Language Config Library")
 {
-	LangConfig *config;
+	LangConfig *config = new LangConfig();
 	
-	void setup()
+	SECTION("GetLangList()")
 	{
-		config = new LangConfig();
+		StringMap list = config->GetLangList();
+		REQUIRE(list.size() > 0);
 	}
-	void teardown()
+	
+	SECTION("GetLang()")
 	{
-		delete config;
+		string lang = config->GetLang();
+		REQUIRE(lang == "");
 	}
-};
-
-TEST(LangConfig, GetLangList)
-{	
-	StringMap list = config->GetLangList();
-	CHECK(list.size() > 0);
-}
-
-TEST(LangConfig, GetLang)
-{
-	string lang;
-	lang = config->GetLang();
-	CHECK_EQUAL(lang, "");
-}
-
-TEST(LangConfig, SetLang)
-{
-	string lang="cpp";
-	config->SetLang(lang);
 	
-	CHECK_EQUAL(lang, config->GetLang());
-}
-
-TEST(LangConfig, GetLangByFile)
-{
-	wxFileName file("foo.cpp");
+	SECTION("SetLang()")
+	{
+		string lang="cpp";
+		config->SetLang(lang);
+		REQUIRE(lang == config->GetLang());
+	}
 	
-	string lang = config->GetLangByFile(file);
-	CHECK_EQUAL("cpp", lang);
-}
-
-TEST(LangConfig, GetLangByName)
-{
-	string lang = config->GetLangByName("C / C++");
-	CHECK_EQUAL("cpp", lang);
+	SECTION("GetLangByFile()")
+	{
+		wxFileName file("foo.cpp");
+		
+		string lang = config->GetLangByFile(file);
+		REQUIRE("cpp" == lang);
+	}
+	
+	SECTION("GetLangByName()")
+	{
+		string lang = config->GetLangByName("C / C++");
+		REQUIRE("cpp" == lang);
+	}
+	
+	SECTION("GetCurrentLangName()")
+	{
+		
+	}
+	
+	SECTION("GetLexerMap()")
+	{
+		
+	}
+	
+	SECTION("GetKeywordList()")
+	{
+		
+	}
 }

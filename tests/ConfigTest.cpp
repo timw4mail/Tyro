@@ -1,23 +1,13 @@
-#include <CppUTest/TestHarness.h>
+#include "catch.hpp"
 #include "../src/base/settings/Config.h"
 
-TEST_GROUP(Config)
+TEST_CASE ("Base config class load json")
 {
-	TyroConfig *config;
+	TyroConfig *config = new TyroConfig();
 	
-	void setup()
+	SECTION("Create Base Config Class")
 	{
-		config = new TyroConfig();
+		config->LoadJson("{\"foo\":\"bar\"}");
+		REQUIRE(config->GetRoot().isObject());
 	}
-	void teardown()
-	{
-		delete config;
-	}
-};
-
-TEST(Config, Create)
-{
-	config->LoadJson("{\"foo\":\"bar\"}");
-	
-	CHECK(config->GetRoot().isObject());
 }
