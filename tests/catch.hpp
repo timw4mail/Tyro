@@ -62,7 +62,6 @@
 #define INTERNAL_CATCH_STRINGIFY2( expr ) #expr
 #define INTERNAL_CATCH_STRINGIFY( expr ) INTERNAL_CATCH_STRINGIFY2( expr )
 
-#include <stdlib>
 #include <sstream>
 #include <stdexcept>
 #include <algorithm>
