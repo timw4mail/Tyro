@@ -6,9 +6,12 @@ before_install:
     
     # Upgrade gcc
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo apt-get -qq update 
+    - sudo apt-get -qq update
     - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
     - if [ "$CXX" = "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 98; fi
+    
+    # Upgrade clang
+    - sudo apt-get -qq install llvm-3.4 llvm-3.4-dev
     - if [ "$CXX" = "clang++" ]; then export CXXFLAGS="$CXXFLAGS -stdlib=libc++"; fi
     
     # Install dependencies
