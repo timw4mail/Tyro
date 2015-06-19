@@ -162,8 +162,7 @@ tests: $(TESTS) json_wrapper $(BASE_LIB) $(WIDGET_LIB)
 
 
 run-tests: tests
-	./tests/runner -s
-	./tests/runner -r compact
+	./tests/runner
 
 clean:
 	rm -f *.res

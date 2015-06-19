@@ -23,12 +23,22 @@ ThemeConfig::~ThemeConfig() {}
  * Set the current theme
  * 
  * @param string theme_name
- * @return void
+ * @return bool
  */ 
-void ThemeConfig::SetTheme(string theme_name)
+bool ThemeConfig::SetTheme(string theme_name)
 {
 	JsonValue theme_list = this->GetRoot();
-	this->current_theme = theme_list.get(theme_name, JsonValue());
+	JsonValue selected_theme = theme_list.get(theme_name, JsonValue());
+	
+	if (selected_theme.isNull()) return FALSE;
+	
+	if (selected_theme.isObject())
+	{
+		this->current_theme = selected_theme;
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 /**
@@ -77,6 +87,6 @@ wxColor ThemeConfig::GetThemeColor(string type, string key)
 	}
 	else
 	{
-		return wxColor("black");
+		return wxColor("BLACK");
 	}
 }
