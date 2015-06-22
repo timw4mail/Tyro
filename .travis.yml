@@ -4,13 +4,9 @@ language: cpp
 before_install:    
     # Define TRAVIS variable for workarounds
     - export CXXFLAGS="$CXXFLAGS -DTRAVIS"
-    - sudo apt-get -qq update
-    
-    # Install dependencies
-    - sudo apt-get -qq install libwxgtk3.0-dev libwxgtk3.0-0 libssh2-1-dev
 
 install:
-    - if [ "$CXX" = "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 98; fi
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 # Build with both gcc and clang
 compiler:
@@ -25,5 +21,8 @@ addons:
         - gcc-4.8
         - g++-4.8
         - clang
+        - libwxgtk3.0-dev
+        - libwxgtk3.0-0
+        - libssh2-1-dev
 
 script: make clean run-tests
