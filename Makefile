@@ -39,7 +39,7 @@ endif
 # Platform compiler flags
 ifeq ($(OS),Darwin)
 	CXX = $(shell wx-config --cxx) -D__WXMAC__ -D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_ -std=gnu++11
-	LDLIBS += /usr/local/lib/libssh2.a
+	LDLIBS += $(shell pkg-config libssh2 --libs)
 else
 	LDLIBS += -lssh2
 endif
@@ -47,7 +47,7 @@ endif
 ifeq ($(OS),Windows_NT)
 	CXXFLAGS += -static
 	CXX += -std=gnu++11 -Wno-unknown-pragmas -Wno-missing-field-initializers -I/include -DWIN32
-	LDLIBS += -L/lib -lwsock32
+	LDLIBS += -L/lib -lws2_32 -lssh2
 endif
 
 ifeq ($(OS),Linux)
@@ -158,7 +158,7 @@ $(TESTS):
 
 .PHONY: tests
 tests: $(TESTS) json_wrapper $(BASE_LIB) $(WIDGET_LIB)
-	$(CXX)  $(CXXFLAGS) $(WX_CXXFLAGS) tests/main.cpp $(TESTS) $(WIDGET_LIB) $(BASE_LIB) $(WX_LDLIBS) $(LDLIBS) -o tests/runner
+	$(CXX)  $(CXXFLAGS) $(WX_CXXFLAGS) tests/main.cpp $(TESTS) $(WIDGET_LIB) $(BASE_LIB) $(LDLIBS) $(WX_LDLIBS) -o tests/runner
 
 
 run-tests: tests

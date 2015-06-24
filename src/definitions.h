@@ -45,10 +45,6 @@ const int TYRO_DEFAULT_FONT_SIZE = 14;
 const int TYRO_DEFAULT_FONT_SIZE = 10;
 #endif
 
-// Typedef some common templates
-typedef map<string, int> StringConstMap;
-typedef map<string, string> StringMap;
-
 // Editor margins
 enum myMargins
 {

@@ -22,5 +22,10 @@ typedef Json::Value JsonValue;
 typedef Json::Reader JsonReader;
 typedef Json::Writer JsonWriter;
 
+// Typedef some common templates
+typedef map<string, int> StringConstMap;
+typedef map<string, string> StringMap;
+typedef vector<string> StringVector;
+
 #endif	// TYRO_COMMON_H
 
