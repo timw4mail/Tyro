@@ -8,7 +8,7 @@
 #ifndef SFTP_H
 #define	SFTP_H
 
-#include "../../common.h"
+#include "../common.h"
 
 // Socket includes
 #include <cstring>

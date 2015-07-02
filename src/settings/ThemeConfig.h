@@ -6,7 +6,7 @@
 #define	TYRO_THEME_CONFIG_H
 
 #include "../wx_common.h"
-#include "../base/settings/Config.h"
+#include "Config.h"
 
 class ThemeConfig : TyroConfig {
 public:

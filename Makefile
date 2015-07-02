@@ -1,4 +1,4 @@
-SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/base/**/*.cpp)
+SOURCES = $(wildcard include/**/*.cpp include/*.cpp src/base/*.cpp)
 OBJECTS = $(patsubst %.cpp,%.o, $(SOURCES))
 BASE_LIB = build/base.a
 
@@ -11,7 +11,7 @@ CONFIG_SRC = $(wildcard src/settings/*.cpp)
 CONFIG_OBJ = $(patsubst %.cpp,%.o, $(CONFIG_SRC))
 CONFIG_LIB = build/config.a
 
-WIDGET_SRC = $(wildcard src/settings/*.cpp src/widgets/*.cpp)
+WIDGET_SRC = $(wildcard src/settings/*.cpp src/widgets/*.cpp src/base/widget/*.cpp)
 WIDGET_OBJ = $(patsubst %.cpp,%.o, $(WIDGET_SRC))
 WIDGET_LIB = build/widget.a
 
@@ -24,6 +24,7 @@ CXXFLAGS += -Os -pipe -DNDEBUG $(INC_FLAGS)
 
 TEST_SRC = $(wildcard tests/*Test.cpp)
 TESTS = $(patsubst %.cpp,%.o,$(TEST_SRC))
+TEST_RUNNER = tests/runner
 
 LDLIBS =
 
@@ -175,3 +176,4 @@ clean:
 	rm -f tests/runner
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
+	mkdir -p build

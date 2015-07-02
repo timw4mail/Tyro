@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/base/settings/Config.h"
+#include "../src/settings/Config.h"
 
 TEST_CASE ("Base config class load json")
 {
