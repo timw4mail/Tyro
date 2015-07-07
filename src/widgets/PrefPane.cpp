@@ -1,9 +1,9 @@
+#ifndef TRAVIS
 #include "src/widgets/PrefPane.h"
 #include "src/widgets/MainFrame.h"
 
 extern wxConfigBase *Glob_config;
 
-#ifndef TRAVIS
 class GeneralPrefPanePage : public wxPanel {
 public:
 	GeneralPrefPanePage(wxWindow *parent)
