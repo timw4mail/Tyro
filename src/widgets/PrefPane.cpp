@@ -1,4 +1,5 @@
-#include "widget.h"
+#include "src/widgets/PrefPane.h"
+#include "src/widgets/MainFrame.h"
 
 extern wxConfigBase *Glob_config;
 

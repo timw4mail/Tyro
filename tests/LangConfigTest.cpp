@@ -1,6 +1,6 @@
 
-#include "catch.hpp"
-#include "../src/settings/LangConfig.h"
+#include "tests/catch.hpp"
+#include "src/settings/LangConfig.h"
 
 TEST_CASE("Language Config Library")
 {

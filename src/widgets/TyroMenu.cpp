@@ -1,5 +1,5 @@
-#include "widget.h"
-#include "../settings/LangConfig.h"
+#include "src/widgets/TyroMenu.h"
+#include "src/settings/LangConfig.h"
 
 static LangConfig *lang_config = nullptr;
 

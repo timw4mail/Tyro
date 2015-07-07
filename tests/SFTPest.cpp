@@ -1,5 +1,5 @@
-#include "catch.hpp"
-#include "../src/base/SFTP.h"
+#include "tests/catch.hpp"
+#include "src/base/SFTP.h"
 
 TEST_CASE("SFTP Library")
 {

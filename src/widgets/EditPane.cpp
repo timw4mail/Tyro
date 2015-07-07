@@ -2,7 +2,7 @@
  * The editor widget
  */
 
-#include "widget.h"
+#include "src/widgets/EditPane.h"
 
 extern StringConstMap Glob_lexer_map;
 extern wxConfig *Glob_config;

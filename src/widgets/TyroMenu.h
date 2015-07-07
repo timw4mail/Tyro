@@ -4,7 +4,7 @@
 #ifndef TYRO_MENU_H
 #define	TYRO_MENU_H
 
-#include "widget.h"
+#include "src/widgets/widget.h"
 
 class TyroMenu : public wxMenuBar {
 public:

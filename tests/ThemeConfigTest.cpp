@@ -1,5 +1,5 @@
-#include "catch.hpp"
-#include "../src/settings/ThemeConfig.h"
+#include "tests/catch.hpp"
+#include "src/settings/ThemeConfig.h"
 
 TEST_CASE("Theme Config Library")
 {

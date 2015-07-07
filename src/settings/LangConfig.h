@@ -1,8 +1,8 @@
 #ifndef TYRO_LANG_CONFIG_H
 #define TYRO_LANG_CONFIG_H
 
-#include "../wx_common.h"
-#include "Config.h"
+#include "src/wx_common.h"
+#include "src/settings/Config.h"
 
 class LangConfig : TyroConfig {
 public:

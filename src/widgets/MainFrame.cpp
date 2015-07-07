@@ -1,7 +1,7 @@
 /**
  * Main Application Frame
  */
-#include "widget.h"
+#include "src/widgets/MainFrame.h"
 
 // Nasty globals
 extern TyroMenu *Glob_menu_bar;

@@ -5,7 +5,13 @@
 #ifndef TYROMAIN_H
 #define TYROMAIN_H
 
-#include "TabContainer.h"
+#include "src/widgets/TyroMenu.h"
+#include "src/widgets/EditPane.h"
+#include "src/widgets/TabContainer.h"
+#ifndef TRAVIS
+#include "src/widgets/PrefPane.h"
+#endif
+#include "src/widgets/FilePane.h"
 
 class MainFrame: public wxFrame
 {

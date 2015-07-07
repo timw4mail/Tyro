@@ -2,10 +2,13 @@
  * Wrapper around wxAuiNotebook
  */
 
-#include "widget.h"
+#include "src/widgets/TabContainer.h"
+#include "src/widgets/MainFrame.h"
 
 extern TyroMenu *Glob_menu_bar;
 extern wxStatusBar *Glob_status_bar;
+
+static MainFrame *parentFrame = nullptr;
 
 static vector<EditPane *> editors;
 static unsigned long untitled_document_count = 0;
@@ -27,7 +30,7 @@ TabContainer::TabContainer(
 		long style
 ) : wxAuiNotebook(parent, id, pos, size, style)
 {
-	this->parent = (MainFrame *) parent;
+	parentFrame = (MainFrame *) parent;
 	
 	this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &TabContainer::OnClose, this, wxID_ANY);
 	this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &TabContainer::OnClosed, this, wxID_ANY);
@@ -173,7 +176,7 @@ void TabContainer::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	if (this->GetPageCount() == 0)
 	{
-		this->parent->EnableEditControls(false);
+		parentFrame->EnableEditControls(false);
 		Glob_status_bar->SetStatusText("", STATUS_CURSOR_LOCATION);
 		Glob_status_bar->SetStatusText("", STATUS_CURRENT_LANGUAGE);
 	}
@@ -203,7 +206,7 @@ void TabContainer::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 void TabContainer::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
 	this->DeleteAllPages();
-	this->parent->EnableEditControls(false);
+	parentFrame->EnableEditControls(false);
 }
 
 /**

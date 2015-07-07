@@ -2,13 +2,15 @@
  * Main application file
  */
 
-#include "wx_common.h"
-#include "widgets/widget.h"
+#include "src/wx_common.h"
+#include "src/widgets/widget.h"
 
 #include <wx/app.h>
 #include <wx/sysopt.h>
 #include <wx/vidmode.h>
 #include <wx/display.h>
+
+#include "src/widgets/MainFrame.h"
 
 
 // Some global stuff

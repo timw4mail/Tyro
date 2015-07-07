@@ -5,6 +5,8 @@
 #ifndef TYRO_PREF_PANE_H
 #define	TYRO_PREF_PANE_H
 
+#include "src/widgets/widget.h"
+
 class PrefPane {
 public:
 	PrefPane();

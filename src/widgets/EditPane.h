@@ -1,8 +1,10 @@
 #ifndef TYROEDIT_PANE_H
 #define TYROEDIT_PANE_H
 
-#include "../settings/LangConfig.h"
-#include "../settings/ThemeConfig.h"
+#include "src/widgets/widget.h"
+#include "src/settings/LangConfig.h"
+#include "src/settings/ThemeConfig.h"
+
 
 class EditPane: public wxStyledTextCtrl
 {
