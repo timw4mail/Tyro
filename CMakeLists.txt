@@ -91,7 +91,7 @@ else()
 endif()
 
 #link it all
-target_link_libraries(Tyro JsonLib BaseLib WidgetLib "${wxWidgets_LIBRARIES}" "${Libssh2_LIBRARIES}")
+target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})
 
 ################################################################################
 # Tests
@@ -104,5 +104,5 @@ file(GLOB test_SRC
 )
 add_executable(test_runner ${test_SRC})
 
-target_link_libraries(test_runner BaseLib WidgetLib "${wxWidgets_LIBRARIES}" "${Libssh2_LIBRARIES}")
+target_link_libraries(test_runner ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES} JsonLib BaseLib WidgetLib)
 
