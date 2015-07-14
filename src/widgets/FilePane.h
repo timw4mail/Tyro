@@ -18,6 +18,7 @@ private:
 	wxImageList *img_list = nullptr;
 	wxDir *dir = nullptr;
 	void InitImageList();
+	void CreateTree(const wxString &path, wxTreeListItem &root);
 };
 
 #endif	/* TYRO_FILE_PANE_H */

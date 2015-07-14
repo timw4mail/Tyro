@@ -1,5 +1,12 @@
 #include "src/widgets/FilePane.h"
 
+enum
+{
+	Icon_File,
+	Icon_FolderClosed,
+	Icon_FolderOpened
+};
+
 FilePane::FilePane(
 	wxWindow* parent, 
 	wxWindowID id, 
@@ -13,19 +20,36 @@ FilePane::FilePane(
 	this->InitImageList();
 	this->SetImageList(this->img_list);
 	
-	this->dir->Open(".");
+	const wxString defaultPath = wxString(".");
+	wxTreeListItem root = this->GetRootItem();
+	this->CreateTree(defaultPath, root);
 	
 	this->AppendColumn("", 
 		wxCOL_WIDTH_AUTOSIZE, 
 		wxALIGN_LEFT, 
 		wxCOL_RESIZABLE | wxCOL_SORTABLE);
 	
-	wxTreeListItem root = this->GetRootItem();
+	
 }
 
 FilePane::~FilePane()
 {
 	
+}
+
+void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
+{
+	wxString *filename = new wxString("");
+	this->dir->Open(path);
+	
+	this->dir->GetFirst(filename, wxEmptyString, wxDIR_DEFAULT | wxDIR_NO_FOLLOW);
+	
+	this->AppendItem(root, *filename, Icon_FolderClosed, Icon_FolderOpened);
+	
+	while (this->dir->GetNext(filename))
+	{
+		this->AppendItem(root, *filename, Icon_FolderClosed, Icon_FolderOpened);
+	}
 }
 
 void FilePane::InitImageList()
