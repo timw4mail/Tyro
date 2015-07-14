@@ -73,14 +73,17 @@ file(GLOB widget_SRC
 	"src/widgets/*.cpp"
 )
 add_library(WidgetLib STATIC ${widget_SRC})
-#add_dependencies(WidgetLib BaseLib JsonLib)
 target_link_libraries(WidgetLib JsonLib)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	set(MACOSX_BUNDLE_ICON_FILE, ${PROJECT_SOURCE_DIR}/resources/platform/osx/tyro.icns)
-	set(MACOSX_BUNDLE_INFO_PLIST, ${PROJECT_SOURCE_DIR}/resources/platform/osx/Info.plist)
-	add_executable(Tyro MACOSX_BUNDLE
-		src/TyroApp.cpp)
+	set(MACOSX_icon_file ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/osx/tyro.icns)
+	set(MACOSX_BUNDLE_ICON_FILE tyro.icns)
+	set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/osx/Info.plist)
+	set_source_files_properties(${MACOSX_icon_file} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+	add_executable(Tyro MACOSX_BUNDLE 
+		src/TyroApp.cpp
+		${MACOSX_icon_file}
+	)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	add_executable(Tyro WIN32
 		resources/platform/msw/resource.rc
