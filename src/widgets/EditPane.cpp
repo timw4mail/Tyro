@@ -5,7 +5,7 @@
 #include "src/widgets/EditPane.h"
 
 extern StringConstMap Glob_lexer_map;
-extern wxConfig *Glob_config;
+static wxConfig *Glob_config = nullptr;
 
 /**
  * Constructor
@@ -19,6 +19,7 @@ EditPane::EditPane(
 	wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size
 ) : wxStyledTextCtrl (parent, id, pos, size, wxBORDER_NONE)
 {
+	Glob_config = (wxConfig *) wxConfigBase::Get();
 	lang_config = new LangConfig();
 	theme_config = new ThemeConfig();
 

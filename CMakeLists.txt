@@ -14,6 +14,7 @@ if(COMPILER_SUPPORTS_CXX11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 elseif(COMPILER_SUPPORTS_CXX0X)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 else()
     message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
 endif()
@@ -24,13 +25,13 @@ include("${wxWidgets_USE_FILE}")
 set(wxWidgets_CONFIG_OPTIONS --static)
 
 #libssh2
-set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
-find_package(LibSSH2 REQUIRED)
-if (LIBSSH2_FOUND)
-   set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
-else (LIBSSH2_FOUND)
-   message ( FATAL_ERROR "Could not find LibSSH2" )
-endif (LIBSSH2_FOUND)
+#set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
+#find_package(LibSSH2 REQUIRED)
+#if (LIBSSH2_FOUND)
+#   set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
+#else (LIBSSH2_FOUND)
+#   message ( FATAL_ERROR "Could not find LibSSH2" )
+#endif (LIBSSH2_FOUND)
 
 
 include_directories(${INCLUDE_DIRS})
@@ -64,7 +65,7 @@ add_custom_command(
 
 # base library
 add_library(BaseLib STATIC  
-	src/base/SFTP.cpp
+#	src/base/SFTP.cpp
 	src/settings/Config.cpp)
 
 # widget library
@@ -94,7 +95,8 @@ else()
 endif()
 
 #link it all
-target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})
+target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES})
+#target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})
 
 ################################################################################
 # Tests
@@ -107,5 +109,6 @@ file(GLOB test_SRC
 )
 add_executable(test_runner ${test_SRC})
 
-target_link_libraries(test_runner ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES} JsonLib BaseLib WidgetLib)
+target_link_libraries(test_runner ${wxWidgets_LIBRARIES} JsonLib BaseLib WidgetLib)
+#target_link_libraries(test_runner ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES} JsonLib BaseLib WidgetLib)
 
