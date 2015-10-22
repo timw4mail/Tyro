@@ -15,8 +15,10 @@ public:
 	);
 	~FilePane();
 private:
+	wxString curr_path = "";
 	wxImageList *img_list = nullptr;
-	wxDir *dir = nullptr;
+	void BindEvents();
+	void OpenFolder(wxTreeListEvent& event);
 	void InitImageList();
 	void CreateTree(const wxString &path, wxTreeListItem &root);
 };

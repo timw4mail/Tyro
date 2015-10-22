@@ -16,11 +16,12 @@ FilePane::FilePane(
 	const wxString &name
 ) : wxTreeListCtrl(parent, id, pos, size, style, name)
 {
-	this->dir = new wxDir();
 	this->InitImageList();
 	this->SetImageList(this->img_list);
 	
-	const wxString defaultPath = wxString(".");
+	wxString defaultPath(".");
+	wxFileName fname(defaultPath);
+	fname.MakeAbsolute(defaultPath);
 	wxTreeListItem root = this->GetRootItem();
 	this->CreateTree(defaultPath, root);
 	
@@ -34,24 +35,80 @@ FilePane::FilePane(
 
 FilePane::~FilePane()
 {
-	
+	delete this->img_list;
 }
 
+void FilePane::BindEvents()
+{
+	this->Bind(wxEVT_TREELIST_ITEM_EXPANDING, &FilePane::OpenFolder, this, wxID_ANY);
+}
+
+void FilePane::OpenFolder(wxTreeListEvent& event)
+{
+	
+	wxTreeListItem item = event.GetItem();
+	const wxString path = this->GetItemText(item, 0);
+	
+	wxLogDebug(path);
+}
+
+/**
+ * Iterates through the specified folder and creates the tree view
+ * 
+ * @access private
+ * @param wxString &path
+ * @param wxTreeListItem &root
+ */
 void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
 {
-	wxString *filename = new wxString("");
-	this->dir->Open(path);
+	wxArrayString *files = new wxArrayString();
+	wxDir::GetAllFiles(path, files);
 	
-	this->dir->GetFirst(filename, wxEmptyString, wxDIR_DEFAULT | wxDIR_NO_FOLLOW);
+	vector<wxString> examined;
+	vector<wxString>::iterator it;
 	
-	this->AppendItem(root, *filename, Icon_FolderClosed, Icon_FolderOpened);
-	
-	while (this->dir->GetNext(filename))
+	for (wxString filename : *files)
 	{
-		this->AppendItem(root, *filename, Icon_FolderClosed, Icon_FolderOpened);
+		wxFileName fname(filename);
+		
+		/*if (fname.IsRelative())
+		{
+			fname.MakeAbsolute();
+		}*/
+
+		// For loose files, just add directly to the tree
+		if (fname.GetDirCount() == 1)
+		{
+			this->AppendItem(root, fname.GetFullName(), Icon_File, Icon_File);
+		}
+		else
+		{
+			fname.RemoveDir(0);
+			wxArrayString folders = fname.GetDirs();
+			wxString curr_folder = folders[0];
+			
+			it = find(examined.begin(), examined.end(), curr_folder);
+			
+			// If the directory already exists, continue;
+			if (it != examined.end()) continue;
+			
+			wxTreeListItem current = this->AppendItem(root, curr_folder, Icon_FolderClosed, Icon_FolderOpened);
+			examined.push_back(curr_folder);
+			
+			// Recurse to create sub dirs
+			this->CreateTree(fname.GetPath(), current);
+		}
 	}
 }
 
+/*void FilePane::CreateFolderTree(StringVector dirList, wxTreeListItem &root)
+{
+	
+}*/
+
+/**
+ * Create the image list object for the file pane widget
+ */
 void FilePane::InitImageList()
 {
 	wxSize iconSize = wxArtProvider::GetSizeHint(wxART_LIST);
