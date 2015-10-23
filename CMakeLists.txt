@@ -1,7 +1,25 @@
 ################################################################################
 # Setup
 ################################################################################
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 2.8)
+
+################################################################################
+set(IS_WINDOWS ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+set(IS_OSX ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+################################################################################
+
+# Hunter for dependency management
+if(${IS_WINDOWS})
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.12.24.tar.gz"
+    SHA1 "a25a7fa55c204a8126efd1f48593a662925b26da"
+)
+endif()
+
+################################################################################
+set(IS_WINDOWS ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+set(IS_OSX ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 project(Tyro)
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
@@ -20,6 +38,10 @@ else()
 endif()
 
 # wxwidgets stuff
+if(${IS_WINDOWS})
+	hunter_add_package(libssh2)
+	hunter_add_package(wxWidgets)
+endif()
 find_package(wxWidgets COMPONENTS core base aui stc adv REQUIRED)
 include("${wxWidgets_USE_FILE}")
 set(wxWidgets_CONFIG_OPTIONS --static)
@@ -33,11 +55,10 @@ else (LIBSSH2_FOUND)
 	message ( FATAL_ERROR "Could not find LibSSH2" )
 endif (LIBSSH2_FOUND)
 
-
 include_directories(${INCLUDE_DIRS})
 
 # set some platform-specific flags
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(${IS_OSX})
 	set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++")
 	add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_ -D__WXMAC__)
 endif()
@@ -76,7 +97,7 @@ file(GLOB widget_SRC
 add_library(WidgetLib STATIC ${widget_SRC})
 target_link_libraries(WidgetLib JsonLib)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(${IS_OSX})
 	set(MACOSX_icon_file ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/osx/tyro.icns)
 	set(MACOSX_BUNDLE_ICON_FILE tyro.icns)
 	set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/osx/Info.plist)
@@ -85,7 +106,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 		src/TyroApp.cpp
 		${MACOSX_icon_file}
 	)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+elseif(${IS_WINDOWS})
 	add_executable(Tyro WIN32
 		resources/platform/msw/resource.rc
 		src/TyroApp.cpp)
@@ -95,12 +116,12 @@ else()
 endif()
 
 # Try to use nuget to install dependencies on Windows
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	add_custom_command(TARGET ${PROJECT_NAME}
-		PRE_BUILD
-		COMMAND nuget restore "${PROJECT_SOURCE_DIR}\\resources\\visual_studio\\packages.config" -PackagesDirectory "${CMAKE_BINARY_DIR}\\packages"
-	)
-endif()
+#if (${IS_WINDOWS})
+#	add_custom_command(TARGET ${PROJECT_NAME}
+#		PRE_BUILD
+#		COMMAND nuget restore "${PROJECT_SOURCE_DIR}\\resources\\visual_studio\\packages.config" -PackagesDirectory "${CMAKE_BINARY_DIR}\\packages"
+#	)
+#endif()
 
 #link it all
 target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})
