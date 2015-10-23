@@ -1,7 +1,7 @@
 ################################################################################
 # Setup
 ################################################################################
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.0)
 
 project(Tyro)
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
@@ -11,12 +11,12 @@ include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
 if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 else()
-    message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
+	message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
 endif()
 
 # wxwidgets stuff
@@ -25,13 +25,13 @@ include("${wxWidgets_USE_FILE}")
 set(wxWidgets_CONFIG_OPTIONS --static)
 
 #libssh2
-#set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
-#find_package(LibSSH2 REQUIRED)
-#if (LIBSSH2_FOUND)
-#   set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
-#else (LIBSSH2_FOUND)
-#   message ( FATAL_ERROR "Could not find LibSSH2" )
-#endif (LIBSSH2_FOUND)
+set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
+find_package(LibSSH2 REQUIRED)
+if (LIBSSH2_FOUND)
+	set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
+else (LIBSSH2_FOUND)
+	message ( FATAL_ERROR "Could not find LibSSH2" )
+endif (LIBSSH2_FOUND)
 
 
 include_directories(${INCLUDE_DIRS})
@@ -64,8 +64,8 @@ add_custom_command(
 )
 
 # base library
-add_library(BaseLib STATIC  
-#	src/base/SFTP.cpp
+add_library(BaseLib STATIC
+	src/base/SFTP.cpp
 	src/settings/Config.cpp)
 
 # widget library
@@ -81,7 +81,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(MACOSX_BUNDLE_ICON_FILE tyro.icns)
 	set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/osx/Info.plist)
 	set_source_files_properties(${MACOSX_icon_file} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-	add_executable(Tyro MACOSX_BUNDLE 
+	add_executable(Tyro MACOSX_BUNDLE
 		src/TyroApp.cpp
 		${MACOSX_icon_file}
 	)
@@ -94,9 +94,16 @@ else()
 		src/TyroApp.cpp)
 endif()
 
+# Try to use nuget to install dependencies on Windows
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	add_custom_command(TARGET ${PROJECT_NAME}
+		PRE_BUILD
+		COMMAND nuget restore "${PROJECT_SOURCE_DIR}\\resources\\visual_studio\\packages.config" -PackagesDirectory "${CMAKE_BINARY_DIR}\\packages"
+	)
+endif()
+
 #link it all
-target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES})
-#target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})
+target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})
 
 ################################################################################
 # Tests
@@ -109,6 +116,4 @@ file(GLOB test_SRC
 )
 add_executable(test_runner ${test_SRC})
 
-target_link_libraries(test_runner ${wxWidgets_LIBRARIES} JsonLib BaseLib WidgetLib)
-#target_link_libraries(test_runner ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES} JsonLib BaseLib WidgetLib)
-
+target_link_libraries(test_runner ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES} JsonLib BaseLib WidgetLib)
