@@ -17,6 +17,7 @@ compiler:
 addons:
     apt:
         sources:
+        - debian-sid
         - ubuntu-toolchain-r-test
         packages:
         - gcc-4.8
