@@ -1,13 +1,13 @@
-sudo: false #required
+sudo: required
 language: cpp
 
 before_install:
     # Define TRAVIS variable for workarounds
     - export CXXFLAGS="$CXXFLAGS -DTRAVIS"
 
-#install:
-#    - sudo apt-get install -qq libwxgtk3.0-dev libwxgtk3.0-0 libssh2-1-dev
-#    - if [ "$CXX" = "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 98; fi
+install:
+    - sudo apt-get install -qq libwxgtk3.0-dev libwxgtk3.0-0 libssh2-1-dev
+    - if [ "$CXX" = "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 98; fi
 
 # Build with both gcc and clang
 compiler:
