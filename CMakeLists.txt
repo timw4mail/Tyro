@@ -3,16 +3,17 @@
 ################################################################################
 cmake_minimum_required (VERSION 3.0)
 
+
+
 # Hunter for dependency management
-if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	include("cmake/HunterGate.cmake")
-	HunterGate(
-		URL "https://github.com/ruslo/hunter/archive/v0.12.24.tar.gz"
-		SHA1 "a25a7fa55c204a8126efd1f48593a662925b26da"
-	)
-endif()
+include("cmake/HunterGate.cmake")
+HunterGate(
+	URL "https://github.com/ruslo/hunter/archive/v0.12.24.tar.gz"
+	SHA1 "a25a7fa55c204a8126efd1f48593a662925b26da"
+)
 
 project(Tyro)
+
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
 
 # C++11, please
@@ -32,17 +33,13 @@ endif()
 # wxwidgets stuff
 
 set(wxWidgets_CONFIG_OPTIONS --static)
-if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	hunter_add_package(wxWidgets)
-endif()
+hunter_add_package(wxWidgets)
 find_package(wxWidgets COMPONENTS core base aui stc adv REQUIRED)
 include("${wxWidgets_USE_FILE}")
 
 #libssh2
 set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
-if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	hunter_add_package(libssh2)
-endif()
+hunter_add_package(libssh2)
 find_package(LibSSH2 REQUIRED)
 if (LIBSSH2_FOUND)
 	set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
