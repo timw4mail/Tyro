@@ -1,25 +1,16 @@
 ################################################################################
 # Setup
 ################################################################################
-cmake_minimum_required (VERSION 2.8)
-
-################################################################################
-set(IS_WINDOWS ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-set(IS_OSX ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-################################################################################
+cmake_minimum_required (VERSION 3.0)
 
 # Hunter for dependency management
-if(${IS_WINDOWS})
-include("cmake/HunterGate.cmake")
-HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.12.24.tar.gz"
-    SHA1 "a25a7fa55c204a8126efd1f48593a662925b26da"
-)
+if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	include("cmake/HunterGate.cmake")
+	HunterGate(
+		URL "https://github.com/ruslo/hunter/archive/v0.12.24.tar.gz"
+		SHA1 "a25a7fa55c204a8126efd1f48593a662925b26da"
+	)
 endif()
-
-################################################################################
-set(IS_WINDOWS ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-set(IS_OSX ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 project(Tyro)
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
@@ -33,21 +24,25 @@ if(COMPILER_SUPPORTS_CXX11)
 elseif(COMPILER_SUPPORTS_CXX0X)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	# Need this for Visual Studio compilers
 else()
 	message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
 endif()
 
 # wxwidgets stuff
-if(${IS_WINDOWS})
-	hunter_add_package(libssh2)
+
+set(wxWidgets_CONFIG_OPTIONS --static)
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	hunter_add_package(wxWidgets)
 endif()
 find_package(wxWidgets COMPONENTS core base aui stc adv REQUIRED)
 include("${wxWidgets_USE_FILE}")
-set(wxWidgets_CONFIG_OPTIONS --static)
 
 #libssh2
 set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
+if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	hunter_add_package(libssh2)
+endif()
 find_package(LibSSH2 REQUIRED)
 if (LIBSSH2_FOUND)
 	set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
@@ -58,8 +53,8 @@ endif (LIBSSH2_FOUND)
 include_directories(${INCLUDE_DIRS})
 
 # set some platform-specific flags
-if(${IS_OSX})
-	set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++ -Wno-potentially-evaluated-expression")
 	add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_ -D__WXMAC__)
 endif()
 
@@ -97,7 +92,7 @@ file(GLOB widget_SRC
 add_library(WidgetLib STATIC ${widget_SRC})
 target_link_libraries(WidgetLib JsonLib)
 
-if(${IS_OSX})
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(MACOSX_icon_file ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/osx/tyro.icns)
 	set(MACOSX_BUNDLE_ICON_FILE tyro.icns)
 	set(MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/osx/Info.plist)
@@ -106,7 +101,7 @@ if(${IS_OSX})
 		src/TyroApp.cpp
 		${MACOSX_icon_file}
 	)
-elseif(${IS_WINDOWS})
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	add_executable(Tyro WIN32
 		resources/platform/msw/resource.rc
 		src/TyroApp.cpp)
@@ -114,14 +109,6 @@ else()
 	add_executable(Tyro
 		src/TyroApp.cpp)
 endif()
-
-# Try to use nuget to install dependencies on Windows
-#if (${IS_WINDOWS})
-#	add_custom_command(TARGET ${PROJECT_NAME}
-#		PRE_BUILD
-#		COMMAND nuget restore "${PROJECT_SOURCE_DIR}\\resources\\visual_studio\\packages.config" -PackagesDirectory "${CMAKE_BINARY_DIR}\\packages"
-#	)
-#endif()
 
 #link it all
 target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})

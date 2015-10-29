@@ -7,7 +7,6 @@ before_install:
     - export CXXFLAGS="$CXXFLAGS -DTRAVIS"
 
 install:
-    - sudo apt-get install -qq libwxgtk3.0-dev libwxgtk3.0-0 libssh2-1-dev
     - if [ "$CXX" = "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 98; fi
 
 # Build with both gcc and clang
@@ -18,14 +17,11 @@ compiler:
 addons:
     apt:
         sources:
-        - debian-sid
         - ubuntu-toolchain-r-test
         packages:
+        - cmake
         - gcc-4.8
         - g++-4.8
         - clang
-        - libwxgtk3.0-dev
-        - libwxgtk3.0-0
-        - libssh2-1-dev
 
 script: make clean run-tests
