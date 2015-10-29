@@ -31,12 +31,11 @@ else()
 endif()
 
 # Silence some useless errors
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-potentially-evaluated-expression)
+if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-potentially-evaluated-expression")
 endif()
 
 # wxwidgets stuff
-
 set(wxWidgets_CONFIG_OPTIONS --static)
 unset(WXSETUP_wxUSE_WEBVIEW_WEBKIT)
 hunter_add_package(wxWidgets)
@@ -45,7 +44,9 @@ include("${wxWidgets_USE_FILE}")
 
 #libssh2
 set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
-hunter_add_package(libssh2)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	hunter_add_package(libssh2)
+endif()
 find_package(LibSSH2 REQUIRED)
 if (LIBSSH2_FOUND)
 	set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
