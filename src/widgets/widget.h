@@ -16,10 +16,8 @@
 #include <wx/dirctrl.h>
 #include <wx/fontpicker.h>
 #include <wx/treelist.h>
-
-#ifndef TRAVIS
 #include <wx/preferences.h>
-#endif
+
 
 #endif	/* TYRO_WIDGET_H */
 

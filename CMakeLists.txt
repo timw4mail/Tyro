@@ -3,7 +3,7 @@
 ################################################################################
 cmake_minimum_required (VERSION 3.0)
 
-
+set(CMAKE_CXX_STANDARD 11)
 
 # Hunter for dependency management
 include("cmake/HunterGate.cmake")
@@ -30,9 +30,15 @@ else()
 	message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
 endif()
 
+# Silence some useless errors
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-potentially-evaluated-expression)
+endif()
+
 # wxwidgets stuff
 
 set(wxWidgets_CONFIG_OPTIONS --static)
+unset(WXSETUP_wxUSE_WEBVIEW_WEBKIT)
 hunter_add_package(wxWidgets)
 find_package(wxWidgets COMPONENTS core base aui stc adv REQUIRED)
 include("${wxWidgets_USE_FILE}")
@@ -51,8 +57,10 @@ include_directories(${INCLUDE_DIRS})
 
 # set some platform-specific flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++ -Wno-potentially-evaluated-expression")
+	set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++")
 	add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_ -D__WXMAC__)
+else()
+	add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_)
 endif()
 
 ################################################################################
