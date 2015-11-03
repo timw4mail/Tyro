@@ -17,22 +17,16 @@ A Cross-platform Code Editor
 Required packages:
 
 * build-essential
-* libwxgtk3.0-dev
 * libssh2-1-dev
-
-Optional:
-
-* libwxgtk3.0-0-dbg
-* libssh2-1-dbg
-
+* libwxgtk3.0-dev
 
 After these packages are installed, the project should build with a simple `make` command.
 
 ### OS X
 Building wxWidgets:
 
-If you want maximum compatibility with older versions of OS X, 
-view [the guide](./Mac-compatibility-build.md). Otherwise, these simpler 
+If you want maximum compatibility with older versions of OS X,
+view [the guide](./Mac-compatibility-build.md). Otherwise, these simpler
 steps should work fine for a local build.
 
 1. Download the latest wxWidgets source (>= 3.0.2)
@@ -64,4 +58,4 @@ Please note that make commands are chainable. For a typical programming loop, `m
 
 
 
- 
+

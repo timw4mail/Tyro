@@ -9,7 +9,7 @@ export CMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/M
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	cd build
-	cmake -DHUNTER_SKIP_LOCK=ON ..
+	cmake -DHUNTER_ENABLED=OFF  ..
 	make "$@"
 	cd ..
 elif [[ "$OSTYPE" == "darwin"* ]]; then

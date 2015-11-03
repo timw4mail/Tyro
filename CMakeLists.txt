@@ -8,8 +8,9 @@ set(CMAKE_CXX_STANDARD 11)
 # Hunter for dependency management
 include("cmake/HunterGate.cmake")
 HunterGate(
-	URL "https://github.com/ruslo/hunter/archive/v0.12.24.tar.gz"
-	SHA1 "a25a7fa55c204a8126efd1f48593a662925b26da"
+	URL "https://github.com/timw4mail/hunter/archive/1.0.1-timw4mail.tar.gz"
+	SHA1 "9aa41108d073e514cd87cb87c919f1471a8c74b7"
+	LOCAL
 )
 
 project(Tyro)
@@ -37,8 +38,9 @@ endif()
 
 # wxwidgets stuff
 set(wxWidgets_CONFIG_OPTIONS --static)
-unset(WXSETUP_wxUSE_WEBVIEW_WEBKIT)
-hunter_add_package(wxWidgets)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	hunter_add_package(wxWidgets)
+endif()
 find_package(wxWidgets COMPONENTS core base aui stc adv REQUIRED)
 include("${wxWidgets_USE_FILE}")
 
