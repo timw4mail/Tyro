@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+#dist: trusty
 language: cpp
 
 before_install:
@@ -23,7 +23,7 @@ addons:
         - gcc-4.8
         - g++-4.8
         - clang
-        - libgtk2.0-dev
+        - libwxgtk3.0-dev
         - libssh2-dev
 
 script: make clean run-tests

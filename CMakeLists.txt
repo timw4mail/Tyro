@@ -37,7 +37,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
 endif()
 
 # wxwidgets stuff
-set(wxWidgets_CONFIG_OPTIONS --static)
+#set(wxWidgets_CONFIG_OPTIONS --static)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	hunter_add_package(wxWidgets)
 endif()
