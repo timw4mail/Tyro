@@ -2,7 +2,7 @@
 
 A Cross-platform Code Editor
 
-[![Build Status](https://travis-ci.org/timw4mail/Tyro.svg?branch=master)](https://travis-ci.org/timw4mail/Tyro) (Linux Build Only)
+[![Build Status](https://jenkins.timshomepage.net/buildStatus/icon?job=tyro)](https://jenkins.timshomepage.net/job/tyro/) (Linux Build Only)
 
 ## Planned Features
 

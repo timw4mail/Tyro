@@ -1,17 +1,9 @@
 ################################################################################
 # Setup
 ################################################################################
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 2.8)
 
 set(CMAKE_CXX_STANDARD 11)
-
-# Hunter for dependency management
-include("cmake/HunterGate.cmake")
-HunterGate(
-	URL "https://github.com/timw4mail/hunter/archive/1.0.1-timw4mail.tar.gz"
-	SHA1 "9aa41108d073e514cd87cb87c919f1471a8c74b7"
-	LOCAL
-)
 
 project(Tyro)
 
@@ -38,17 +30,11 @@ endif()
 
 # wxwidgets stuff
 #set(wxWidgets_CONFIG_OPTIONS --static)
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	hunter_add_package(wxWidgets)
-endif()
 find_package(wxWidgets COMPONENTS core base aui stc adv REQUIRED)
 include("${wxWidgets_USE_FILE}")
 
 #libssh2
 set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	hunter_add_package(libssh2)
-endif()
 find_package(LibSSH2 REQUIRED)
 if (LIBSSH2_FOUND)
 	set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
