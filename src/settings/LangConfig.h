@@ -1,5 +1,4 @@
-#ifndef TYRO_LANG_CONFIG_H
-#define TYRO_LANG_CONFIG_H
+#pragma once
 
 #include "src/wx_common.h"
 #include "src/settings/Config.h"
@@ -20,5 +19,3 @@ private:
 	string lang;
 	StringMap reverseMap;
 };
-
-#endif

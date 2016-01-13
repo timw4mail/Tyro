@@ -70,11 +70,6 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
 	for (wxString filename : *files)
 	{
 		wxFileName fname(filename);
-		
-		/*if (fname.IsRelative())
-		{
-			fname.MakeAbsolute();
-		}*/
 
 		// For loose files, just add directly to the tree
 		if (fname.GetDirCount() == 1)

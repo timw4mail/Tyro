@@ -1,9 +1,7 @@
 /**
  * Common header for widget classes
  */
-
-#ifndef WX_COMMON_H
-#define	WX_COMMON_H
+#pragma once
 
 #include "common.h"
 
@@ -54,6 +52,3 @@ static inline bool HAS_FONT_BUG()
 
 // Tyro-specific variables
 #include "definitions.h"
-
-#endif	/* WX_COMMON_H */
-

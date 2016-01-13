@@ -1,9 +1,7 @@
 /**
  * Preference Panes
  */
-
-#ifndef TYRO_PREF_PANE_H
-#define	TYRO_PREF_PANE_H
+#pragma once
 
 #include "src/widgets/widget.h"
 
@@ -16,6 +14,4 @@ public:
 protected:
 	wxPreferencesEditor *pref_window = nullptr;
 };
-
-#endif	/* TYRO_PREF_PANE_H */
 

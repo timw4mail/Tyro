@@ -1,9 +1,7 @@
 /**
  * Main Application Frame
  */
-
-#ifndef TYROMAIN_H
-#define TYROMAIN_H
+#pragma once
 
 #include "src/widgets/TyroMenu.h"
 #include "src/widgets/EditPane.h"
@@ -55,6 +53,3 @@ class MainFrame: public wxFrame
 		void OnQuit(wxCommandEvent &event);
 		void OnAbout(wxCommandEvent &event);
 };
-
-
-#endif // TYROMAIN_H

@@ -1,6 +1,4 @@
-#ifndef TYROEDIT_PANE_H
-#define TYROEDIT_PANE_H
-
+#pragma once
 #include "src/widgets/widget.h"
 #include "src/settings/LangConfig.h"
 #include "src/settings/ThemeConfig.h"
@@ -36,5 +34,3 @@ protected:
 	void SetTheme(string theme_name);
 	void _ApplyTheme(JsonValue &lexer_map);
 };
-
-#endif // TYRODOC_FRAME_H

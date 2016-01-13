@@ -1,8 +1,7 @@
 /**
  * Main Menu class
  */
-#ifndef TYRO_MENU_H
-#define	TYRO_MENU_H
+#pragma once
 
 #include "src/widgets/widget.h"
 
@@ -23,6 +22,3 @@ private:
 	void SetupLangMenu();
 	void EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable);
 };
-
-#endif	/* TYRO_MENU_H */
-

@@ -1,8 +1,7 @@
 /**
  * Common header for widgets
  */
-#ifndef TYRO_WIDGET_H
-#define	TYRO_WIDGET_H
+#pragma once
 
 // Common wxWidgets stuff
 #include "src/wx_common.h"
@@ -17,7 +16,4 @@
 #include <wx/fontpicker.h>
 #include <wx/treelist.h>
 #include <wx/preferences.h>
-
-
-#endif	/* TYRO_WIDGET_H */
 

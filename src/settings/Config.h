@@ -1,5 +1,4 @@
-#ifndef TYRO_CONFIG_H
-#define	TYRO_CONFIG_H
+#pragma once
 
 #include "src/common.h"
 
@@ -13,7 +12,3 @@ private:
     JsonValue default_root;
     JsonReader reader;
 };
-
-
-#endif	/* TYRO_CONFIG_H */
-

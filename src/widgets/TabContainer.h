@@ -1,9 +1,7 @@
 /**
  * Wrapper around wxAuiNotebook
  */
-
-#ifndef TABCONTAINER_H
-#define	TABCONTAINER_H
+#pragma once
 
 #include "src/widgets/TyroMenu.h"
 #include "src/widgets/EditPane.h"
@@ -36,6 +34,4 @@ private:
 	void OnClosed(wxAuiNotebookEvent &event);
 	void OnTabContextMenu(wxAuiNotebookEvent &event);
 };
-
-#endif	/* TABCONTAINER_H */
 

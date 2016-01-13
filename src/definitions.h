@@ -1,9 +1,7 @@
 /**
  * Miscellaneous Program-specific definitions
  */
-
-#ifndef DEFINITIONS_H
-#define	DEFINITIONS_H
+#pragma once
 
 // Application config
 const wxString APP_NAME = "Tyro";
@@ -137,6 +135,3 @@ const wxString TYRO_FILE_SAVE_WILDCARDS =
 	"SQL (*.sql)|*.sql|"
 	"Text (*.txt)|*.txt|"
 	"Yaml (.yml,*.yaml)| *.yml;*.yaml";
-
-#endif	/* DEFINITIONS_H */
-

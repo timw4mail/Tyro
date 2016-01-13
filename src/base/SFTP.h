@@ -5,8 +5,7 @@
  * Created on April 6, 2015, 2:22 PM
  */
 
-#ifndef SFTP_H
-#define	SFTP_H
+#pragma once
 
 #include "../common.h"
 
@@ -52,6 +51,3 @@ private:
 	void ssh_connect();
 	void sftp_connect();
 };
-
-#endif	/* SFTP_H */
-

@@ -9,6 +9,15 @@ project(Tyro)
 
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
 
+# C11, please
+include(CheckCCompilerFlag)
+CHECK_C_COMPILER_FLAG("-std=c11" COMPILER_SUPPORTS_C11)
+if (COMPILER_SUPPORTS_C11)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+else()
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+endif()
+
 # C++11, please
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)

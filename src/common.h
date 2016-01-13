@@ -1,8 +1,7 @@
 /**
  * A common header for global includes
  */
-#ifndef TYRO_COMMON_H
-#define TYRO_COMMON_H
+#pragma once
 
 // C++ Standard Lib includes
 #include <iostream>
@@ -26,6 +25,3 @@ typedef Json::Writer JsonWriter;
 typedef map<string, int> StringConstMap;
 typedef map<string, string> StringMap;
 typedef vector<string> StringVector;
-
-#endif	// TYRO_COMMON_H
-

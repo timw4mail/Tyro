@@ -1,5 +1,4 @@
-#ifndef TYRO_FILE_PANE_H
-#define	TYRO_FILE_PANE_H
+#pragma once
 
 #include "src/widgets/widget.h"
 
@@ -22,6 +21,4 @@ private:
 	void InitImageList();
 	void CreateTree(const wxString &path, wxTreeListItem &root);
 };
-
-#endif	/* TYRO_FILE_PANE_H */
 

@@ -1,9 +1,7 @@
 /**
  * Theme manager
  */
-
-#ifndef TYRO_THEME_CONFIG_H
-#define	TYRO_THEME_CONFIG_H
+#pragma once
 
 #include "src/wx_common.h"
 #include "src/settings/Config.h"
@@ -19,6 +17,4 @@ public:
 private:
 	JsonValue current_theme;
 };
-
-#endif	/* TYRO_THEME_CONFIG_H */
 
