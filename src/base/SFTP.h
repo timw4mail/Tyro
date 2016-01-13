@@ -1,4 +1,4 @@
-/** 
+/**
  * File:   SFTP.h
  * Author: twarren
  *
@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../common.h"
+#include "src/common.h"
 
 // Socket includes
 #include <cstring>
