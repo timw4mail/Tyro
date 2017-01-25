@@ -1,8 +1,6 @@
-#Tyro
+# Tyro
 
 A Cross-platform Code Editor
-
-[![Build Status](https://jenkins.timshomepage.net/buildStatus/icon?job=tyro)](https://jenkins.timshomepage.net/job/tyro/) (Linux Build Only)
 
 ## Planned Features
 
