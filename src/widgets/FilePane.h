@@ -4,7 +4,7 @@
 
 class FilePane : public wxTreeListCtrl {
 public:
-	FilePane(
+	explicit FilePane(
 		wxWindow *parent, 
 		wxWindowID id=wxID_ANY, 
 		const wxPoint &pos=wxDefaultPosition, 
@@ -12,13 +12,14 @@ public:
 		long style=wxTL_DEFAULT_STYLE, 
 		const wxString &name=wxTreeListCtrlNameStr
 	);
-	~FilePane();
+	~FilePane() override;
 private:
 	wxString curr_path = "";
 	wxImageList *img_list = nullptr;
 	void BindEvents();
 	void OpenFolder(wxTreeListEvent& event);
+	void OpenFileInEditor(wxTreeListEvent& event);
 	void InitImageList();
-	void CreateTree(const wxString &path, wxTreeListItem &root);
+	void CreateTree(const wxString &path, wxTreeListItem &root, int level = 0);
 };
 

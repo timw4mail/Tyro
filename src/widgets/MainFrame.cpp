@@ -475,7 +475,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 
 	info.SetDescription(desc);
 
-	info.SetCopyright(" (C) 2015");
+	info.SetCopyright(" (C) 2015-2019");
 
 	wxAboutBox(info);
 }

@@ -97,7 +97,7 @@ void EditPane::ApplyTheme(string lang, string theme)
 		this->SetLexer(wxSTC_LEX_NULL);
 	}
 	
-	if (theme != "")
+	if ( ! theme.empty())
 	{
 		theme_config->SetTheme(theme);
 	}
@@ -115,7 +115,7 @@ void EditPane::ApplyTheme(string lang, string theme)
 	}
 	else
 	{
-		if (lang != "")
+		if ( ! lang.empty())
 		{
 			string typeMap[] = {"null", "int", "unsigned int", "double", "string", "boolean", "array", "object"};
 			stringstream output;
@@ -272,7 +272,7 @@ void EditPane::BindEvents()
 		}
 	}, wxID_ANY);
 
-	this->Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
+	// this->Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
 }
 
 /**
@@ -316,14 +316,14 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		wxFONTFLAG_ANTIALIASED
 	);
 
-	static const wxColor default_background = theme_config->GetThemeColor("background", "default");
-	static const wxColor default_foreground = theme_config->GetThemeColor("foreground", "default");
-	wxColor line_number_background = ( ! theme_config->GetThemeValue("line_numbers", "background").isNull())
-		? (theme_config->GetThemeColor("line_numbers", "background"))
+	static const wxColor default_background = this->theme_config->GetThemeColor("background", "default");
+	static const wxColor default_foreground = this->theme_config->GetThemeColor("foreground", "default");
+	wxColor line_number_background = ( ! this->theme_config->GetThemeValue("line_numbers", "background").isNull())
+		? (this->theme_config->GetThemeColor("line_numbers", "background"))
 		: default_background;
 
-	wxColor line_number_foreground = ( ! theme_config->GetThemeValue("line_numbers", "foreground").isNull())
-		? (theme_config->GetThemeColor("line_numbers", "foreground"))
+	wxColor line_number_foreground = ( ! this->theme_config->GetThemeValue("line_numbers", "foreground").isNull())
+		? (this->theme_config->GetThemeColor("line_numbers", "foreground"))
 		: default_foreground;
 
 	// Set default colors/ fonts
@@ -452,7 +452,7 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
  */
 string EditPane::GetCurrentLang()
 {
-	return lang_config->GetCurrentLangName();
+	return this->lang_config->GetCurrentLangName();
 }
 
 /**
@@ -464,8 +464,8 @@ string EditPane::GetCurrentLang()
 void EditPane::SetCurrentLang(string name)
 {
 	// Update the current lang in the config
-	string langKey = lang_config->GetLangByName(name);
-	lang_config->SetLang(langKey);
+	string langKey = this->lang_config->GetLangByName(name);
+	this->lang_config->SetLang(langKey);
 	
 	// Re-highlight the page with the new langauge
 	this->ApplyTheme(langKey);

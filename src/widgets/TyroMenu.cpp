@@ -88,7 +88,7 @@ void TyroMenu::SetupLangMenu()
 {
 	StringMap languages = lang_config->GetLangList();
 	
-	for (auto lang: languages)
+	for (const auto lang: languages)
 	{
 		langMenu->Append(wxID_ANY, lang.second, "Highlight file as " + lang.second, wxITEM_RADIO);
 	}

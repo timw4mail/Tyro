@@ -51,7 +51,7 @@ public:
 		this->InitLexerMap();
 		Glob_config = wxConfigBase::Get();
 		Glob_menu_bar = new TyroMenu();
-		Glob_main_frame = new MainFrame(0L, APP_NAME, this->CalculateWindowSize());
+		Glob_main_frame = new MainFrame(nullptr, APP_NAME, this->CalculateWindowSize());
 #ifndef TRAVIS
 		Glob_pref_pane = new PrefPane();
 #endif
@@ -74,13 +74,13 @@ public:
 	
 	/**
 	 * Exit handler
-	 * 
+	 *
 	 * @return int 
 	 */
 	int OnExit()
 	{
 		// Deallocate config object
-		delete wxConfigBase::Set((wxConfigBase *) NULL);
+		delete wxConfigBase::Set((wxConfigBase *) nullptr);
 		
 		return close(true);
 	}
