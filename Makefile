@@ -16,8 +16,9 @@ dev: all
 
 build:
 	@mkdir -p build
+	./cmake.sh Tyro
 
-run:
+run: build
 ifneq ($(OS),Darwin)
 	./$(PROGRAM)
 else

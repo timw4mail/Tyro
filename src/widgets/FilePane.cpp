@@ -1,4 +1,7 @@
 #include "src/widgets/FilePane.h"
+#include "src/widgets/MainFrame.h"
+
+extern MainFrame *Glob_main_frame;
 
 enum
 {
@@ -16,6 +19,7 @@ FilePane::FilePane(
 	const wxString &name
 ) : wxTreeListCtrl(parent, id, pos, size, style, name)
 {
+    this->BindEvents();
 	this->InitImageList();
 	this->SetImageList(this->img_list);
 	
@@ -92,16 +96,16 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root, int level)
 		}
 
 		// Remove the directory component closest to the root
-		filename.RemoveDir(0);
+		/* filename.RemoveDir(0);
 
 		wxArrayString folders = filename.GetDirs();
-
-		wxLogDebug(item);
 
 		wxTreeListItem newRootNode = root;
 
 		for (const wxString &curr_folder: folders)
 		{
+		    wxLogDebug(curr_folder);
+
 			// Check if directory has already been created
 			it = find(examined.begin(), examined.end(), curr_folder);
 
@@ -122,7 +126,7 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root, int level)
 			newRootNode = current;
 
 			this->CreateTree(curr_folder, root);
-		}
+		} */
 	}
 }
 
@@ -134,9 +138,12 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root, int level)
 void FilePane::OpenFileInEditor(wxTreeListEvent& event)
 {
 	wxTreeListItem item = event.GetItem();
-	auto path = this->GetItemText(item, 0);
+	auto data = (wxStringClientData*)this->GetItemData(item);
+	const wxString& path = data->GetData();
 
-	wxLogMessage(path);
+	wxString path_arr [1] = { path };
+	auto files = wxArrayString(1, *path_arr);
+	Glob_main_frame->OpenFiles(files);
 }
 
 /**

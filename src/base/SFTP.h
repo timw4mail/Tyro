@@ -1,10 +1,3 @@
-/**
- * File:   SFTP.h
- * Author: twarren
- *
- * Created on April 6, 2015, 2:22 PM
- */
-
 #pragma once
 
 #include "src/common.h"
