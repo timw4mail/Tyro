@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_set>
 #include "src/widgets/widget.h"
 
 class FilePane : public wxTreeListCtrl {
@@ -16,10 +17,13 @@ public:
 private:
 	wxString curr_path = "";
 	wxImageList *img_list = nullptr;
+	unordered_set<std::string> file_set;
+	unordered_set<std::string> dir_set;
 	void BindEvents();
 	void OpenFolder(wxTreeListEvent& event);
 	void OpenFileInEditor(wxTreeListEvent& event);
 	void InitImageList();
-	void CreateTree(const wxString &path, wxTreeListItem &root, int level = 0);
+	void CreateTree(const wxString &path, wxTreeListItem &root);
+    void DirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent);
 };
 

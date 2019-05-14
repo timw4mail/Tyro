@@ -1,3 +1,5 @@
+#include <unordered_set>
+
 #include "src/widgets/FilePane.h"
 #include "src/widgets/MainFrame.h"
 
@@ -34,7 +36,6 @@ FilePane::FilePane(
 		wxALIGN_LEFT, 
 		wxCOL_RESIZABLE | wxCOL_SORTABLE);
 	
-	
 }
 
 FilePane::~FilePane()
@@ -61,85 +62,112 @@ void FilePane::OpenFolder(wxTreeListEvent& event)
  * Iterates through the specified folder and creates the tree view
  * 
  * @access private
- * @param wxString &path
- * @param wxTreeListItem &root
  */
-void FilePane::CreateTree(const wxString &path, wxTreeListItem &root, int level)
+void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
 {
-	// So yeah, this doesn't really work right.
-	// It seems I need to create a tree from the list of file paths,
-	// after which this should be much simpler.
-	// @TODO Fix
-
 	auto *files = new wxArrayString();
 	wxDir::GetAllFiles(path, files);
-	
-	vector<wxString> examined;
-	vector<wxString>::iterator it;
-	
-	for (const wxString &item : *files)
-	{
-		wxFileName filename(item);
 
-		// For loose files, just add directly to the tree
-		if (filename.GetDirCount() == 1)
-		{
-			auto fullFileName = filename.GetFullPath();
+    // std::unordered_set<std::string> dirs;
 
-			auto fileData = new wxStringClientData();
-			fileData->SetData(fullFileName);
+    for (const wxString &file: *files)
+    {
+        wxFileName fileName(file);
 
-			examined.push_back(fullFileName);
+        if (fileName.DirExists("."))
+        {
+            fileName.RemoveDir(0);
+        }
 
-			this->AppendItem(root, filename.GetFullName(), Icon_File, Icon_File, fileData);
-			continue;
-		}
+        auto dir = std::string(fileName.GetPath());
 
-		// Remove the directory component closest to the root
-		/* filename.RemoveDir(0);
+        if (dir.empty())
+        {
+            continue;
+        }
 
-		wxArrayString folders = filename.GetDirs();
+        this->dir_set.insert(dir);
+    }
 
-		wxTreeListItem newRootNode = root;
-
-		for (const wxString &curr_folder: folders)
-		{
-		    wxLogDebug(curr_folder);
-
-			// Check if directory has already been created
-			it = find(examined.begin(), examined.end(), curr_folder);
-
-			if (it != examined.end()) continue;
-
-			// Create the directory node if it doesn't exist
-			auto fileData = new wxStringClientData();
-			fileData->SetData(curr_folder);
-
-			wxTreeListItem current = this->AppendItem(
-					newRootNode,
-					curr_folder,
-					Icon_FolderClosed,
-					Icon_FolderOpened,
-					fileData);
-			examined.push_back(curr_folder);
-
-			newRootNode = current;
-
-			this->CreateTree(curr_folder, root);
-		} */
-	}
+    for (auto& dir: this->dir_set)
+    {
+        wxString wdir = wxString(dir);
+        wxLogDebug("Creating Dir Tree: %s", wdir);
+        this->DirToTree(wdir, root, wxString("."));
+    }
 }
 
-/*void FilePane::CreateFolderTree(StringVector dirList, wxTreeListItem &root)
+/**
+ * Recursively create directory tree from list of files
+ * 
+ * @access private
+ */
+void FilePane::DirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent)
 {
-	
-}*/
+    auto fullPath = parent.Clone();
+    fullPath += "/";
+    fullPath += path;
 
+    auto *files = new wxArrayString();
+    wxDir::GetAllFiles(path, files);
+
+    for (const wxString &item: *files)
+    {
+        wxFileName filename(item);
+
+        // Remove the directory component closest to the root
+        if (filename.GetDirCount() > 1)
+        {
+            filename.RemoveDir(0);
+        }
+
+        const wxArrayString dirs = filename.GetDirs();
+
+        // See if the path already exists on the tree
+        /* for (const wxString &dir: dirs)
+        {
+            this->dir_it = find(this->examined.begin(), this->examined.end(), dir);
+
+            if (dir_it != this->examined.end())
+            {
+                break;
+            }
+
+            auto fileData = new wxStringClientData();
+            fileData->SetData(dir);
+
+            auto dir_node = this->AppendItem(root, dir, Icon_FolderClosed, Icon_FolderOpened, fileData);
+
+            this->examined.push_back(dir);
+
+            this->CreateTree(dir, dir_node);
+            break;
+        }*/
+
+        // If the file is at the root, add it to the tree
+        if (filename.GetDirCount() == 1)
+        {
+            filename.MakeAbsolute();
+
+            auto fileData = new wxStringClientData();
+            fileData->SetData(filename.GetFullPath());
+
+            this->AppendItem(root, filename.GetFullName(), Icon_File, Icon_File, fileData);
+            continue;
+        }
+    }
+}
+
+/**
+ * Open a file you double-click on the file list
+ */
 void FilePane::OpenFileInEditor(wxTreeListEvent& event)
 {
 	wxTreeListItem item = event.GetItem();
 	auto data = (wxStringClientData*)this->GetItemData(item);
 	const wxString& path = data->GetData();
+
+	wxLogDebug("Opening file from sidebar: %s", path);
 
 	wxString path_arr [1] = { path };
 	auto files = wxArrayString(1, *path_arr);

@@ -6,7 +6,7 @@
 // Application config
 const wxString APP_NAME = "Tyro";
 const wxString APP_VENDOR = "Aviat Ion";
-const wxString APP_VERSION = "0.9.1";
+const wxString APP_VERSION = "0.10.0";
 const wxString APP_VERSION_MORE = "Pre-release";
 
 // Command-line arguments

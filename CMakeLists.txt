@@ -3,6 +3,7 @@
 ################################################################################
 cmake_minimum_required (VERSION 2.8)
 
+set(CMAKE_CXX_FLAGS "-stdlib=libc++")
 set(CMAKE_CXX_STANDARD 11)
 
 project(Tyro)
@@ -32,9 +33,12 @@ else()
 	message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
 endif()
 
-# Silence some useless errors
+
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+	# Silence some useless errors
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-potentially-evaluated-expression")
+	# Set the correct standard lib
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
 endif()
 
 # wxwidgets stuff

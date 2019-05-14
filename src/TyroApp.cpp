@@ -43,7 +43,7 @@ public:
 	{
 		if ( ! wxApp::OnInit()) return false;
 
-		this->SetSystemOptions();
+		TyroApp::SetSystemOptions();
 		this->SetAppName(APP_NAME);
 		this->SetVendorName(APP_VENDOR);
 
@@ -162,7 +162,7 @@ private:
 		
 		wxLogDebug("Current display: %ix%i", mode.w, mode.h);
 		
-		wxSize base((int)((float)mode.w * 0.8), (int)((float)mode.h * 0.8));
+		wxSize base((int)((float)mode.w * 0.9), (int)((float)mode.h * 0.9));
 		
 		return base;
 	}
@@ -170,13 +170,14 @@ private:
 	/**
 	 * Toolkit-specific settings 
      */
-	void SetSystemOptions()
+	void static SetSystemOptions()
 	{
 	#ifdef __WXMAC__
 		wxSystemOptions::SetOption("osx.openfiledialog.always-show-types", 1);
 	#endif
 
-	#ifdef __WXMSW__
+	#ifdef __WXMSW_
+		wxSystemOptions::SetOption("msw.remap", 0);_
 		wxSystemOptions::SetOption("msw.display.directdraw", 1);
 	#endif
 	}
