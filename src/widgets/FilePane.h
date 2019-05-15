@@ -25,5 +25,6 @@ private:
 	void InitImageList();
 	void CreateTree(const wxString &path, wxTreeListItem &root);
     void DirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent);
+    void AddDirFiles(const wxString &path, wxTreeListItem &root);
 };
 

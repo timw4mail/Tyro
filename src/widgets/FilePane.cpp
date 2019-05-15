@@ -68,8 +68,6 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
 	auto *files = new wxArrayString();
 	wxDir::GetAllFiles(path, files);
 
-    // std::unordered_set<std::string> dirs;
-
     for (const wxString &file: *files)
     {
         wxFileName fileName(file);
@@ -79,6 +77,12 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
             fileName.RemoveDir(0);
         }
 
+        // If the file is at the root, add it to the tree
+        if (fileName.GetDirCount() == 1)
+        {
+            this->AddDirFiles(path, root);
+        }
+
         auto dir = std::string(fileName.GetPath());
 
         if (dir.empty())
@@ -86,11 +90,7 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
             continue;
         }
 
-        this->dir_set.insert(dir);
-    }
-
-    for (auto& dir: this->dir_set)
-    {
+        // Append the folder to the tree
         wxString wdir = wxString(dir);
         wxLogDebug("Creating Dir Tree: %s", wdir);
         this->DirToTree(wdir, root, wxString("."));
@@ -104,33 +104,37 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
  */
 void FilePane::DirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent)
 {
-    auto fullPath = parent.Clone();
+    auto fullPath =  parent.Clone();
     fullPath += "/";
     fullPath += path;
+
+    this->dir_set.insert(".");
+
+    wxLogDebug("Rendering Dir Tree for %s", fullPath);
 
     auto *files = new wxArrayString();
     wxDir::GetAllFiles(path, files);
 
     for (const wxString &item: *files)
     {
-        wxFileName filename(item);
+        wxFileName fileName(item);
 
         // Remove the directory component closest to the root
-        if (filename.GetDirCount() > 1)
+        if (fileName.GetDirCount() > 1 || fileName.DirExists("."))
         {
-            filename.RemoveDir(0);
+            fileName.RemoveDir(0);
         }
 
-        const wxArrayString dirs = filename.GetDirs();
+        const wxArrayString dirs = fileName.GetDirs();
 
         // See if the path already exists on the tree
-        /* for (const wxString &dir: dirs)
+        for (const wxString &dir: dirs)
         {
-            this->dir_it = find(this->examined.begin(), this->examined.end(), dir);
-
-            if (dir_it != this->examined.end())
+            // Stop early if folder exists
+            auto it = this->dir_set.find(std::string(dir));
+            if (it != this->dir_set.end())
             {
-                break;
+                continue;
             }
 
             auto fileData = new wxStringClientData();
@@ -138,23 +142,38 @@ void FilePane::DirToTree(const wxString &path, wxTreeListItem &root, const wxStr
 
             auto dir_node = this->AppendItem(root, dir, Icon_FolderClosed, Icon_FolderOpened, fileData);
 
-            this->examined.push_back(dir);
+            this->dir_set.insert(std::string(dir));
 
-            this->CreateTree(dir, dir_node);
-            break;
-        }*/
+            this->DirToTree(dir, dir_node, fullPath);
 
-        // If the file is at the root, add it to the tree
-        if (filename.GetDirCount() == 1)
+            // break;
+        }
+    }
+}
+
+void FilePane::AddDirFiles(const wxString &path, wxTreeListItem &root)
+{
+    auto *files = new wxArrayString();
+    wxDir::GetAllFiles(path, files);
+
+    wxLogDebug("Redering files in : %s", path);
+
+    for (const wxString &item: *files)
+    {
+        wxFileName fileName(item);
+        fileName.MakeAbsolute();
+
+        auto it = this->file_set.find(std::string(fileName.GetFullPath()));
+        if (it != this->file_set.end())
         {
-            filename.MakeAbsolute();
-
-            auto fileData = new wxStringClientData();
-            fileData->SetData(filename.GetFullPath());
-
-            this->AppendItem(root, filename.GetFullName(), Icon_File, Icon_File, fileData);
             continue;
         }
+
+        auto fileData = new wxStringClientData();
+        fileData->SetData(fileName.GetFullPath());
+
+        this->AppendItem(root, fileName.GetFullName(), Icon_File, Icon_File, fileData);
+        this->file_set.insert(std::string(fileName.GetFullPath()));
     }
 }
 

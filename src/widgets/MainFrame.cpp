@@ -393,11 +393,10 @@ void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 	if(editor->SaveFile(filePath))
 	{
 		wxFileName fileName(filePath);
-		const wxString fullPath = filePath;
-		const wxString caption= fileName.GetFullName();
+		const wxString caption = fileName.GetFullName();
 
 		// Update the name of the tab
-		notebook->SetPageToolTip(notebook->GetSelection(), fullPath);
+		notebook->SetPageToolTip(notebook->GetSelection(), filePath);
 		notebook->SetPageText(notebook->GetSelection(), caption);
 
 		// Update the editor highlighting
@@ -541,8 +540,8 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 	EditPane *editor = notebook->GetCurrentEditor();
 
 	// Parse flags
-	int stc_flags = 0;
-	int fr_flags = event.GetFlags();
+	uint stc_flags = 0;
+	uint fr_flags = event.GetFlags();
 
 	if (fr_flags & wxFR_WHOLEWORD) stc_flags |= wxSTC_FIND_WHOLEWORD;
 	if (fr_flags & wxFR_MATCHCASE) stc_flags |= wxSTC_FIND_MATCHCASE;
@@ -686,8 +685,8 @@ void MainFrame::EnableEditControls(bool enable)
  */
 void MainFrame::OnLangSelect(wxCommandEvent &event)
 {
-	wxMenu *selectedMenu = (wxMenu *) event.GetEventObject();
-	wxMenu *langMenu = Glob_menu_bar->GetMenu(myLANG_MENU);
+	auto *selectedMenu = (wxMenu *) event.GetEventObject();
+	auto *langMenu = Glob_menu_bar->GetMenu(myLANG_MENU);
 	if (langMenu == NULL) wxLogDebug("Couldn't get lang menu");
 
 	if (selectedMenu == langMenu)
