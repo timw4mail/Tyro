@@ -175,9 +175,7 @@ bool EditPane::SaveFile()
 {
 	wxString fname = this->fileName.GetFullPath();
 
-	const wxString cfname(fname);
-
-	return this->SaveFile(cfname);
+	return this->SaveFile(fname);
 }
 
 /**
@@ -332,25 +330,18 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		this->StyleSetBackground(i, default_background);
 		this->StyleSetForeground(i, default_foreground);
 		
-		if ( ! HAS_FONT_BUG())
-		{
-			wxFont globalFont;
-			wxString fontFace;
-			if ( ! Glob_config->Read("global_font", &globalFont))
-			{
-				this->StyleSetFont(i, *defaultFont);
-			}
-			else
-			{
-				this->StyleSetFont(i, globalFont);
-			}
-		}
-		else
+		wxFont globalFont;
+		wxString fontFace;
+		if ( ! Glob_config->Read("global_font", &globalFont))
 		{
 			this->StyleSetFont(i, *defaultFont);
 		}
+		else
+		{
+			this->StyleSetFont(i, globalFont);
+		}
 	}
-	
+
 	// Set up Code folding
 	if (Glob_config->ReadBool("show_code_folding", false))
 	{

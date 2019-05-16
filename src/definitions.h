@@ -16,9 +16,9 @@ const wxString APP_VERSION_MORE = "Pre-release";
 #endif
 const wxCmdLineEntryDesc Glob_cmdLineDesc[] = {
 	{
-		wxCMD_LINE_PARAM, 
-		NULL,
-		NULL, 
+		wxCMD_LINE_PARAM,
+		nullptr,
+		nullptr,
 		"input file(s)",
 		wxCMD_LINE_VAL_STRING,
 		wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE 

@@ -8,10 +8,8 @@
 #include <wx/app.h>
 #include <wx/sysopt.h>
 #include <wx/vidmode.h>
-#include <wx/display.h>
 
 #include "src/widgets/MainFrame.h"
-
 
 // Some global stuff
 wxConfigBase *Glob_config = nullptr;
@@ -51,7 +49,7 @@ public:
 		this->InitLexerMap();
 		Glob_config = wxConfigBase::Get();
 		Glob_menu_bar = new TyroMenu();
-		Glob_main_frame = new MainFrame(nullptr, APP_NAME, this->CalculateWindowSize());
+		Glob_main_frame = new MainFrame(nullptr, APP_NAME, CalculateWindowSize());
 #ifndef TRAVIS
 		Glob_pref_pane = new PrefPane();
 #endif
@@ -153,23 +151,8 @@ private:
 	}
 	
 	/**
-	 * Calculate original window size based on size of the current monitor
-     */
-	wxSize CalculateWindowSize()
-	{
-		wxDisplay display;
-		wxVideoMode mode = display.GetCurrentMode();
-		
-		wxLogDebug("Current display: %ix%i", mode.w, mode.h);
-		
-		wxSize base((int)((float)mode.w * 0.9), (int)((float)mode.h * 0.9));
-		
-		return base;
-	}
-	
-	/**
 	 * Toolkit-specific settings 
-     */
+	 */
 	void static SetSystemOptions()
 	{
 	#ifdef __WXMAC__

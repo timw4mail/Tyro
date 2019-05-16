@@ -24,6 +24,7 @@
 #include <wx/version.h>
 #include <wx/cmdline.h>
 #include <wx/config.h>
+#include <wx/display.h>
 #include <wx/font.h>
 #include <wx/stdpaths.h>
 #include <wx/platinfo.h>
@@ -34,20 +35,19 @@
 #pragma clang diagnostic pop
 #endif
 
-// Define a check for font-control bug 
-// in wxWidgets < 3.0.3 and OS X >= 10.10
-static inline bool HAS_FONT_BUG()
+/**
+ * Calculate original window size based on size of the current monitor
+ */
+wxSize static CalculateWindowSize()
 {
-#ifndef __WXMAC__
-	return false;
-#endif
-		
-#if	wxCHECK_VERSION(3,0,3)
-	return false;
-#endif
-	
-	wxPlatformInfo info;
-	return (info.GetOSMajorVersion() == 10 && info.GetOSMinorVersion() > 9);
+    wxDisplay display;
+    wxVideoMode mode = display.GetCurrentMode();
+
+    wxLogDebug("Current display: %ix%i", mode.w, mode.h);
+
+    wxSize base((int)((float)mode.w * 0.9), (int)((float)mode.h * 0.9));
+
+    return base;
 }
 
 // Tyro-specific variables

@@ -16,22 +16,21 @@ public:
 
 		wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
-		// Check that version of OS X is less than 10.10 for wxWidgets < 3.0.3
-		// Otherwise the font control will segfault
-		if( ! HAS_FONT_BUG())
-		{
-			this->fontPicker = new wxFontPickerCtrl(
-				this,
-				myID_PREFS_FONT,
-				wxNullFont,
-				wxDefaultPosition,
-				wxDefaultSize,
-				wxFNTP_USE_TEXTCTRL ^ wxFNTP_USEFONT_FOR_LABEL
-			);
-			wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
-			fontSizer->Add(this->fontPicker, wxSizerFlags().Border());
-			sizer->Add(fontSizer, wxSizerFlags().Border());
-		}
+		this->fontPicker = new wxFontPickerCtrl(
+			this,
+			myID_PREFS_FONT,
+			this->GetFont(),
+			wxDefaultPosition,
+			wxDefaultSize,
+			wxFNTP_FONTDESC_AS_LABEL
+		);
+		this->fontPicker->SetLabelText("Editor Font");
+		wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
+		fontSizer->AddSpacer(50);
+		fontSizer->Add(this->fontPicker, wxSizerFlags().Border());
+		fontSizer->AddSpacer(50);
+		sizer->Add(fontSizer, wxSizerFlags().Border());
+
 
 		sizer->Add(this->showLineNumbers, wxSizerFlags().Border());
 		sizer->Add(this->showIndentGuides, wxSizerFlags().Border());
@@ -43,14 +42,11 @@ public:
 		// On supported platforms
 		if (wxPreferencesEditor::ShouldApplyChangesImmediately())
 		{
-			if ( ! HAS_FONT_BUG())
-			{
-				this->fontPicker->Bind(wxEVT_FONTPICKER_CHANGED, [=] (wxFontPickerEvent &event) {
-					Glob_config->Write("global_font", event.GetFont());
-					this->frame->OnPrefsChanged(event);
-					Glob_config->Flush();
-				}, myID_PREFS_FONT);
-			}
+			this->fontPicker->Bind(wxEVT_FONTPICKER_CHANGED, [=] (wxFontPickerEvent &event) {
+				Glob_config->Write("global_font", event.GetFont());
+				this->frame->OnPrefsChanged(event);
+				Glob_config->Flush();
+			}, myID_PREFS_FONT);
 
 			this->showLineNumbers->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_line_numbers", event.IsChecked());
@@ -79,21 +75,18 @@ public:
 	/**
 	 * Apply current settings to the pref window
 	 *
-     * @return bool
-     */
+	 * @return bool
+	 */
 	virtual bool TransferDataToWindow()
 	{
 		this->showLineNumbers->SetValue(Glob_config->ReadBool("show_line_numbers", true));
 		this->showIndentGuides->SetValue(Glob_config->ReadBool("show_indent_guides", false));
 		this->showCodeFolding->SetValue(Glob_config->ReadBool("show_code_folding", false));
 
-		if ( ! HAS_FONT_BUG())
-		{
-			wxFont globalFont;
-			Glob_config->Read("global_font", &globalFont);
+		wxFont globalFont;
+		Glob_config->Read("global_font", &globalFont);
 
-			this->fontPicker->SetSelectedFont(globalFont);
-		}
+		this->fontPicker->SetSelectedFont(globalFont);
 
 		return true;
 	}
@@ -102,18 +95,15 @@ public:
 	 * Called on platforms with modal preferences dialog to save
 	 * and apply the changes
 	 *
-     * @return bool
-     */
+	 * @return bool
+	 */
 	virtual bool TransferDataFromWindow()
 	{
 		Glob_config->Write("show_line_numbers", this->showLineNumbers->IsChecked());
 		Glob_config->Write("show_indent_guides", this->showIndentGuides->IsChecked());
 		Glob_config->Write("show_code_folding", this->showCodeFolding->IsChecked());
 
-		if ( ! HAS_FONT_BUG())
-		{
-			Glob_config->Write("global_font", this->fontPicker->GetSelectedFont());
-		}
+		Glob_config->Write("global_font", this->fontPicker->GetSelectedFont());
 
 		wxCommandEvent evt = wxCommandEvent();
 		this->frame->OnPrefsChanged(evt);

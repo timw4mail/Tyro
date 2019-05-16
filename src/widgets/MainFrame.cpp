@@ -440,15 +440,15 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	wxString desc = "Tyro, a text editor for all development\n\n"
 		"System info: \n";
 
-	desc += wxString::Format("Architecture: %s\n",
+	desc += wxString::Format("\tArchitecture: %s\n",
 		wxPlatformInfo::GetArchName(plat_info.GetArchitecture()));
 
-	desc += wxString::Format("Operating System:\n\t%s %i.%i\n",
+	desc += wxString::Format("\tOperating System:\n\t\t%s %i.%i\n",
 		wxPlatformInfo::GetOperatingSystemIdName(plat_info.GetOperatingSystemId()),
 		plat_info.GetOSMajorVersion(),
 		plat_info.GetOSMinorVersion());
 
-	desc += wxString::Format("wxWidgets version: %s %i.%i.%i\n",
+	desc += wxString::Format("\nwxWidgets version: %s %i.%i.%i\n",
 		plat_info.GetPortIdName(),
 		wxMAJOR_VERSION,
 		wxMINOR_VERSION,
@@ -460,10 +460,10 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	wxString desk = plat_info.GetDesktopEnvironment();
 	if (desk != "")
 	{
-		desc += wxString::Format("Desktop Environment:%s\n", desk);
+		desc += wxString::Format("\tDesktop Environment:%s\n", desk);
 	}
 
-	desc += "Distro: ";
+	desc += "\tDistro: ";
 	desc += dist_info.Description;
 
 	if (dist_info.CodeName != "")
