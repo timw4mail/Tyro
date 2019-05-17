@@ -7,7 +7,7 @@
 LangConfig::LangConfig()
 {
 	this->LoadJson(languages_json);
-	this->lang = "";
+	this->language = "";
 	
 	// "cache" reverse map of languages to their keys
 	JsonValue langList = this->GetRoot();
@@ -62,7 +62,7 @@ string LangConfig::GetLangByFile(wxFileName &fileName)
 			)
 			{
 				this->SetLang(lang);
-				return this->lang;
+				return this->language;
 			}
 			
 			// Go to the next pattern for this language
@@ -71,7 +71,7 @@ string LangConfig::GetLangByFile(wxFileName &fileName)
 	}
 
 	this->SetLang("");
-	return this->lang;
+	return this->language;
 }
 
 /**
@@ -82,7 +82,7 @@ string LangConfig::GetLangByFile(wxFileName &fileName)
  */
 JsonValue LangConfig::GetKeywordList(string lang)
 {
-	if (lang == "none") lang = this->lang;
+	if (lang == "none") lang = this->language;
 	
 	return this->GetRoot()
 		.get(lang, JsonValue())
@@ -97,7 +97,7 @@ JsonValue LangConfig::GetKeywordList(string lang)
  */
 JsonValue LangConfig::GetLexerMap(string lang)
 {
-	if (lang == "none") lang = this->lang;
+	if (lang == "none") lang = this->language;
 	
 	return this->GetRoot()
 		.get(lang, JsonValue())
@@ -112,7 +112,7 @@ JsonValue LangConfig::GetLexerMap(string lang)
  */ 
 void LangConfig::SetLang(string lang)
 {
-	this->lang = lang;
+	this->language = lang;
 }
 
 /**
@@ -120,7 +120,7 @@ void LangConfig::SetLang(string lang)
  */
 string LangConfig::GetLang()
 {
-	return this->lang;
+	return this->language;
 }
 
 /**
@@ -131,7 +131,7 @@ string LangConfig::GetLang()
 string LangConfig::GetCurrentLangName()
 {
 	return this->GetRoot()
-		.get(this->lang, JsonValue())
+		.get(this->language, JsonValue())
 		.get("name", JsonValue())
 		.asString();
 }

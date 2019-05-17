@@ -7,7 +7,7 @@
 class EditPane: public wxStyledTextCtrl
 {
 public:
-	EditPane(
+	explicit EditPane(
 		wxWindow *parent,
 		wxWindowID id = wxID_ANY,
 		const wxPoint &post = wxDefaultPosition,
@@ -19,10 +19,10 @@ public:
 	void Highlight(wxString filePath);
 	bool SaveFile();
 	bool SaveFile(const wxString &filename);
-	void ReApplyTheme(string theme="");
-	void ApplyTheme(string lang, string theme="");
+	void ReApplyTheme(const string &theme="");
+	void ApplyTheme(const string &lang, const string &theme="");
 	string GetCurrentLang();
-	void SetCurrentLang(string name);
+	void SetCurrentLang(const string &name);
 protected:
 	StringConstMap::iterator lexerMapIt;
 	LangConfig *lang_config = nullptr;
@@ -31,6 +31,6 @@ protected:
 	bool FileWritable();
 	void BindEvents();
 	void OnCharAdded(wxStyledTextEvent &event);
-	void SetTheme(string theme_name);
+	// void SetTheme(const string &theme_name);
 	void _ApplyTheme(JsonValue &lexer_map);
 };

@@ -46,7 +46,7 @@ public:
 		this->SetVendorName(APP_VENDOR);
 
 		// Initialize globals
-		this->InitLexerMap();
+		TyroApp::InitLexerMap();
 		Glob_config = wxConfigBase::Get();
 		Glob_menu_bar = new TyroMenu();
 		Glob_main_frame = new MainFrame(nullptr, APP_NAME, CalculateWindowSize());
@@ -122,7 +122,7 @@ private:
 	/**
 	 * Set up mapping for lexers
 	 */
-	void InitLexerMap()
+	void static InitLexerMap()
 	{
 		Glob_lexer_map[""] = wxSTC_LEX_NULL;
 		Glob_lexer_map["batch"] = wxSTC_LEX_BATCH;
@@ -167,4 +167,4 @@ private:
 };
 
 // Set up the main method and event loop
-IMPLEMENT_APP(TyroApp);
+wxIMPLEMENT_APP(TyroApp);

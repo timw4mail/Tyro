@@ -16,6 +16,6 @@ public:
 	string GetCurrentLangName();
 	string GetLangByName(string name);
 private:
-	string lang;
+	string language;
 	StringMap reverseMap;
 };

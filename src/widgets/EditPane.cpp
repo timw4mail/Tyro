@@ -84,7 +84,7 @@ void EditPane::Highlight(wxString filePath)
  * @param string theme
  * @return void
  */
-void EditPane::ApplyTheme(string lang, string theme)
+void EditPane::ApplyTheme(const string &lang, const string &theme)
 {
 	this->StyleClearAll();
 
@@ -138,7 +138,7 @@ void EditPane::ApplyTheme(string lang, string theme)
  * @param string [theme]
  * @return void
  */
-void EditPane::ReApplyTheme(string theme)
+void EditPane::ReApplyTheme(const string &theme)
 {
 	this->ApplyTheme(lang_config->GetLangByName(this->GetCurrentLang()), theme);
 }
@@ -302,16 +302,16 @@ void EditPane::OnCharAdded(wxStyledTextEvent& event)
  * Iterate through the theme settings and apply them
  *
  * @param JsonValue lexer_map - Maps token types to theme colors
- * @param int addtoi - Offset for some languages
  * @return void
  */
 void EditPane::_ApplyTheme(JsonValue &lexer_map)
 {
 	// Font setup
-	wxFont *defaultFont = wxFont::New(
+	wxFont defaultFont(
 		TYRO_DEFAULT_FONT_SIZE,
-		wxFONTFAMILY_MODERN,
-		wxFONTFLAG_ANTIALIASED
+		wxFONTFAMILY_TELETYPE,
+		wxFONTFLAG_DEFAULT,
+		wxFONTWEIGHT_NORMAL
 	);
 
 	static const wxColor default_background = this->theme_config->GetThemeColor("background", "default");
@@ -334,7 +334,7 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		wxString fontFace;
 		if ( ! Glob_config->Read("global_font", &globalFont))
 		{
-			this->StyleSetFont(i, *defaultFont);
+			this->StyleSetFont(i, defaultFont);
 		}
 		else
 		{
@@ -358,11 +358,11 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		
 		this->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
 		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,     "BLACK", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,	 "BLACK", "BLACK");
 		this->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
 		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,     "BLACK", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,     "BLACK", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,	 "BLACK", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,	 "BLACK", "BLACK");
 	}
 	else
 	{
@@ -452,7 +452,7 @@ string EditPane::GetCurrentLang()
  * @param string name
  * @return void
  */
-void EditPane::SetCurrentLang(string name)
+void EditPane::SetCurrentLang(const string &name)
 {
 	// Update the current lang in the config
 	string langKey = this->lang_config->GetLangByName(name);
