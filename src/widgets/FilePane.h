@@ -15,7 +15,7 @@ public:
 	);
 	~FilePane() override;
 private:
-	wxString curr_path = "";
+	wxString base_path = "";
 	wxImageList *img_list = nullptr;
 	unordered_set<std::string> file_set;
 	unordered_set<std::string> dir_set;
@@ -24,7 +24,8 @@ private:
 	void OpenFileInEditor(wxTreeListEvent& event);
 	void InitImageList();
 	void CreateTree(const wxString &path, wxTreeListItem &root);
-    void DirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent);
-    void AddDirFiles(const wxString &path, wxTreeListItem &root);
+	void AddDirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent);
+	void AddDirFiles(const wxString &path, wxTreeListItem &root);
+	wxString BaseName(wxString path);
 };
 

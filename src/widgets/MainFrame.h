@@ -26,7 +26,7 @@ class MainFrame: public wxFrame
 		wxFindReplaceData *findData = nullptr;
 		wxFindReplaceDialog *findDlg = nullptr;
 		wxFindReplaceDialog *replaceDlg = nullptr;
-		void SetupToolbar();
+		wxAuiToolBar* SetupToolbar();
 		void SetupStatusBar();
 		void BindEvents();
 		void DoLayout();

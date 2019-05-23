@@ -58,6 +58,7 @@ MainFrame::~MainFrame()
 	wxDELETE(this->findData);
 	wxDELETE(this->replaceDlg);
 	wxDELETE(this->findReplaceData);
+	wxDELETE(this->toolBar);
 
 	Glob_status_bar->Destroy();
 
@@ -72,7 +73,7 @@ MainFrame::~MainFrame()
 void MainFrame::DoLayout()
 {
 	this->manager = new wxAuiManager(this);
-	this->SetupToolbar();
+	this->toolBar = this->SetupToolbar();
 
 	// Setup properties for each AUI pane
 	wxAuiPaneInfo toolBarPaneInfo;
@@ -123,7 +124,7 @@ void MainFrame::SetupStatusBar()
  *
  * @return void
  */
-void MainFrame::SetupToolbar()
+wxAuiToolBar* MainFrame::SetupToolbar()
 {
 	// Icon files
 #ifndef __WXGTK__
@@ -163,6 +164,8 @@ void MainFrame::SetupToolbar()
 	toolBar->AddStretchSpacer();
 
 	toolBar->Realize();
+
+	return toolBar;
 }
 
 /**
