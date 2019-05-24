@@ -14,6 +14,7 @@ public:
 		const wxString &name=wxTreeListCtrlNameStr
 	);
 	~FilePane() override;
+	void CreateTree(const wxString &path);
 private:
 	wxString base_path = "";
 	wxImageList *img_list = nullptr;
@@ -23,9 +24,7 @@ private:
 	void OpenFolder(wxTreeListEvent& event);
 	void OpenFileInEditor(wxTreeListEvent& event);
 	void InitImageList();
-	void CreateTree(const wxString &path, wxTreeListItem &root);
-	void AddDirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent);
-	void AddDirFiles(const wxString &path, wxTreeListItem &root);
-	wxString BaseName(wxString path);
+	void AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent);
+	void AddDirFiles(wxTreeListItem &root, const wxString &path);
 };
 

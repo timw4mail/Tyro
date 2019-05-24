@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#include <libgen.h>
+
 #include "common.h"
 
 // Disable annoying warning
@@ -48,6 +50,14 @@ wxSize static CalculateWindowSize()
     wxSize base((int)((float)mode.w * 0.9), (int)((float)mode.h * 0.9));
 
     return base;
+}
+
+wxString static BaseName(wxString path)
+{
+	auto fullPath = path.char_str();
+	auto base = basename(fullPath);
+
+	return (wxString) base;
 }
 
 // Tyro-specific variables

@@ -1,4 +1,3 @@
-#include <libgen.h>
 #include <unordered_set>
 
 #include "src/widgets/FilePane.h"
@@ -29,8 +28,8 @@ FilePane::FilePane(
 	wxString defaultPath(".");
 	wxFileName filename(defaultPath);
 	filename.MakeAbsolute(defaultPath);
-	wxTreeListItem root = this->GetRootItem();
-	this->CreateTree(defaultPath, root);
+
+	this->CreateTree(defaultPath);
 	
 	this->AppendColumn("", 
 		wxCOL_WIDTH_AUTOSIZE, 
@@ -64,8 +63,10 @@ void FilePane::OpenFolder(wxTreeListEvent& event)
  * 
  * @access private
  */
-void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
+void FilePane::CreateTree(const wxString &path)
 {
+	wxTreeListItem root = this->GetRootItem();
+
 	auto *files = new wxArrayString();
 	wxFileName rootPath(path);
 	rootPath.MakeAbsolute();
@@ -83,21 +84,22 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
 		// If the file is at the root, add it to the tree
 		if (fileName.GetDirCount() == rootPath.GetDirCount())
 		{
-			this->AddDirFiles(path, root);
+			this->AddDirFiles(root, path);
 		}
 
 		auto dir = std::string(fileName.GetPath());
 
-		if (dir.empty())
+		if (dir.empty() || BaseName(this->base_path) == BaseName(dir))
 		{
 			continue;
 		}
 
 		// Append the folder to the tree
 		wxString wdir = wxString(dir);
-		// wxLogDebug("Creating Dir Tree: %s", wdir);
-		this->AddDirToTree(this->BaseName(wdir), root, wxString(""));
+		this->AddDirToTree(root, BaseName(dir), wxString(""));
 	}
+
+	delete files;
 }
 
 /**
@@ -105,16 +107,16 @@ void FilePane::CreateTree(const wxString &path, wxTreeListItem &root)
  * 
  * @access private
  */
-void FilePane::AddDirToTree(const wxString &path, wxTreeListItem &root, const wxString &parent)
+void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent)
 {
-	auto pathBase = this->BaseName(path);
+	auto pathBase = BaseName(path);
 	auto fullPath = this->base_path;
 
 	if ( ! parent.empty())
 	{
 		fullPath += "/";
 
-		wxString par = parent.Clone();
+		auto par = parent.Clone();
 		par.Replace((wxString)this->base_path, "");
 
 		fullPath += par.ToStdString();
@@ -128,8 +130,13 @@ void FilePane::AddDirToTree(const wxString &path, wxTreeListItem &root, const wx
 
 	wxFileName parentDir(fullPath);
 	parentDir.MakeAbsolute();
+	parentDir.Normalize();
 
-	wxLogDebug("Rendering Dir Tree for %s, full path: %s", path, fullPath);
+	auto parentDirs = parentDir.GetDirs();
+
+	wxString wFullPath(fullPath);
+
+	wxLogInfo("Rendering Dir Tree for %s, full path: %s", path, fullPath);
 
 	auto *files = new wxArrayString();
 	wxDir::GetAllFiles(fullPath, files);
@@ -137,12 +144,88 @@ void FilePane::AddDirToTree(const wxString &path, wxTreeListItem &root, const wx
 	for (const wxString &item: *files)
 	{
 		wxFileName fileName(item);
-
+		fileName.MakeRelativeTo(fullPath);
 		auto dir = std::string(fileName.GetPath());
+
+		wxLogDebug("File %s in %s", fileName.GetFullName(), fullPath);
+		wxLogDebug("Dir %s in %s", dir, fullPath);
+
+		// Add files
+		if (fileName.GetDirCount() == 1)
+		{
+			this->AddDirFiles(root, fullPath);
+		}
+
+		// Stop early if folder exists
+		/*auto it = this->dir_set.find(std::string(dir));
+		if (it != this->dir_set.end())
+		{
+			continue;
+		}
+
+		if (fileName.GetDirCount() < parentDir.GetDirCount() || ( ! item.Contains(wFullPath)))
+		{
+			continue;
+		}
+
+		auto dirs = fileName.GetDirs();
+
+		// Remove the last folder from the filename to pass as the parent dir
+		fileName.RemoveLastDir();
+		auto parentPath = fileName.GetPath();
+		parentPath.Replace((wxString)this->base_path, "");
+		parentPath.Replace("/", "");
+
+		if (parentDirs.GetCount() == dirs.GetCount())
+		{
+			continue;
+		}
+
+		for (auto i = 0; i < dirs.GetCount(); i++)
+		{
+			if (dirs[i] == "")
+			{
+				break;
+			}
+
+			// Skip path segments that already exist
+			if (parentDirs.GetCount() > i && parentDirs[i] == dirs[i])
+			{
+				continue;
+			}
+
+			 if (parentDirs.GetCount() > i && parentDirs[i] != dirs[i])
+			{
+				wxLogWarning("Wat?! Where'd this path segment come from? :%s not in %s", dirs[i], parentPath);
+				continue;
+			}
+
+			wxLogDebug("Path segment to Add: %s, Base Dir: %s", dirs[i], fullPath);
+
+			auto fileData = new wxStringClientData();
+			fileData->SetData(dir);
+
+			auto dir_label = BaseName(dir);
+			auto dir_node = this->AppendItem(root, dir_label, Icon_FolderClosed, Icon_FolderOpened, fileData);
+
+			// wxLogDebug("Recursing for dir %s, from parent %s", parentPath, fullPath);
+
+			// this->AddDirToTree(dir_node, dir_label, parentPath);
+
+			break;
+		} */
+
+		/* auto dir = std::string(fileName.GetPath());
+
+		// Remove the last folder from the filename to pass as the parent dir
+		fileName.RemoveLastDir();
+		auto parentPath = fileName.GetPath();
+		parentPath.Replace((wxString)this->base_path, "");
+
 		wxString wdir(dir);
 		wxFileName dirName(dir);
 
-		if ( ! (wdir.Contains(pathBase) || dirName.GetDirCount() != (parentDir.GetDirCount() + 1)))
+		if (( ! wdir.Contains((wxString) fullPath)) || dirName.GetDirCount() != parentDir.GetDirCount())
 		{
 			continue;
 		}
@@ -157,22 +240,23 @@ void FilePane::AddDirToTree(const wxString &path, wxTreeListItem &root, const wx
 		auto fileData = new wxStringClientData();
 		fileData->SetData(dir);
 
-		auto dir_label = this->BaseName(dir);
+		auto dir_label = BaseName(dir);
 		auto dir_node = this->AppendItem(root, dir_label, Icon_FolderClosed, Icon_FolderOpened, fileData);
 
 		this->dir_set.insert(std::string(dir));
 
-		wxLogDebug("Recursing for dir %s, from parent %s", dir_label, fullPath);
+		wxLogDebug("Recursing for dir %s, from parent %s", parentPath, fullPath);
 
-		this->AddDirFiles(fullPath, dir_node);
-		this->AddDirToTree(dir_label, dir_node, fullPath);
+		this->AddDirToTree(dir_node, dir_label, parentPath); */
 	}
+
+	// delete files;
 }
 
-void FilePane::AddDirFiles(const wxString &path, wxTreeListItem &root)
+void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path)
 {
 	auto *files = new wxArrayString();
-	wxDir::GetAllFiles(path, files);
+	wxDir::GetAllFiles(path, files, wxEmptyString, wxDIR_FILES);
 
 	wxFileName rootPath(path);
 	rootPath.MakeAbsolute();
@@ -197,11 +281,13 @@ void FilePane::AddDirFiles(const wxString &path, wxTreeListItem &root)
 		auto fileData = new wxStringClientData();
 		fileData->SetData(fileName.GetFullPath());
 
-		auto fileLabel = this->BaseName(fileName.GetFullName());
+		auto fileLabel = BaseName(fileName.GetFullName());
 
 		this->AppendItem(root, fileLabel, Icon_File, Icon_File, fileData);
 		this->file_set.insert(std::string(fileName.GetFullPath()));
 	}
+
+	delete files;
 }
 
 /**
@@ -247,12 +333,4 @@ void FilePane::InitImageList()
 			wxArtProvider::GetIcon(icon, wxART_LIST, iconSize)
 		);
 	}
-}
-
-wxString FilePane::BaseName(wxString path)
-{
-	auto fullPath = path.char_str();
-	auto base = basename(fullPath);
-
-	return (wxString) base;
 }
