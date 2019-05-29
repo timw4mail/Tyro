@@ -81,25 +81,25 @@ void FilePane::CreateTree(const wxString &path)
 	{
 		wxFileName fileName(file);
 
-		// If the file is at the root, add it to the tree
-		if (fileName.GetDirCount() == rootPath.GetDirCount())
-		{
-			this->AddDirFiles(root, path);
-		}
-
+		// Make the dir relative to the base path,
+		// then only use the first dir segment
+		fileName.MakeRelativeTo(this->base_path);
 		auto dir = std::string(fileName.GetPath());
 
-		if (dir.empty() || BaseName(this->base_path) == BaseName(dir))
+		if (dir.empty())
 		{
 			continue;
 		}
 
-		// Append the folder to the tree
-		wxString wdir = wxString(dir);
-		this->AddDirToTree(root, BaseName(dir), wxString(""));
+		wxArrayString dirs = fileName.GetDirs();
+
+		this->AddDirToTree(root, dirs[0], wxString(""));
 	}
 
 	delete files;
+
+	// Add files that are in the root path
+	this->AddDirFiles(root, this->base_path);
 }
 
 /**
@@ -109,7 +109,7 @@ void FilePane::CreateTree(const wxString &path)
  */
 void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent)
 {
-	auto pathBase = BaseName(path);
+	wxLogDebug("AddDirToTree path: %s, parent: %s", path, parent);
 	auto fullPath = this->base_path;
 
 	if ( ! parent.empty())
@@ -117,144 +117,80 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 		fullPath += "/";
 
 		auto par = parent.Clone();
-		par.Replace((wxString)this->base_path, "");
+		par.Replace((wxString)this->base_path + "/", "");
 
 		fullPath += par.ToStdString();
 	}
 
-	if ( ! fullPath.Contains(pathBase))
+	if ( ! fullPath.Contains(path))
 	{
 		fullPath += "/";
-		fullPath += pathBase;
+		fullPath += path;
 	}
-
-	wxFileName parentDir(fullPath);
-	parentDir.MakeAbsolute();
-	parentDir.Normalize();
-
-	auto parentDirs = parentDir.GetDirs();
 
 	wxString wFullPath(fullPath);
 
-	wxLogInfo("Rendering Dir Tree for %s, full path: %s", path, fullPath);
+	// Stop early if folder exists
+	auto it = this->dir_set.find(std::string(fullPath));
+	if (it != this->dir_set.end())
+	{
+		wxLogInfo("Redundant call to AddDirToTree for: %s, %s", path, parent);
+		return;
+	}
+
+	auto shortDir = BaseName(wFullPath);
+
+	auto fileData = new wxStringClientData();
+	fileData->SetData(fullPath);
+	auto dir_node = this->AppendItem(root, shortDir, Icon_FolderClosed, Icon_FolderOpened, fileData);
+	this->dir_set.insert(string(fullPath));
+
+	// ------------------------------------------------------------------------------------
+	// Find folder(s) to recurse
+	// ------------------------------------------------------------------------------------
 
 	auto *files = new wxArrayString();
 	wxDir::GetAllFiles(fullPath, files);
 
-	for (const wxString &item: *files)
+	wxFileName currentPath((wxString)fullPath);
+	currentPath.MakeRelativeTo(this->base_path);
+
+	for (const wxString &file: *files)
 	{
-		wxFileName fileName(item);
+		auto parentDir = currentPath.GetPath();
+		wxFileName fileName(file);
+
+		// Make the dir relative to the base path,
+		// then only use the first dir segment
 		fileName.MakeRelativeTo(fullPath);
 		auto dir = std::string(fileName.GetPath());
 
-		wxLogDebug("File %s in %s", fileName.GetFullName(), fullPath);
-		wxLogDebug("Dir %s in %s", dir, fullPath);
-
-		// Add files
-		if (fileName.GetDirCount() == 1)
-		{
-			this->AddDirFiles(root, fullPath);
-		}
-
-		// Stop early if folder exists
-		/*auto it = this->dir_set.find(std::string(dir));
-		if (it != this->dir_set.end())
+		if (dir.empty())
 		{
 			continue;
 		}
 
-		if (fileName.GetDirCount() < parentDir.GetDirCount() || ( ! item.Contains(wFullPath)))
-		{
-			continue;
+		auto newParent = parentDir;
+		if (parentDir.empty() || parentDir == ".") {
+			newParent = BaseName(fullPath);
 		}
 
-		auto dirs = fileName.GetDirs();
+		wxArrayString dirs = fileName.GetDirs();
 
-		// Remove the last folder from the filename to pass as the parent dir
-		fileName.RemoveLastDir();
-		auto parentPath = fileName.GetPath();
-		parentPath.Replace((wxString)this->base_path, "");
-		parentPath.Replace("/", "");
-
-		if (parentDirs.GetCount() == dirs.GetCount())
-		{
-			continue;
-		}
-
-		for (auto i = 0; i < dirs.GetCount(); i++)
-		{
-			if (dirs[i] == "")
-			{
-				break;
-			}
-
-			// Skip path segments that already exist
-			if (parentDirs.GetCount() > i && parentDirs[i] == dirs[i])
-			{
-				continue;
-			}
-
-			 if (parentDirs.GetCount() > i && parentDirs[i] != dirs[i])
-			{
-				wxLogWarning("Wat?! Where'd this path segment come from? :%s not in %s", dirs[i], parentPath);
-				continue;
-			}
-
-			wxLogDebug("Path segment to Add: %s, Base Dir: %s", dirs[i], fullPath);
-
-			auto fileData = new wxStringClientData();
-			fileData->SetData(dir);
-
-			auto dir_label = BaseName(dir);
-			auto dir_node = this->AppendItem(root, dir_label, Icon_FolderClosed, Icon_FolderOpened, fileData);
-
-			// wxLogDebug("Recursing for dir %s, from parent %s", parentPath, fullPath);
-
-			// this->AddDirToTree(dir_node, dir_label, parentPath);
-
-			break;
-		} */
-
-		/* auto dir = std::string(fileName.GetPath());
-
-		// Remove the last folder from the filename to pass as the parent dir
-		fileName.RemoveLastDir();
-		auto parentPath = fileName.GetPath();
-		parentPath.Replace((wxString)this->base_path, "");
-
-		wxString wdir(dir);
-		wxFileName dirName(dir);
-
-		if (( ! wdir.Contains((wxString) fullPath)) || dirName.GetDirCount() != parentDir.GetDirCount())
-		{
-			continue;
-		}
-
-		// Stop early if folder exists
-		auto it = this->dir_set.find(std::string(dir));
-		if (it != this->dir_set.end())
-		{
-			continue;
-		}
-
-		auto fileData = new wxStringClientData();
-		fileData->SetData(dir);
-
-		auto dir_label = BaseName(dir);
-		auto dir_node = this->AppendItem(root, dir_label, Icon_FolderClosed, Icon_FolderOpened, fileData);
-
-		this->dir_set.insert(std::string(dir));
-
-		wxLogDebug("Recursing for dir %s, from parent %s", parentPath, fullPath);
-
-		this->AddDirToTree(dir_node, dir_label, parentPath); */
+		this->AddDirToTree(dir_node, dirs[0], newParent);
 	}
 
-	// delete files;
+	delete files;
+
+	// Add the files, if they exist
+	// Defer until after recursion so that files follow folders
+	this->AddDirFiles(dir_node, fullPath);
 }
 
 void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path)
 {
+	wxLogDebug("Adding files for dir: %s", path);
+
 	auto *files = new wxArrayString();
 	wxDir::GetAllFiles(path, files, wxEmptyString, wxDIR_FILES);
 
@@ -265,12 +201,6 @@ void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path)
 	{
 		wxFileName fileName(item);
 		fileName.MakeAbsolute();
-
-		// If the file is in another folder, don't add it here!
-		if (fileName.GetDirCount() != rootPath.GetDirCount())
-		{
-			continue;
-		}
 
 		auto it = this->file_set.find(std::string(fileName.GetFullPath()));
 		if (it != this->file_set.end())
