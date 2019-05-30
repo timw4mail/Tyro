@@ -109,7 +109,7 @@ void FilePane::CreateTree(const wxString &path)
  */
 void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent)
 {
-	wxLogDebug("AddDirToTree path: %s, parent: %s", path, parent);
+	wxLogInfo("AddDirToTree path: %s, parent: %s", path, parent);
 	auto fullPath = this->base_path;
 
 	if ( ! parent.empty())
@@ -153,14 +153,17 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 	wxDir::GetAllFiles(fullPath, files);
 
 	wxFileName currentPath((wxString)fullPath);
+	currentPath.MakeAbsolute();
 	currentPath.MakeRelativeTo(this->base_path);
 
 	for (const wxString &file: *files)
 	{
 		auto parentDir = currentPath.GetPath();
+		wxLogInfo("- Parent dir: %s, full dir: %s", parentDir, fullPath);
+
 		wxFileName fileName(file);
 
-		// Make the dir relative to the base path,
+		// Make the dir relative to the search path,
 		// then only use the first dir segment
 		fileName.MakeRelativeTo(fullPath);
 		auto dir = std::string(fileName.GetPath());
@@ -171,11 +174,19 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 		}
 
 		auto newParent = parentDir;
-		if (parentDir.empty() || parentDir == ".") {
+		if (parentDir.empty())
+		{
 			newParent = BaseName(fullPath);
 		}
 
+		if ( ! newParent.Contains(BaseName(fullPath)))
+		{
+			newParent += "/" + BaseName(fullPath);
+		}
+
 		wxArrayString dirs = fileName.GetDirs();
+
+		wxLogInfo("-- Recursing to deeper folder: %s(%s), parent: %s(%s)", dirs[0], dir, newParent, parentDir);
 
 		this->AddDirToTree(dir_node, dirs[0], newParent);
 	}
@@ -189,7 +200,7 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 
 void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path)
 {
-	wxLogDebug("Adding files for dir: %s", path);
+	wxLogInfo("Adding files for dir: %s", path);
 
 	auto *files = new wxArrayString();
 	wxDir::GetAllFiles(path, files, wxEmptyString, wxDIR_FILES);
