@@ -47,6 +47,8 @@ void TyroMenu::SetupMainMenus()
 	fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
 	fileMenu->AppendSeparator();
 	fileMenu->Append(wxID_OPEN, "&Open\tCtrl+O", "Opens an existing file");
+	fileMenu->Append(myID_OPEN_DIR, "&Open Dir\tShift+Ctrl+O", "Opens the selected folder in the sidebar");
+
 	fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S", "Save the content");
 	fileMenu->Append(wxID_SAVEAS, "Save &As...\tShift+Ctrl+S", "Save current file as...");
 	fileMenu->AppendSeparator();

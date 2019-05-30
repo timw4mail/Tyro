@@ -60,7 +60,7 @@ EditPane::~EditPane()
  * @param wxString filePath
  * @return void
  */
-void EditPane::Highlight(wxString filePath)
+void EditPane::Highlight(const wxString &filePath)
 {
 	this->fileName.Assign(filePath);
 
@@ -149,7 +149,7 @@ void EditPane::ReApplyTheme(const string &theme)
  * @param wxString filePath
  * @return bool
  */
-bool EditPane::Load(wxString filePath)
+bool EditPane::Load(const wxString &filePath)
 {
 	this->fileName.Assign(filePath);
 

@@ -178,6 +178,7 @@ void MainFrame::BindEvents()
 	// File Menu Events
 	this->Bind(wxEVT_MENU, &MainFrame::OnNew, this, wxID_NEW);
 	this->Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
+	this->Bind(wxEVT_MENU, &MainFrame::OnOpenFolder, this, myID_OPEN_DIR);
 	this->Bind(wxEVT_MENU, &MainFrame::OnSave, this, wxID_SAVE);
 	this->Bind(wxEVT_MENU, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
 	this->Bind(wxEVT_MENU, &MainFrame::OnCloseTab, this, wxID_CLOSE);
@@ -287,6 +288,17 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	dlg.GetPaths(filelist);
 
 	this->OpenFiles(filelist);
+}
+
+void MainFrame::OnOpenFolder(wxCommandEvent &event)
+{
+	wxString path;
+
+	wxDirDialog dlg(this, "Select Project Dir", wxEmptyString, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST | wxDD_CHANGE_DIR);
+
+	if (dlg.ShowModal() != wxID_OK) return;
+
+	filePane->CreateTree(dlg.GetPath());
 }
 
 /**

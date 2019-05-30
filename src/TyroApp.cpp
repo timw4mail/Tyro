@@ -50,9 +50,7 @@ public:
 		Glob_config = wxConfigBase::Get();
 		Glob_menu_bar = new TyroMenu();
 		Glob_main_frame = new MainFrame(nullptr, APP_NAME, CalculateWindowSize());
-#ifndef TRAVIS
 		Glob_pref_pane = new PrefPane();
-#endif
 
 		// Setup Main Window
 		Glob_main_frame->Layout();
@@ -144,6 +142,7 @@ private:
 		Glob_lexer_map["python"] = wxSTC_LEX_PYTHON;
 		Glob_lexer_map["ruby"] = wxSTC_LEX_RUBY;
 		Glob_lexer_map["rust"] = wxSTC_LEX_CPP;
+		Glob_lexer_map["scheme"] = wxSTC_LEX_LISP;
 		Glob_lexer_map["shell"] = wxSTC_LEX_BASH;
 		Glob_lexer_map["sql"] = wxSTC_LEX_SQL;
 		Glob_lexer_map["xml"] = wxSTC_LEX_XML;

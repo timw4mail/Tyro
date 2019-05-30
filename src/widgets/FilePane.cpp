@@ -5,6 +5,8 @@
 
 extern MainFrame *Glob_main_frame;
 
+auto DIR_SEP = wxFileName::GetPathSeparator();
+
 enum
 {
 	Icon_File,
@@ -35,6 +37,8 @@ FilePane::FilePane(
 		wxCOL_WIDTH_AUTOSIZE, 
 		wxALIGN_LEFT, 
 		wxCOL_RESIZABLE | wxCOL_SORTABLE);
+
+	this->SetSortColumn(0);
 	
 }
 
@@ -60,11 +64,14 @@ void FilePane::OpenFolder(wxTreeListEvent& event)
 
 /**
  * Iterates through the specified folder and creates the tree view
- * 
- * @access private
  */
 void FilePane::CreateTree(const wxString &path)
 {
+	// Clear the tree!
+	this->DeleteAllItems();
+	this->file_set.clear();
+	this->dir_set.clear();
+
 	wxTreeListItem root = this->GetRootItem();
 
 	auto *files = new wxArrayString();
@@ -93,7 +100,7 @@ void FilePane::CreateTree(const wxString &path)
 
 		wxArrayString dirs = fileName.GetDirs();
 
-		this->AddDirToTree(root, dirs[0], wxString(""));
+		this->AddDirToTree(root, dirs[0], wxString(""), true);
 	}
 
 	delete files;
@@ -107,24 +114,24 @@ void FilePane::CreateTree(const wxString &path)
  * 
  * @access private
  */
-void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent)
+void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent, bool recurse)
 {
 	wxLogInfo("AddDirToTree path: %s, parent: %s", path, parent);
 	auto fullPath = this->base_path;
 
 	if ( ! parent.empty())
 	{
-		fullPath += "/";
+		fullPath += DIR_SEP;
 
 		auto par = parent.Clone();
-		par.Replace((wxString)this->base_path + "/", "");
+		par.Replace((wxString)this->base_path + DIR_SEP, "");
 
 		fullPath += par.ToStdString();
 	}
 
 	if ( ! fullPath.Contains(path))
 	{
-		fullPath += "/";
+		fullPath += DIR_SEP;
 		fullPath += path;
 	}
 
@@ -148,6 +155,7 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 	// ------------------------------------------------------------------------------------
 	// Find folder(s) to recurse
 	// ------------------------------------------------------------------------------------
+	if ( ! recurse) return;
 
 	auto *files = new wxArrayString();
 	wxDir::GetAllFiles(fullPath, files);
@@ -181,7 +189,7 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 
 		if ( ! newParent.Contains(BaseName(fullPath)))
 		{
-			newParent += "/" + BaseName(fullPath);
+			newParent += DIR_SEP + BaseName(fullPath);
 		}
 
 		wxArrayString dirs = fileName.GetDirs();

@@ -34,6 +34,7 @@ class MainFrame: public wxFrame
 		// Main Menu Event handlers
 		void OnNew(wxCommandEvent &event);
 		void OnOpen(wxCommandEvent &event);
+		void OnOpenFolder(wxCommandEvent &event);
 		void OnCloseAll(wxCommandEvent &event);
 		void OnFileClose(wxCommandEvent &event);
 		void OnSave(wxCommandEvent &event);

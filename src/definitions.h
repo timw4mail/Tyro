@@ -68,8 +68,11 @@ enum myMenuIds {
 
 // General Menu ids
 enum myMenuItemIds {
+	// Menu options for sidebar
+	myID_OPEN_DIR = wxID_HIGHEST + 1,
+
 	// Menu options for immediate file
-	myID_VIEW_WHITESPACE = wxID_HIGHEST + 1,
+	myID_VIEW_WHITESPACE,
 	myID_VIEW_LINE_ENDINGS,
 	myID_CLOSE_ALL,
 	myID_CLOSE_ALL_BUT_THIS,
@@ -104,6 +107,7 @@ const wxString TYRO_FILE_OPEN_WILDCARDS =
 	"Python (*.py,*.pyw)|*.py;*.pyw|"
 	"Ruby (*.rb)|*.rb|"
 	"Rust (*.rs)|*.rs|"
+ 	"Scheme (*.scm)|*.scm"
 	"Shell (*.sh, *.bsh)|*.sh;*.bsh|"
 	"SQL (*.sql)|*.sql|"
 	"Text (*.txt)|*.txt|"
@@ -131,6 +135,7 @@ const wxString TYRO_FILE_SAVE_WILDCARDS =
 	"Python (*.py,*.pyw)|*.py;*.pyw|"
 	"Ruby (*.rb)|*.rb|"
 	"Rust (*.rs)|*.rs|"
+ 	"Scheme (*.scm)|*.scm|"
 	"Shell (*.sh, *.bsh)|*.sh;*.bsh|"
 	"SQL (*.sql)|*.sql|"
 	"Text (*.txt)|*.txt|"

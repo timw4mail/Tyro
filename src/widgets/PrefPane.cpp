@@ -15,23 +15,6 @@ public:
 		this->showCodeFolding = new wxCheckBox(this, myID_PREFS_CODE_FOLDING, "Show code folding");
 
 		wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-
-		this->fontPicker = new wxFontPickerCtrl(
-			this,
-			myID_PREFS_FONT,
-			this->GetFont(),
-			wxDefaultPosition,
-			wxDefaultSize,
-			wxFNTP_FONTDESC_AS_LABEL
-		);
-		this->fontPicker->SetLabelText("Editor Font");
-		wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
-		fontSizer->AddSpacer(50);
-		fontSizer->Add(this->fontPicker, wxSizerFlags().Border());
-		fontSizer->AddSpacer(50);
-		sizer->Add(fontSizer, wxSizerFlags().Border());
-
-
 		sizer->Add(this->showLineNumbers, wxSizerFlags().Border());
 		sizer->Add(this->showIndentGuides, wxSizerFlags().Border());
 		sizer->Add(this->showCodeFolding, wxSizerFlags().Border());
@@ -42,12 +25,6 @@ public:
 		// On supported platforms
 		if (wxPreferencesEditor::ShouldApplyChangesImmediately())
 		{
-			this->fontPicker->Bind(wxEVT_FONTPICKER_CHANGED, [=] (wxFontPickerEvent &event) {
-				Glob_config->Write("global_font", event.GetFont());
-				this->frame->OnPrefsChanged(event);
-				Glob_config->Flush();
-			}, myID_PREFS_FONT);
-
 			this->showLineNumbers->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_line_numbers", event.IsChecked());
 				this->frame->OnPrefsChanged(event);
@@ -70,6 +47,9 @@ public:
 
 	~GeneralPrefPanePage()
 	{
+		wxDELETE(this->showLineNumbers);
+		wxDELETE(this->showIndentGuides);
+		wxDELETE(this->showCodeFolding);
 	}
 
 	/**
@@ -82,11 +62,6 @@ public:
 		this->showLineNumbers->SetValue(Glob_config->ReadBool("show_line_numbers", true));
 		this->showIndentGuides->SetValue(Glob_config->ReadBool("show_indent_guides", false));
 		this->showCodeFolding->SetValue(Glob_config->ReadBool("show_code_folding", false));
-
-		wxFont globalFont;
-		Glob_config->Read("global_font", &globalFont);
-
-		this->fontPicker->SetSelectedFont(globalFont);
 
 		return true;
 	}
@@ -103,6 +78,86 @@ public:
 		Glob_config->Write("show_indent_guides", this->showIndentGuides->IsChecked());
 		Glob_config->Write("show_code_folding", this->showCodeFolding->IsChecked());
 
+		wxCommandEvent evt = wxCommandEvent();
+		this->frame->OnPrefsChanged(evt);
+
+		Glob_config->Flush();
+
+		return true;
+	}
+
+private:
+	MainFrame *frame;
+	wxCheckBox *showLineNumbers = nullptr;
+	wxCheckBox *showIndentGuides = nullptr;
+	wxCheckBox *showCodeFolding = nullptr;
+};
+
+class FontPrefPanePage : public wxPanel{
+public:
+	FontPrefPanePage(wxWindow *parent): wxPanel(parent)
+	{
+		this->frame = (MainFrame *) parent;
+
+		wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+
+		this->fontPicker = new wxFontPickerCtrl(
+		this,
+		myID_PREFS_FONT,
+		this->GetFont(),
+		wxDefaultPosition,
+		wxDefaultSize,
+		wxFNTP_FONTDESC_AS_LABEL
+		);
+		this->fontPicker->SetLabelText("Editor Font");
+		wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
+		fontSizer->AddSpacer(50);
+		fontSizer->Add(this->fontPicker, wxSizerFlags().Border());
+		fontSizer->AddSpacer(50);
+		sizer->Add(fontSizer, wxSizerFlags().Border());
+
+		this->SetSizerAndFit(sizer);
+
+		// Change settings on selection, rather than on apply button
+		// On supported platforms
+		if (wxPreferencesEditor::ShouldApplyChangesImmediately())
+		{
+			this->fontPicker->Bind(wxEVT_FONTPICKER_CHANGED, [=] (wxFontPickerEvent &event) {
+				Glob_config->Write("global_font", event.GetFont());
+				this->frame->OnPrefsChanged(event);
+				Glob_config->Flush();
+			}, myID_PREFS_FONT);
+		}
+	}
+
+	~FontPrefPanePage()
+	{
+		wxDELETE(this->fontPicker);
+	}
+
+	/**
+	 * Apply current settings to the pref window
+	 *
+	 * @return bool
+	 */
+	virtual bool TransferDataToWindow()
+	{
+		wxFont globalFont;
+		Glob_config->Read("global_font", &globalFont);
+
+		this->fontPicker->SetSelectedFont(globalFont);
+
+		return true;
+	}
+
+	/**
+	 * Called on platforms with modal preferences dialog to save
+	 * and apply the changes
+	 *
+	 * @return bool
+	 */
+	virtual bool TransferDataFromWindow()
+	{
 		Glob_config->Write("global_font", this->fontPicker->GetSelectedFont());
 
 		wxCommandEvent evt = wxCommandEvent();
@@ -116,17 +171,26 @@ public:
 private:
 	MainFrame *frame;
 	wxFontPickerCtrl *fontPicker = nullptr;
-	wxCheckBox *showLineNumbers = nullptr;
-	wxCheckBox *showIndentGuides = nullptr;
-	wxCheckBox *showCodeFolding = nullptr;
 };
 
+/*
+ * Creates the "General" pane on the pref window
+ * */
 class GeneralPrefPane: public wxStockPreferencesPage {
 public:
 	GeneralPrefPane() : wxStockPreferencesPage(Kind_General) {}
 	virtual wxWindow *CreateWindow(wxWindow *parent)
 	{
 		return new GeneralPrefPanePage(parent);
+	}
+};
+
+class FontPrefPane: public wxStockPreferencesPage {
+public:
+	FontPrefPane() : wxStockPreferencesPage(Kind_Advanced) {}
+	virtual wxWindow *CreateWindow(wxWindow *parent)
+	{
+		return new FontPrefPanePage(parent);
 	}
 };
 
@@ -138,6 +202,7 @@ PrefPane::PrefPane()
 {
 	this->pref_window = new wxPreferencesEditor();
 	this->pref_window->AddPage(new GeneralPrefPane());
+	// this->pref_window->AddPage(new FontPrefPane());
 }
 
 PrefPane::~PrefPane()

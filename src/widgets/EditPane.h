@@ -15,8 +15,8 @@ public:
 	);
 	~EditPane();
 	wxFileName fileName;
-	bool Load(wxString filePath);
-	void Highlight(wxString filePath);
+	bool Load(const wxString &filePath);
+	void Highlight(const wxString &filePath);
 	bool SaveFile();
 	bool SaveFile(const wxString &filename);
 	void ReApplyTheme(const string &theme="");
