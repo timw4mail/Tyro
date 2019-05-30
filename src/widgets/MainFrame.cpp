@@ -292,13 +292,13 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnOpenFolder(wxCommandEvent &event)
 {
-	wxString path;
-
 	wxDirDialog dlg(this, "Select Project Dir", wxEmptyString, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST | wxDD_CHANGE_DIR);
 
 	if (dlg.ShowModal() != wxID_OK) return;
 
-	filePane->CreateTree(dlg.GetPath());
+	auto path = dlg.GetPath();
+
+	filePane->CreateTree(path);
 }
 
 /**

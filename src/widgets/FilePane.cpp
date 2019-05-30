@@ -75,7 +75,7 @@ void FilePane::CreateTree(const wxString &path)
 	wxTreeListItem root = this->GetRootItem();
 
 	auto *files = new wxArrayString();
-	wxFileName rootPath(path);
+	wxFileName rootPath = wxFileName::DirName(path);
 	rootPath.MakeAbsolute();
 
 	this->base_path = rootPath.GetPath();
@@ -196,7 +196,7 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 
 		wxLogInfo("-- Recursing to deeper folder: %s(%s), parent: %s(%s)", dirs[0], dir, newParent, parentDir);
 
-		this->AddDirToTree(dir_node, dirs[0], newParent);
+		this->AddDirToTree(dir_node, dirs[0], newParent, true);
 	}
 
 	delete files;

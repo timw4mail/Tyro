@@ -58,6 +58,8 @@ include_directories(${INCLUDE_DIRS})
 
 # set some platform-specific flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set(MACOSX_DEPLOYMENT_TARGET 10.9)
+	#set(CMAKE_OSX_SYSROOT "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk")
 	set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++")
 	add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_ -D__WXMAC__)
 else()
