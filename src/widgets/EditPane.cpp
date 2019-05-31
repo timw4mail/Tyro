@@ -20,8 +20,8 @@ EditPane::EditPane(
 ) : wxStyledTextCtrl (parent, id, pos, size, wxBORDER_NONE)
 {
 	Glob_config = (wxConfig *) wxConfigBase::Get();
-	lang_config = new LangConfig();
-	theme_config = new ThemeConfig();
+	this->lang_config = new LangConfig();
+	this->theme_config = new ThemeConfig();
 
 	this->BindEvents();
 	
@@ -49,8 +49,8 @@ EditPane::EditPane(
 EditPane::~EditPane()
 {
 	wxLogDebug("Called EditPane Destructor");
-	delete lang_config;
-	delete theme_config;
+	delete this->lang_config;
+	delete this->theme_config;
 }
 
 /**
@@ -65,7 +65,7 @@ void EditPane::Highlight(const wxString &filePath)
 	this->fileName.Assign(filePath);
 
 	// Get the configuration name for the selected language
-	string lang = lang_config->GetLangByFile(this->fileName);
+	string lang = this->lang_config->GetLangByFile(this->fileName);
 
 	// Apply the theme
 	this->ApplyTheme(lang);
@@ -99,12 +99,12 @@ void EditPane::ApplyTheme(const string &lang, const string &theme)
 	
 	if ( ! theme.empty())
 	{
-		theme_config->SetTheme(theme);
+		this->theme_config->SetTheme(theme);
 	}
 
 	// Get the keywords and mapping for the selected language
-	JsonValue lexer_map = lang_config->GetLexerMap(lang);
-	JsonValue keywords_array = lang_config->GetKeywordList(lang);
+	JsonValue lexer_map = this->lang_config->GetLexerMap(lang);
+	JsonValue keywords_array = this->lang_config->GetKeywordList(lang);
 	
 	if (keywords_array.isArray())
 	{
@@ -140,7 +140,7 @@ void EditPane::ApplyTheme(const string &lang, const string &theme)
  */
 void EditPane::ReApplyTheme(const string &theme)
 {
-	this->ApplyTheme(lang_config->GetLangByName(this->GetCurrentLang()), theme);
+	this->ApplyTheme(this->lang_config->GetLangByName(this->GetCurrentLang()), theme);
 }
 
 /**
@@ -393,33 +393,33 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		string key = lexer_map[i].asString();
 
 		// Set the foreground color, if it exists
-		if ( ! theme_config->GetThemeValue("foreground", key).isNull())
+		if ( ! this->theme_config->GetThemeValue("foreground", key).isNull())
 		{
-			this->StyleSetForeground(i, theme_config->GetThemeColor("foreground", key));
+			this->StyleSetForeground(i, this->theme_config->GetThemeColor("foreground", key));
 		}
 
 		// Set the background color, if it exists
-		if ( ! theme_config->GetThemeValue("background", key).isNull())
+		if ( ! this->theme_config->GetThemeValue("background", key).isNull())
 		{
-			this->StyleSetBackground(i, theme_config->GetThemeColor("background", key));
+			this->StyleSetBackground(i, this->theme_config->GetThemeColor("background", key));
 		}
 
 		// Set bold, if it applies
-		if (theme_config->GetThemeValue("bold", key).isBool())
+		if  this->theme_config->GetThemeValue("bold", key).isBool())
 		{
-			this->StyleSetBold(i, theme_config->GetThemeValue("bold", key).asBool());
+			this->StyleSetBold(i, this->theme_config->GetThemeValue("bold", key).asBool());
 		}
 		
 		// Italic
-		if (theme_config->GetThemeValue("italic", key).isBool())
+		if  this->theme_config->GetThemeValue("italic", key).isBool())
 		{
-			this->StyleSetItalic(i, theme_config->GetThemeValue("italic", key).asBool());
+			this->StyleSetItalic(i, this->theme_config->GetThemeValue("italic", key).asBool());
 		}
 		
 		// Underline
-		if (theme_config->GetThemeValue("underline", key).isBool())
+		if  this->theme_config->GetThemeValue("underline", key).isBool())
 		{
-			this->StyleSetUnderline(i, theme_config->GetThemeValue("underline", key).asBool());
+			this->StyleSetUnderline(i, this->theme_config->GetThemeValue("underline", key).asBool());
 		}
 	}
 }

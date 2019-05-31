@@ -39,7 +39,6 @@ FilePane::FilePane(
 		wxCOL_RESIZABLE | wxCOL_SORTABLE);
 
 	this->SetSortColumn(0);
-	
 }
 
 FilePane::~FilePane()
