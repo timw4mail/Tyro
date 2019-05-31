@@ -306,13 +306,8 @@ void EditPane::OnCharAdded(wxStyledTextEvent& event)
  */
 void EditPane::_ApplyTheme(JsonValue &lexer_map)
 {
-	// Font setup
-	wxFont defaultFont(
-		TYRO_DEFAULT_FONT_SIZE,
-		wxFONTFAMILY_TELETYPE,
-		wxFONTFLAG_DEFAULT,
-		wxFONTWEIGHT_NORMAL
-	);
+	// Make sure to have a default font, especially for Linux
+	wxFont globalFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
 
 	static const wxColor default_background = this->theme_config->GetThemeColor("background", "default");
 	static const wxColor default_foreground = this->theme_config->GetThemeColor("foreground", "default");
@@ -324,22 +319,16 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		? (this->theme_config->GetThemeColor("line_numbers", "foreground"))
 		: default_foreground;
 
+	// Attempt to set the font according to config
+	Glob_config->Read("global_font", &globalFont);
+
 	// Set default colors/ fonts
 	for(int i = 0; i <= wxSTC_STYLE_MAX; i++)
 	{
 		this->StyleSetBackground(i, default_background);
 		this->StyleSetForeground(i, default_foreground);
-		
-		wxFont globalFont;
-		wxString fontFace;
-		if ( ! Glob_config->Read("global_font", &globalFont))
-		{
-			this->StyleSetFont(i, defaultFont);
-		}
-		else
-		{
-			this->StyleSetFont(i, globalFont);
-		}
+
+		this->StyleSetFont(i, globalFont);
 	}
 
 	// Set up Code folding

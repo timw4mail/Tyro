@@ -10,7 +10,7 @@ class ThemeConfig : TyroConfig {
 public:
 	ThemeConfig();
 	~ThemeConfig();
-	bool SetTheme(string theme_name);
+	bool SetTheme(const string &theme_name);
 	JsonValue GetTheme();
 	JsonValue GetThemeValue(string type, string key);
 	wxColor GetThemeColor(string type, string key);

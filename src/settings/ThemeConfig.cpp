@@ -25,7 +25,7 @@ ThemeConfig::~ThemeConfig() {}
  * @param string theme_name
  * @return bool
  */ 
-bool ThemeConfig::SetTheme(string theme_name)
+bool ThemeConfig::SetTheme(const string &theme_name)
 {
 	JsonValue theme_list = this->GetRoot();
 	JsonValue selected_theme = theme_list.get(theme_name, JsonValue());

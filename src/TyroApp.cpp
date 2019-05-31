@@ -22,10 +22,6 @@ StringConstMap Glob_lexer_map;
 PrefPane *Glob_pref_pane = nullptr;
 #endif
 
-// Static app loading variables
-static wxArrayString files;
-static int param_count;
-
 /**
  * Class with main method
  */
@@ -58,7 +54,7 @@ public:
 		Glob_main_frame->Show(true);
 		
 		// Open passed files
-		if (param_count > 0)
+		if (this->param_count > 0)
 		{
 			Glob_main_frame->OpenFiles(files);
 		}
@@ -105,18 +101,22 @@ public:
 	{
 		// Get un-named parameters
 		int i;
-		param_count = parser.GetParamCount();
+		this->param_count = parser.GetParamCount();
 
-		wxLogDebug("%i Parameters", param_count);
+		wxLogDebug("%i Parameters", this->param_count);
 
-		for (i = 0; i < param_count; i++)
+		for (i = 0; i < this->param_count; i++)
 		{
-			files.Add(parser.GetParam(i));
+			this->files.Add(parser.GetParam(i));
 		}
 
 		return true;
 	}
 private:
+	// app loading variables
+	wxArrayString files;
+	int param_count = 0;
+
 	/**
 	 * Set up mapping for lexers
 	 */

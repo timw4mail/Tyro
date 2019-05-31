@@ -103,10 +103,10 @@ void FilePane::CreateTree(const wxString &path)
 		this->AddDirToTree(root, dirs[0], wxString(""), true);
 	}
 
-	delete files;
-
 	// Add files that are in the root path
-	this->AddDirFiles(root, this->base_path);
+	this->AddDirFiles(root, this->base_path, files);
+
+	delete files;
 }
 
 /**
@@ -199,19 +199,23 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
 		this->AddDirToTree(dir_node, dirs[0], newParent, true);
 	}
 
-	delete files;
-
 	// Add the files, if they exist
 	// Defer until after recursion so that files follow folders
-	this->AddDirFiles(dir_node, fullPath);
+	this->AddDirFiles(dir_node, fullPath, files);
+
+	delete files;
 }
 
-void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path)
+/**
+ * Add the file leaves for the current file path in the tree
+ *
+ * @param wxTreeListITem &root - The branch of the tree representing the current path
+ * @param wxString &path - The filesystem path
+ * @param wxArrayString *files - The list of files
+ */
+void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path, wxArrayString *files)
 {
 	wxLogInfo("Adding files for dir: %s", path);
-
-	auto *files = new wxArrayString();
-	wxDir::GetAllFiles(path, files, wxEmptyString, wxDIR_FILES);
 
 	wxFileName rootPath(path);
 	rootPath.MakeAbsolute();
@@ -235,8 +239,6 @@ void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path)
 		this->AppendItem(root, fileLabel, Icon_File, Icon_File, fileData);
 		this->file_set.insert(std::string(fileName.GetFullPath()));
 	}
-
-	delete files;
 }
 
 /**

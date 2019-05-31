@@ -25,6 +25,6 @@ private:
 	void OpenFileInEditor(wxTreeListEvent& event);
 	void InitImageList();
 	void AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent, bool recurse = false);
-	void AddDirFiles(wxTreeListItem &root, const wxString &path);
+	void AddDirFiles(wxTreeListItem &root, const wxString &path, wxArrayString *files);
 };
 

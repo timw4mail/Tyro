@@ -101,13 +101,16 @@ public:
 
 		wxSizer *sizer = new wxBoxSizer(wxVERTICAL);
 
+		wxFont globalFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+		Glob_config->Read("global_font", &globalFont);
+
 		this->fontPicker = new wxFontPickerCtrl(
-		this,
-		myID_PREFS_FONT,
-		this->GetFont(),
-		wxDefaultPosition,
-		wxDefaultSize,
-		wxFNTP_FONTDESC_AS_LABEL
+			this,
+			myID_PREFS_FONT,
+			globalFont,
+			wxDefaultPosition,
+			wxDefaultSize,
+			wxFNTP_FONTDESC_AS_LABEL
 		);
 		this->fontPicker->SetLabelText("Editor Font");
 		wxSizer *fontSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -142,7 +145,7 @@ public:
 	 */
 	virtual bool TransferDataToWindow()
 	{
-		wxFont globalFont;
+		wxFont globalFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
 		Glob_config->Read("global_font", &globalFont);
 
 		this->fontPicker->SetSelectedFont(globalFont);
@@ -202,7 +205,7 @@ PrefPane::PrefPane()
 {
 	this->pref_window = new wxPreferencesEditor();
 	this->pref_window->AddPage(new GeneralPrefPane());
-	// this->pref_window->AddPage(new FontPrefPane());
+	this->pref_window->AddPage(new FontPrefPane());
 }
 
 PrefPane::~PrefPane()
