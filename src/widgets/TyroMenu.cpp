@@ -1,20 +1,17 @@
 #include "src/widgets/TyroMenu.h"
-#include "src/settings/LangConfig.h"
-
-static LangConfig *lang_config = nullptr;
 
 /**
  * Constructor
  */ 
 TyroMenu::TyroMenu()
 {
-	fileMenu = new wxMenu();
-	editMenu = new wxMenu();
-	viewMenu = new wxMenu();
-	langMenu = new wxMenu();
-	helpMenu = new wxMenu();
+	this->fileMenu = new wxMenu();
+	this->editMenu = new wxMenu();
+	this->viewMenu = new wxMenu();
+	this->langMenu = new wxMenu();
+	this->helpMenu = new wxMenu();
 
-	lang_config = new LangConfig();
+	this->lang_config = new LangConfig();
 
 	this->SetupMainMenus();
 	this->SetupLangMenu();
@@ -33,7 +30,7 @@ TyroMenu::TyroMenu()
 TyroMenu::~TyroMenu()
 {
 	wxLogDebug("TyroMenu Destructor Called.");
-	delete lang_config;
+	delete this->lang_config;
 }
 
 /**
@@ -44,41 +41,38 @@ TyroMenu::~TyroMenu()
 void TyroMenu::SetupMainMenus()
 {
 	// Add items to top-level menus
-	fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
-	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_OPEN, "&Open\tCtrl+O", "Opens an existing file");
-	fileMenu->Append(myID_OPEN_DIR, "&Open Dir\tShift+Ctrl+O", "Opens the selected folder in the sidebar");
-
-	fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S", "Save the content");
-	fileMenu->Append(wxID_SAVEAS, "Save &As...\tShift+Ctrl+S", "Save current file as...");
-	fileMenu->AppendSeparator();
-	fileMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current document");
-	fileMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
-	fileMenu->Append(wxID_EXIT, "&Quit\tCtrl+Q", "Quit the application");
+	this->fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
+	this->fileMenu->AppendSeparator();
+	this->fileMenu->Append(wxID_OPEN, "&Open\tCtrl+O", "Opens an existing file");
+	this->fileMenu->Append(myID_OPEN_DIR, "&Open Dir\tShift+Ctrl+O", "Opens the selected folder in the sidebar");
+	this->fileMenu->AppendSeparator();
+	this->fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S", "Save the content");
+	this->fileMenu->Append(wxID_SAVEAS, "Save &As...\tShift+Ctrl+S", "Save current file as...");
+	this->fileMenu->AppendSeparator();
+	this->fileMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current document");
+	this->fileMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
+	this->fileMenu->Append(wxID_EXIT, "&Quit\tCtrl+Q", "Quit the application");
 	
-	editMenu->Append(wxID_UNDO, "&Undo\tCtrl+Z", "Undo last action");
-	editMenu->Append(wxID_REDO, "&Redo\tCtrl+Y", "Redo last action");
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_CUT, "Cu&t\tCtrl+X", "Cut selected text");
-	editMenu->Append(wxID_COPY, "&Copy\tCtrl+C", "Copy selected text");
-	editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
+	this->editMenu->Append(wxID_UNDO, "&Undo\tCtrl+Z", "Undo last action");
+	this->editMenu->Append(wxID_REDO, "&Redo\tCtrl+Y", "Redo last action");
+	this->editMenu->AppendSeparator();
+	this->editMenu->Append(wxID_CUT, "Cu&t\tCtrl+X", "Cut selected text");
+	this->editMenu->Append(wxID_COPY, "&Copy\tCtrl+C", "Copy selected text");
+	this->editMenu->Append(wxID_PASTE, "&Paste\tCtrl+V", "Paste contents of clipboard");
 	//editMenu->Append(wxID_DELETE, "&Delete\tDel");
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
-	editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
-	
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
-#ifndef TRAVIS
-	editMenu->AppendSeparator();
-	editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
-#endif
+	this->editMenu->AppendSeparator();
+	this->editMenu->Append(wxID_FIND, "&Find\tCtrl+F");
+	this->editMenu->Append(wxID_REPLACE, "&Replace\tCtrl+R");
+	this->editMenu->AppendSeparator();
+	this->editMenu->Append(wxID_SELECTALL, "Select All\tCtrl+A", "Select all the text in the current document");
+	this->editMenu->AppendSeparator();
+	this->editMenu->Append(wxID_PREFERENCES, "&Preferences\tCtrl+P");
 
-	viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
-	viewMenu->AppendCheckItem(myID_VIEW_LINE_ENDINGS, "Show line endings", "Toggle visibility of line ending characters");
-	viewMenu->AppendCheckItem(myID_LINE_WRAP, "Word Wrap", "Toggle wrapping of long lines");
+	this->viewMenu->AppendCheckItem(myID_VIEW_WHITESPACE, "Show Invisible Characters\tCtrl+Shift+I", "Toggle visibility of white space characters");
+	this->viewMenu->AppendCheckItem(myID_VIEW_LINE_ENDINGS, "Show line endings", "Toggle visibility of line ending characters");
+	this->viewMenu->AppendCheckItem(myID_LINE_WRAP, "Word Wrap", "Toggle wrapping of long lines");
 	
-	helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
+	this->helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
 }
 
 /**

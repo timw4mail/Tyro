@@ -194,7 +194,20 @@ bool EditPane::SaveFile(const wxString &filename)
 	if (this->FileWritable())
 	{
 		this->SetSavePoint();
-		return wxStyledTextCtrl::SaveFile(filename);
+		bool saved = wxStyledTextCtrl::SaveFile(filename);
+
+		if (saved)
+		{
+			auto parent = (wxAuiNotebook*) this->GetParent();
+			auto currentPage = parent->GetCurrentPage();
+			auto idx = parent->GetPageIndex(currentPage);
+			wxString currentTitle = parent->GetPageText(idx);
+
+			currentTitle.Replace("*", "");
+			parent->SetPageText(idx, currentTitle);
+		}
+
+		return saved;
 	}
 
 	return false;
@@ -267,6 +280,25 @@ void EditPane::BindEvents()
 			if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
 				this->ToggleFold (lineClick);
 			}
+		}
+	}, wxID_ANY);
+
+	// On modification, update parent tab to show "dirtyness"
+	this->Bind(wxEVT_STC_MODIFIED, [=](wxStyledTextEvent& event) {
+		auto parent = (wxAuiNotebook*) this->GetParent();
+		auto currentPage = parent->GetCurrentPage();
+		auto idx = parent->GetPageIndex(currentPage);
+		wxString currentTitle = parent->GetPageText(idx);
+
+		if (this->IsModified() && ! currentTitle.Contains("*"))
+		{
+			parent->SetPageText(idx, currentTitle + "*");
+		}
+
+		if (currentTitle.Contains("*") && ! this->IsModified())
+		{
+			currentTitle.Replace("*", "");
+			parent->SetPageText(idx, currentTitle);
 		}
 	}, wxID_ANY);
 
@@ -405,19 +437,19 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		}
 
 		// Set bold, if it applies
-		if  this->theme_config->GetThemeValue("bold", key).isBool())
+		if (this->theme_config->GetThemeValue("bold", key).isBool())
 		{
 			this->StyleSetBold(i, this->theme_config->GetThemeValue("bold", key).asBool());
 		}
 		
 		// Italic
-		if  this->theme_config->GetThemeValue("italic", key).isBool())
+		if (this->theme_config->GetThemeValue("italic", key).isBool())
 		{
 			this->StyleSetItalic(i, this->theme_config->GetThemeValue("italic", key).asBool());
 		}
 		
 		// Underline
-		if  this->theme_config->GetThemeValue("underline", key).isBool())
+		if (this->theme_config->GetThemeValue("underline", key).isBool())
 		{
 			this->StyleSetUnderline(i, this->theme_config->GetThemeValue("underline", key).asBool());
 		}

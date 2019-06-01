@@ -14,11 +14,7 @@ all:
 
 dev: all
 
-build:
-	@mkdir -p build
-	./cmake.sh Tyro
-
-run: build
+run: all
 ifneq ($(OS),Darwin)
 	./$(PROGRAM)
 else
@@ -27,11 +23,11 @@ endif
 
 
 ifeq ($(OS),Darwin)
-run-app:
+run-app: all
 	open -a $(PWD)/build/Tyro.app
 endif
 
-run-grind:
+run-grind: all
 	valgrind $(PROGRAM)
 
 # Make optimized and striped executable
@@ -79,8 +75,6 @@ run-tests: tests
 	
 tests: $(TEST_RUNNER)
 	./build/test_runner
-	
-
 	
 tests-verbose: $(TEST_RUNNER)
 	./build/test_runner -s
