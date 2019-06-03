@@ -302,6 +302,19 @@ void EditPane::BindEvents()
 		}
 	}, wxID_ANY);
 
+	this->Bind(wxEVT_STC_SAVEPOINTREACHED, [=](wxStyledTextEvent& event) {
+		auto parent = (wxAuiNotebook*) this->GetParent();
+		auto currentPage = parent->GetCurrentPage();
+		auto idx = parent->GetPageIndex(currentPage);
+		wxString currentTitle = parent->GetPageText(idx);
+
+		if (currentTitle.Contains("*"))
+		{
+			currentTitle.Replace("*", "");
+			parent->SetPageText(idx, currentTitle);
+		}
+	}, wxID_ANY);
+
 	// this->Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
 }
 

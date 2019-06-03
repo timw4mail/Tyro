@@ -139,4 +139,4 @@ const wxString TYRO_FILE_SAVE_WILDCARDS =
 	"Shell (*.sh, *.bsh)|*.sh;*.bsh|"
 	"SQL (*.sql)|*.sql|"
 	"Text (*.txt)|*.txt|"
-	"Yaml (.yml,*.yaml)| *.yml;*.yaml";
+	"Yaml (.yml,*.yaml)| *.yml;*.yaml|";
