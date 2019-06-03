@@ -37,7 +37,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title, const wxSize &size)
 
 	// Setup StatusBar
 	Glob_status_bar = new wxStatusBar(this, wxID_ANY);
-	Glob_status_bar->SetFieldsCount(3);
+	Glob_status_bar->SetFieldsCount(6);
 
 	this->DoLayout();
 
@@ -127,7 +127,7 @@ void MainFrame::SetupStatusBar()
 wxAuiToolBar* MainFrame::SetupToolbar()
 {
 	// Icon files
-#ifndef __WXGTK__
+//#ifndef __WXGTK__
 	#include "resources/xpm/32/new.xpm"
 	#include "resources/xpm/32/open.xpm"
 	#include "resources/xpm/32/save.xpm"
@@ -141,14 +141,14 @@ wxAuiToolBar* MainFrame::SetupToolbar()
 	wxBitmap copy_icon(copy);
 	wxBitmap cut_icon(cut);
 	wxBitmap paste_icon(paste);
-#else
+/*#else
 	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR);
 	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR);
 	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR);
 	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY, wxART_TOOLBAR);
 	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR);
 	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR);
-#endif
+#endif */
 
 	toolBar = new wxAuiToolBar(this);
 
@@ -215,11 +215,10 @@ void MainFrame::BindEvents()
 			case wxID_REDO:
 				if (editor->CanRedo()) editor->Redo();
 			break;
-#ifndef TRAVIS
+
 			case wxID_PREFERENCES:
 				Glob_pref_pane->Show(this);
 			break;
-#endif
 
 			case wxID_FIND:
 				this->OnEditFind(event);
