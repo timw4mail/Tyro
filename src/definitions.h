@@ -107,11 +107,11 @@ const wxString TYRO_FILE_OPEN_WILDCARDS =
 	"Python (*.py,*.pyw)|*.py;*.pyw|"
 	"Ruby (*.rb)|*.rb|"
 	"Rust (*.rs)|*.rs|"
- 	"Scheme (*.scm)|*.scm"
+ 	"Scheme (*.scm)|*.scm|"
 	"Shell (*.sh, *.bsh)|*.sh;*.bsh|"
 	"SQL (*.sql)|*.sql|"
 	"Text (*.txt)|*.txt|"
-	"Yaml (.yml,*.yaml)| *.yml;*.yaml";
+	"Yaml (.yml,*.yaml)| *.yml;*.yaml|";
 
 const wxString TYRO_FILE_SAVE_WILDCARDS = 
 	"All files (*.*)|*|"
