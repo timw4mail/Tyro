@@ -33,18 +33,6 @@
 			"default", "comment", "keyword1", "string", "keyword2", "string", "string", "string"
 		]
 	},
-	"coffeescript": {
-		"name": "Coffeescript",
-		"file_pattern": "*.coffee;*.litcoffee",
-		"keywords": [
-			"new instanceof do return break continue throw for while until loop if else unless switch when then in of by typeof delete where try catch finally prototype jQuery case default function var void with const let enum export import native __hasProp __extends __slice __bind __indexOf",
-			"Object Number Boolean Array String RegExp Function Date Math eval setInterval clearInterval setTimeout clearTimeout isFinite isNaN parseFloat parseInt escape unescape console encodeURI encodeURIComponent decodeURI decodeURIComponent window document navigator location history screen alert prompt process GLOBAL require exports",
-			"false true yes no on off undefined null NaN Infinity"
-		],
-		"lexer_map": [
-			"default", "comment", "comment_line", "comment_doc", "number", "keyword1", "string", "character", "uuid", "preprocessor", "operator", "identifier", "string_eol", "default", "regex", "comment_special", "keyword2"
-		]
-	},
 	"cpp": {
 		"name": "C / C++",
 		"file_pattern": "*.c;*.cc;*.cpp;*.cxx;*.cs;*.h;*.hh;*.hpp;*.hxx;*.xpm",
