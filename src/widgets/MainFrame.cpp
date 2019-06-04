@@ -9,9 +9,7 @@ extern wxStatusBar *Glob_status_bar;
 static TabContainer *notebook = nullptr;
 static FilePane *filePane = nullptr;
 
-#ifndef TRAVIS
-	extern PrefPane *Glob_pref_pane;
-#endif
+extern PrefPane *Glob_pref_pane;
 
 
 // Frame icon
@@ -127,7 +125,7 @@ void MainFrame::SetupStatusBar()
 wxAuiToolBar* MainFrame::SetupToolbar()
 {
 	// Icon files
-//#ifndef __WXGTK__
+#ifndef __WXGTK__
 	#include "resources/xpm/32/new.xpm"
 	#include "resources/xpm/32/open.xpm"
 	#include "resources/xpm/32/save.xpm"
@@ -137,23 +135,28 @@ wxAuiToolBar* MainFrame::SetupToolbar()
 
 	wxBitmap new_file_icon(new_file);
 	wxBitmap open_file_icon(open);
+	wxBitmap open_folder_icon(open);
 	wxBitmap save_file_icon(save);
 	wxBitmap copy_icon(copy);
 	wxBitmap cut_icon(cut);
 	wxBitmap paste_icon(paste);
-/*#else
+#else
 	wxBitmap new_file_icon = wxArtProvider::GetBitmap(wxART_NEW, wxART_TOOLBAR);
 	wxBitmap open_file_icon = wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_TOOLBAR);
+	wxBitmap open_folder_icon = wxArtProvider::GetBitmap(wxART_FOLDER_OPEN, wxART_TOOLBAR);
 	wxBitmap save_file_icon = wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_TOOLBAR);
 	wxBitmap copy_icon = wxArtProvider::GetBitmap(wxART_COPY, wxART_TOOLBAR);
 	wxBitmap cut_icon = wxArtProvider::GetBitmap(wxART_CUT, wxART_TOOLBAR);
 	wxBitmap paste_icon = wxArtProvider::GetBitmap(wxART_PASTE, wxART_TOOLBAR);
-#endif */
+#endif
 
 	toolBar = new wxAuiToolBar(this);
 
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
+#ifdef __WXGTK__
+	toolBar->AddTool(myID_OPEN_DIR, "Open Dir", open_folder_icon, "Open folder");
+#endif
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
 
 	toolBar->AddSeparator();

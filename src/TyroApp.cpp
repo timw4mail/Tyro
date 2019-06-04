@@ -126,7 +126,6 @@ private:
 		Glob_lexer_map["batch"] = wxSTC_LEX_BATCH;
 		Glob_lexer_map["caml"] = wxSTC_LEX_CAML;
 		Glob_lexer_map["cmake"] = wxSTC_LEX_CMAKE;
-		Glob_lexer_map["coffeescript"] = wxSTC_LEX_COFFEESCRIPT;
 		Glob_lexer_map["cpp"] = wxSTC_LEX_CPP;
 		Glob_lexer_map["css"] = wxSTC_LEX_CSS;
 		Glob_lexer_map["fortran"] = wxSTC_LEX_FORTRAN;
@@ -139,6 +138,7 @@ private:
 		Glob_lexer_map["markdown"] = wxSTC_LEX_MARKDOWN;
 		Glob_lexer_map["php"] = wxSTC_LEX_HTML;
 		Glob_lexer_map["perl"] = wxSTC_LEX_PERL;
+		Glob_lexer_map["properties"] = wxSTC_LEX_PROPERTIES;
 		Glob_lexer_map["python"] = wxSTC_LEX_PYTHON;
 		Glob_lexer_map["ruby"] = wxSTC_LEX_RUBY;
 		Glob_lexer_map["rust"] = wxSTC_LEX_CPP;
