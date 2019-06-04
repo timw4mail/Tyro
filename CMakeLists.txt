@@ -20,9 +20,12 @@ endif()
 
 # C++11, please
 include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
+if(COMPILER_SUPPORTS_CXX17)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+elseif(COMPILER_SUPPORTS_CXX11)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 elseif(COMPILER_SUPPORTS_CXX0X)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
@@ -58,12 +61,11 @@ include_directories(${INCLUDE_DIRS})
 
 # set some platform-specific flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	set(MACOSX_DEPLOYMENT_TARGET 10.9)
-	#set(CMAKE_OSX_SYSROOT "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk")
-	set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++")
-	add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_ -D__WXMAC__)
+	#set(MACOSX_DEPLOYMENT_TARGET 10.9)
+	#set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++")
+	add_definitions(-D__WXMAC__)
 else()
-	add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_)
+	#add_definitions(-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_)
 endif()
 
 ################################################################################
@@ -88,9 +90,8 @@ add_custom_command(
 )
 
 # base library
-add_library(BaseLib STATIC
-#	src/base/SFTP.cpp
-	src/settings/Config.cpp)
+#add_library(BaseLib STATIC
+#	src/base/SFTP.cpp)
 
 # widget library
 file(GLOB widget_SRC
@@ -119,7 +120,7 @@ else()
 endif()
 
 #link it all
-target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES})# ${Libssh2_LIBRARIES})
+target_link_libraries(Tyro JsonLib WidgetLib ${wxWidgets_LIBRARIES})# BaseLib ${Libssh2_LIBRARIES})
 
 ################################################################################
 # Tests

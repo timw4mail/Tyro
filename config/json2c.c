@@ -50,9 +50,9 @@ int main(int argc, char** argv) {
     i = 1;
     while ((c = fgetc(fi)) != EOF) {
         if (i < 12)
-            fprintf(fo, c < 16 ? ", 0x%02x" : ", 0x%02x", c);
+            fprintf(fo, ", 0x%02x", c);
         else {
-            fprintf(fo, c < 16 ? ",\n   0x%02x" : ",\n   0x%02x", c);
+            fprintf(fo, ",\n   0x%02x", c);
             i = 0;
         }
         i++;

@@ -17,10 +17,7 @@ TyroMenu *Glob_menu_bar = nullptr;
 wxStatusBar *Glob_status_bar = nullptr;
 MainFrame *Glob_main_frame = nullptr;
 StringConstMap Glob_lexer_map;
-
-#ifndef TRAVIS
 PrefPane *Glob_pref_pane = nullptr;
-#endif
 
 /**
  * Class with main method

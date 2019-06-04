@@ -704,7 +704,7 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
 {
 	auto *selectedMenu = (wxMenu *) event.GetEventObject();
 	auto *langMenu = Glob_menu_bar->GetMenu(myLANG_MENU);
-	if (langMenu == NULL) wxLogDebug("Couldn't get lang menu");
+	if (langMenu == nullptr) wxLogDebug("Couldn't get lang menu");
 
 	if (selectedMenu == langMenu)
 	{
