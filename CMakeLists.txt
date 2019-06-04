@@ -46,13 +46,13 @@ find_package(wxWidgets COMPONENTS core base aui stc adv REQUIRED)
 include("${wxWidgets_USE_FILE}")
 
 #libssh2
-set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
-find_package(LibSSH2 REQUIRED)
-if (LIBSSH2_FOUND)
-	set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
-else (LIBSSH2_FOUND)
-	message ( FATAL_ERROR "Could not find LibSSH2" )
-endif (LIBSSH2_FOUND)
+#set(CMAKE_MODULE_PATH ${Tyro_SOURCE_DIR}/cmake)
+#find_package(LibSSH2 REQUIRED)
+#if (LIBSSH2_FOUND)
+#	set (INCLUDE_DIRS ${INCLUDE_DIRS} ${LIBSSH2_INCLUDE_DIR})
+#else (LIBSSH2_FOUND)
+#	message ( FATAL_ERROR "Could not find LibSSH2" )
+#endif (LIBSSH2_FOUND)
 
 include_directories(${INCLUDE_DIRS})
 
@@ -89,7 +89,7 @@ add_custom_command(
 
 # base library
 add_library(BaseLib STATIC
-	src/base/SFTP.cpp
+#	src/base/SFTP.cpp
 	src/settings/Config.cpp)
 
 # widget library
@@ -119,7 +119,7 @@ else()
 endif()
 
 #link it all
-target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES})
+target_link_libraries(Tyro JsonLib BaseLib WidgetLib ${wxWidgets_LIBRARIES})# ${Libssh2_LIBRARIES})
 
 ################################################################################
 # Tests
