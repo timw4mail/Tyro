@@ -33,7 +33,7 @@ public:
 	 * 
 	 * @return bool 
 	 */
-	bool OnInit()
+	bool OnInit() override
 	{
 		if ( ! wxApp::OnInit()) return false;
 
@@ -69,7 +69,7 @@ public:
 	 *
 	 * @return int 
 	 */
-	int OnExit()
+	int OnExit() override
 	{
 		// Deallocate config object
 		delete wxConfigBase::Set((wxConfigBase *) nullptr);
@@ -83,7 +83,7 @@ public:
 	 * @param wxCmdLineParser& parser
 	 * @return void
 	 */
-	void OnInitCmdLine(wxCmdLineParser &parser)
+	void OnInitCmdLine(wxCmdLineParser &parser) override
 	{
 		parser.SetDesc(Glob_cmdLineDesc);
 
@@ -97,7 +97,7 @@ public:
 	 * @param wxCmdLineParser& parser
 	 * @return bool
 	 */
-	bool OnCmdLineParsed(wxCmdLineParser &parser)
+	bool OnCmdLineParsed(wxCmdLineParser &parser) override
 	{
 		// Get un-named parameters
 		int i;

@@ -10,5 +10,5 @@ public:
 	void LoadJson(const char json[]);
 private:
     JsonValue default_root;
-    JsonReader reader;
+    Json::Reader reader;
 };
