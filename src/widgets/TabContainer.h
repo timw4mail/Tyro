@@ -28,6 +28,7 @@ public:
 	void OnCloseAll(wxCommandEvent &event);
 	void OnCloseAllButThis(wxCommandEvent &event);
 private:
+	unsigned long untitled_document_count = 0;
 	EditPane *NewEditor();
 	void OnTabSwitch(wxAuiNotebookEvent &event);
 	void OnClose(wxAuiNotebookEvent &event);

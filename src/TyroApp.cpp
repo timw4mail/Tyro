@@ -138,7 +138,12 @@ private:
 		Glob_lexer_map["properties"] = wxSTC_LEX_PROPERTIES;
 		Glob_lexer_map["python"] = wxSTC_LEX_PYTHON;
 		Glob_lexer_map["ruby"] = wxSTC_LEX_RUBY;
+	#ifdef wxSTC_LEX_RUST
+		Glob_lexer_map["rust"] = wxSTC_LEX_RUST;
+	#endif
+	#ifndef wxSTC_LEX_RUST
 		Glob_lexer_map["rust"] = wxSTC_LEX_CPP;
+	#endif
 		Glob_lexer_map["scheme"] = wxSTC_LEX_LISP;
 		Glob_lexer_map["shell"] = wxSTC_LEX_BASH;
 		Glob_lexer_map["sql"] = wxSTC_LEX_SQL;
@@ -155,8 +160,8 @@ private:
 		wxSystemOptions::SetOption("osx.openfiledialog.always-show-types", 1);
 	#endif
 
-	#ifdef __WXMSW_
-		wxSystemOptions::SetOption("msw.remap", 0);_
+	#ifdef __WXMSW__
+		wxSystemOptions::SetOption("msw.remap", 0);
 		wxSystemOptions::SetOption("msw.display.directdraw", 1);
 	#endif
 	}

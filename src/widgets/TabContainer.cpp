@@ -8,11 +8,6 @@
 extern TyroMenu *Glob_menu_bar;
 extern wxStatusBar *Glob_status_bar;
 
-static MainFrame *parentFrame = nullptr;
-
-static vector<EditPane *> editors;
-static unsigned long untitled_document_count = 0;
-
 /**
  * Constructor
  * 
@@ -30,8 +25,6 @@ TabContainer::TabContainer(
 		long style
 ) : wxAuiNotebook(parent, id, pos, size, style)
 {
-	parentFrame = (MainFrame *) parent;
-	
 	this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &TabContainer::OnClose, this, wxID_ANY);
 	this->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSED, &TabContainer::OnClosed, this, wxID_ANY);
 	this->Bind(wxEVT_AUINOTEBOOK_TAB_RIGHT_DOWN, &TabContainer::OnTabContextMenu, this, wxID_ANY);
@@ -63,11 +56,11 @@ EditPane* TabContainer::NewEditor()
  */
 void TabContainer::AddTab()
 {
-	untitled_document_count++;
+	this->untitled_document_count++;
 	
 	wxString caption;
 
-	caption.Printf("Untitled %lu", untitled_document_count);
+	caption.Printf("Untitled %lu", this->untitled_document_count);
 
 	this->AddPage(this->NewEditor(), caption, true);
 }
@@ -176,6 +169,7 @@ void TabContainer::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	if (this->GetPageCount() == 0)
 	{
+		auto parentFrame = (MainFrame *)this->GetParent();
 		parentFrame->EnableEditControls(false);
 		Glob_status_bar->SetStatusText("", STATUS_CURSOR_LOCATION);
 		Glob_status_bar->SetStatusText("", STATUS_CURRENT_LANGUAGE);
@@ -206,6 +200,7 @@ void TabContainer::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 void TabContainer::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
 	this->DeleteAllPages();
+	auto parentFrame = (MainFrame *)this->GetParent();
 	parentFrame->EnableEditControls(false);
 }
 

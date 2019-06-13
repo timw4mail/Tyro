@@ -3,8 +3,6 @@
 #include "src/widgets/FilePane.h"
 #include "src/widgets/MainFrame.h"
 
-extern MainFrame *Glob_main_frame;
-
 auto DIR_SEP = wxFileName::GetPathSeparator();
 
 enum
@@ -253,7 +251,10 @@ void FilePane::OpenFileInEditor(wxTreeListEvent& event)
 
 	wxString path_arr [1] = { path };
 	auto files = wxArrayString(1, *path_arr);
-	Glob_main_frame->OpenFiles(files);
+
+	// Use the parent accessor to get the main frame
+	auto parent = (MainFrame *)this->GetParent();
+	parent->OpenFiles(files);
 }
 
 /**

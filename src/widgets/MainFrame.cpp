@@ -12,7 +12,7 @@ static FilePane *filePane = nullptr;
 extern PrefPane *Glob_pref_pane;
 
 
-// Frame icon
+// Frame icon (const static char *tyro_icon[])
 #include "resources/xpm/tyro.xpm"
 
 /**
@@ -48,9 +48,6 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title, const wxSize &size)
 MainFrame::~MainFrame()
 {
 	wxLogDebug("Main Frame Destructor Called.");
-	//delete notebook;
-	//delete toolBar;
-	//delete filePane;
 
 	wxDELETE(this->findDlg);
 	wxDELETE(this->findData);
@@ -311,6 +308,7 @@ void MainFrame::OnOpenFolder(wxCommandEvent &event)
  */
 void MainFrame::OpenFiles(wxArrayString filelist)
 {
+	// @TODO skip duplicated files
 	int listcount = filelist.GetCount();
 
 	if (listcount < 1) return;
@@ -447,7 +445,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.SetName(APP_NAME);
 	info.SetVersion(APP_VERSION, APP_VERSION_MORE);
 
-	info.AddDeveloper("Tim Warren");
+	info.AddDeveloper("Timothy J. Warren");
 	info.AddArtist("Brian Smith: Main icon");
 
 #ifndef __WXGTK__
@@ -457,15 +455,15 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	wxString desc = "Tyro, a text editor for all development\n\n"
 		"System info: \n";
 
-	desc += wxString::Format("\tArchitecture: %s\n",
+	desc += wxString::Format("%s\n",
 		wxPlatformInfo::GetArchName(plat_info.GetArchitecture()));
 
-	desc += wxString::Format("\tOperating System:\n\t\t%s %i.%i\n",
+	desc += wxString::Format("%s %i.%i\n",
 		wxPlatformInfo::GetOperatingSystemIdName(plat_info.GetOperatingSystemId()),
 		plat_info.GetOSMajorVersion(),
 		plat_info.GetOSMinorVersion());
 
-	desc += wxString::Format("\nwxWidgets version: %s %i.%i.%i\n",
+	desc += wxString::Format("%s %i.%i.%i\n",
 		plat_info.GetPortIdName(),
 		wxMAJOR_VERSION,
 		wxMINOR_VERSION,
@@ -477,10 +475,9 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	wxString desk = plat_info.GetDesktopEnvironment();
 	if (desk != "")
 	{
-		desc += wxString::Format("\tDesktop Environment:%s\n", desk);
+		desc += wxString::Format("%s\n", desk);
 	}
 
-	desc += "\tDistro: ";
 	desc += dist_info.Description;
 
 	if (dist_info.CodeName != "")
@@ -488,6 +485,12 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 		desc += " (" + dist_info.CodeName + ")\n";
 	}
 #endif
+
+	if ( ! info.HasIcon())
+	{
+		wxIcon appIcon = wxIcon(tyro_icon);
+		info.SetIcon(appIcon);
+	}
 
 	info.SetDescription(desc);
 
@@ -704,7 +707,13 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
 {
 	auto *selectedMenu = (wxMenu *) event.GetEventObject();
 	auto *langMenu = Glob_menu_bar->GetMenu(myLANG_MENU);
-	if (langMenu == nullptr) wxLogDebug("Couldn't get lang menu");
+	if (langMenu == nullptr)
+	{
+		wxLogDebug("Couldn't get lang menu");
+		// Go to the more specific event handlers
+		event.Skip(true);
+		return;
+	}
 
 	if (selectedMenu == langMenu)
 	{
