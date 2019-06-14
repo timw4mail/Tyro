@@ -8,6 +8,23 @@ const wxString APP_NAME = "Tyro";
 const wxString APP_VENDOR = "Aviat Ion";
 const wxString APP_VERSION = "0.10.0";
 const wxString APP_VERSION_MORE = "Pre-release";
+const wxString APP_LICENSE = "Copyright 2019 Timothy J. Warren\n"
+							 "\n"
+							 "Permission is hereby granted, free of charge, to any person obtaining a copy of this software \n"
+							 "and associated documentation files (the \"Software\"), to deal in the Software without \n"
+							 "restriction, including without limitation the rights to use, copy, modify, merge, publish, \n"
+							 "distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the \n"
+							 "Software is furnished to do so, subject to the following conditions:\n"
+							 "\n"
+							 "The above copyright notice and this permission notice shall be included in all copies or \n"
+							 "substantial portions of the Software.\n"
+							 "\n"
+							 "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, \n"
+							 "INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR \n"
+							 "PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR \n"
+							 "ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \n"
+							 "ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS \n"
+							 "IN THE SOFTWARE.";
 
 // Command-line arguments
 #ifdef __clang__

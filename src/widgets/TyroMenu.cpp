@@ -72,7 +72,7 @@ void TyroMenu::SetupMainMenus()
 	this->viewMenu->AppendCheckItem(myID_VIEW_LINE_ENDINGS, "Show line endings", "Toggle visibility of line ending characters");
 	this->viewMenu->AppendCheckItem(myID_LINE_WRAP, "Word Wrap", "Toggle wrapping of long lines");
 	
-	this->helpMenu->Append(wxID_ABOUT, "&About...\tF1", "Show info about this application");
+	this->helpMenu->Append(wxID_ABOUT, "About Tyro", "Show info about this application");
 }
 
 /**

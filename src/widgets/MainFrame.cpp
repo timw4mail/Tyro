@@ -452,16 +452,13 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	info.AddArtist("http://dryicons.com: Other icons");
 #endif
 
-	wxString desc = "Tyro, a text editor for all development\n\n"
-		"System info: \n";
+	wxString desc = "Tyro, a text editor for all development\n\n";
 
-	desc += wxString::Format("%s\n",
-		wxPlatformInfo::GetArchName(plat_info.GetArchitecture()));
-
-	desc += wxString::Format("%s %i.%i\n",
+	desc += wxString::Format("%s %i.%i (%s)\n",
 		wxPlatformInfo::GetOperatingSystemIdName(plat_info.GetOperatingSystemId()),
 		plat_info.GetOSMajorVersion(),
-		plat_info.GetOSMinorVersion());
+		plat_info.GetOSMinorVersion(),
+		wxPlatformInfo::GetArchName(plat_info.GetArchitecture()));
 
 	desc += wxString::Format("%s %i.%i.%i\n",
 		plat_info.GetPortIdName(),
@@ -493,10 +490,11 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
 	}
 
 	info.SetDescription(desc);
+	info.SetLicence(APP_LICENSE);
 
-	info.SetCopyright(" (C) 2015-2019");
+	info.SetCopyright("(C) 2015-2019");
 
-	wxAboutBox(info);
+	wxAboutBox(info, this);
 }
 
 /**
