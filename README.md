@@ -17,7 +17,7 @@ Required packages:
 * build-essential
 * cmake
 * libssh2-1-dev
-* libwxgtk3.0-dev
+* libwxgtk3.0-dev or libwxgtk3.0-gtk3-dev
 
 After these packages are installed, the project should build with a simple `make` command.
 
@@ -35,7 +35,7 @@ Build the app:
 
 ### Windows
 
-See the guide for building on Windows: [Windows-Build](./Windows-Build.md)
+* Todo
 
 ## Make commands
 Please note that make commands are chainable. For a typical programming loop, `make clean dev run` is very useful.

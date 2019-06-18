@@ -26,7 +26,10 @@ LangConfig::LangConfig()
 /**
  * Destructor
  */ 
-LangConfig::~LangConfig() {}
+LangConfig::~LangConfig()
+{
+	wxLogDebug("LangConfig Destructor Called.");
+}
 
 /**
  * Determine the format of the current file by
@@ -110,7 +113,7 @@ JsonValue LangConfig::GetLexerMap(string lang)
  * @param string lang
  * @return void
  */ 
-void LangConfig::SetLang(string lang)
+void LangConfig::SetLang(const string &lang)
 {
 	this->language = lang;
 }
@@ -142,7 +145,7 @@ string LangConfig::GetCurrentLangName()
  * @param string name
  * @return string
  */
-string LangConfig::GetLangByName(string name)
+string LangConfig::GetLangByName(const string &name)
 {
 	int count = this->reverseMap.count(name);
 	return (count > 0) ? this->reverseMap[name] : "";

@@ -4,8 +4,8 @@
 
 #include "Config.h"
 
-TyroConfig::TyroConfig() {}
-TyroConfig::~TyroConfig() {}
+TyroConfig::TyroConfig() = default;
+TyroConfig::~TyroConfig() = default;
 
 void TyroConfig::LoadJson(const char json[])
 {

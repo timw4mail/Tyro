@@ -36,7 +36,7 @@ TabContainer::TabContainer(
  */
 TabContainer::~TabContainer() 
 {
-	wxLogDebug("TabContainer destructor called");
+	wxLogDebug("TabContainer Destructor Called.");
 }
 
 /**
@@ -71,7 +71,7 @@ void TabContainer::AddTab()
  * @param wxString filePath
  * @return void
  */
-void TabContainer::AddTab(wxString filePath)
+void TabContainer::AddTab(const wxString &filePath)
 {	
 	wxFileName fileName(filePath);
 	
@@ -104,7 +104,7 @@ void TabContainer::AddTab(wxString filePath)
  * 
  * @return *EditPane 
  */
-EditPane *TabContainer::GetCurrentEditor()
+EditPane* TabContainer::GetCurrentEditor()
 {
 	return (EditPane *) this->GetCurrentPage();
 }
@@ -115,7 +115,7 @@ EditPane *TabContainer::GetCurrentEditor()
  * @param size_t page_idx
  * @return *EditPane
  */
-EditPane *TabContainer::GetEditor(size_t page_idx)
+EditPane* TabContainer::GetEditor(size_t page_idx)
 {
 	return (EditPane *) this->GetPage(page_idx);
 }
@@ -184,7 +184,7 @@ void TabContainer::OnClosed(wxAuiNotebookEvent &WXUNUSED(event))
 void TabContainer::OnTabContextMenu(wxAuiNotebookEvent &WXUNUSED(event))
 {
 	// Create Menu
-	wxMenu *contextMenu = new wxMenu();
+	auto *contextMenu = new wxMenu();
 	contextMenu->Append(wxID_CLOSE, "&Close\tCtrl+W", "Close the current tab");
 	contextMenu->Append(myID_CLOSE_ALL, "C&lose All\tShift+Ctrl+W", "Close all open documents.");
 	contextMenu->Append(myID_CLOSE_ALL_BUT_THIS, "Close All but this\tCtrl+Shift+Alt+W", "Close all open documents, except the one selected");

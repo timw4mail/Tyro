@@ -7,14 +7,14 @@ class LangConfig : TyroConfig {
 public:
 	LangConfig();
 	~LangConfig();
-	void SetLang(string lang);
+	void SetLang(const string &lang);
 	string GetLang();
 	string GetLangByFile(wxFileName &fileName);
 	JsonValue GetKeywordList(string lang="none");
 	JsonValue GetLexerMap(string lang="none");
 	StringMap GetLangList();
 	string GetCurrentLangName();
-	string GetLangByName(string name);
+	string GetLangByName(const string &name);
 private:
 	string language;
 	StringMap reverseMap;

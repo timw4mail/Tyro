@@ -17,7 +17,10 @@ ThemeConfig::ThemeConfig()
 /**
  * Destructor
  */ 
-ThemeConfig::~ThemeConfig() {}
+ThemeConfig::~ThemeConfig()
+{
+	wxLogDebug("ThemeConfig Destructor Called.");
+}
 
 /**
  * Set the current theme
@@ -58,7 +61,7 @@ JsonValue ThemeConfig::GetTheme()
  * @param string key
  * @return JsonValue
  */
-JsonValue ThemeConfig::GetThemeValue(string type, string key)
+JsonValue ThemeConfig::GetThemeValue(const string &type, const string &key)
 {
 	JsonValue value = this->current_theme
 		.get(type, JsonValue())
@@ -73,7 +76,7 @@ JsonValue ThemeConfig::GetThemeValue(string type, string key)
  * @param key
  * @return 
  */
-wxColor ThemeConfig::GetThemeColor(string type, string key)
+wxColor ThemeConfig::GetThemeColor(const string &type, const string &key)
 {
 	JsonValue color_value = this->GetThemeValue(type, key);
 

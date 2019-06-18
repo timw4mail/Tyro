@@ -41,6 +41,7 @@ FilePane::FilePane(
 
 FilePane::~FilePane()
 {
+	wxLogDebug("FilePane Destructor Called.");
 	delete this->img_list;
 }
 

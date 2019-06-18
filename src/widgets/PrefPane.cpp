@@ -5,8 +5,14 @@ extern wxConfigBase *Glob_config;
 
 class GeneralPrefPanePage : public wxPanel {
 public:
-	GeneralPrefPanePage(wxWindow *parent)
-	: wxPanel(parent)
+	explicit GeneralPrefPanePage(
+		wxWindow *parent,
+		wxWindowID winid = wxID_ANY,
+		const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize,
+		long style = wxTAB_TRAVERSAL | wxNO_BORDER,
+		const wxString& name = wxPanelNameStr
+	) : wxPanel(parent, winid, pos, size, style, name)
 	{
 		auto BASE_MARGIN = 30;
 
@@ -70,8 +76,9 @@ public:
 		}
 	}
 
-	~GeneralPrefPanePage()
+	~GeneralPrefPanePage() override
 	{
+		wxLogDebug("GeneralPrefPanePage Destructor Called.");
 		wxDELETE(this->showLineNumbers);
 		wxDELETE(this->showIndentGuides);
 		wxDELETE(this->showCodeFolding);
@@ -83,7 +90,7 @@ public:
 	 *
 	 * @return bool
 	 */
-	virtual bool TransferDataToWindow()
+	bool TransferDataToWindow() override
 	{
 		this->showLineNumbers->SetValue(Glob_config->ReadBool("show_line_numbers", true));
 		this->showIndentGuides->SetValue(Glob_config->ReadBool("show_indent_guides", false));
@@ -103,7 +110,7 @@ public:
 	 *
 	 * @return bool
 	 */
-	virtual bool TransferDataFromWindow()
+	bool TransferDataFromWindow() override
 	{
 		Glob_config->Write("show_line_numbers", this->showLineNumbers->IsChecked());
 		Glob_config->Write("show_indent_guides", this->showIndentGuides->IsChecked());
@@ -132,7 +139,7 @@ private:
 class GeneralPrefPane: public wxStockPreferencesPage {
 public:
 	GeneralPrefPane() : wxStockPreferencesPage(Kind_General) {}
-	virtual wxWindow *CreateWindow(wxWindow *parent)
+	wxWindow *CreateWindow(wxWindow *parent) override
 	{
 		return new GeneralPrefPanePage(parent);
 	}
@@ -150,7 +157,8 @@ PrefPane::PrefPane()
 
 PrefPane::~PrefPane()
 {
-	//delete this->pref_window;
+	wxLogDebug("PrefPane Destructor Called.");
+	delete this->pref_window;
 }
 
 void PrefPane::Show(wxWindow *parent)

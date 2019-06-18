@@ -48,7 +48,7 @@ EditPane::EditPane(
  */
 EditPane::~EditPane()
 {
-	wxLogDebug("Called EditPane Destructor");
+	wxLogDebug("EditPane Destructor Called.");
 	delete this->lang_config;
 	delete this->theme_config;
 }

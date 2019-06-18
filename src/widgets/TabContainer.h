@@ -13,16 +13,16 @@ static long tab_style = wxBORDER_NONE | wxAUI_NB_TAB_SPLIT |wxAUI_NB_TAB_MOVE
 class TabContainer: public wxAuiNotebook
 {
 public:
-	TabContainer(
+	explicit TabContainer(
 		wxWindow *parent,
 		wxWindowID id=wxID_ANY,
 		const wxPoint &pos=wxDefaultPosition,
 		const wxSize &size=wxDefaultSize,
 		long style=tab_style
 	);
-	~TabContainer();
+	~TabContainer() override;
 	void AddTab();
-	void AddTab(wxString filePath);
+	void AddTab(const wxString &filePath);
 	EditPane *GetCurrentEditor();
 	EditPane *GetEditor(size_t page_idx);
 	void OnCloseAll(wxCommandEvent &event);

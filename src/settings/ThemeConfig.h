@@ -12,8 +12,8 @@ public:
 	~ThemeConfig();
 	bool SetTheme(const string &theme_name);
 	JsonValue GetTheme();
-	JsonValue GetThemeValue(string type, string key);
-	wxColor GetThemeColor(string type, string key);
+	JsonValue GetThemeValue(const string &type, const string &key);
+	wxColor GetThemeColor(const string &type, const string &key);
 private:
 	JsonValue current_theme;
 };

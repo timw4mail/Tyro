@@ -68,7 +68,10 @@ public:
 	 */
 	int OnExit() override
 	{
+		wxLogDebug("Closing App...");
+
 		// Deallocate config object
+		wxLogDebug("Deleting wxConfigBase");
 		delete wxConfigBase::Set((wxConfigBase *) nullptr);
 		
 		return close(true);
@@ -117,7 +120,7 @@ private:
 	/**
 	 * Set up mapping for lexers
 	 */
-	void static InitLexerMap()
+	void const static InitLexerMap()
 	{
 		Glob_lexer_map[""] = wxSTC_LEX_NULL;
 		Glob_lexer_map["batch"] = wxSTC_LEX_BATCH;

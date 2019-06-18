@@ -166,7 +166,7 @@ void TyroMenu::EnableEntireMenu(size_t menuId, wxMenu *menu, bool enable)
  */
 void TyroMenu::SetCurrentLanguage(string lang)
 {
-	if (lang == "")
+	if (lang.empty())
 	{
 		lang = "Plain Text";
 	}

@@ -57,7 +57,8 @@ MainFrame::~MainFrame()
 
 	Glob_status_bar->Destroy();
 
-	manager->UnInit();
+
+	this->manager->UnInit();
 }
 
 /**
@@ -682,7 +683,8 @@ void MainFrame::OnToggleLineEndings(wxCommandEvent &event)
 void MainFrame::EnableEditControls(bool enable)
 {
 	// Update menu items
-	Glob_menu_bar->EnableEditControls(enable);
+	auto menu_bar = (TyroMenu *) this->GetMenuBar();
+	menu_bar->EnableEditControls(enable);
 
 	// Toggle toolbar items
 	this->toolBar->EnableTool(wxID_SAVE, enable);
