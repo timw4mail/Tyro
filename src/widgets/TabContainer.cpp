@@ -81,7 +81,7 @@ void TabContainer::AddTab(const wxString &filePath)
 		return;
 	}
 	
-	wxString caption= fileName.GetFullName();
+	wxString caption = fileName.GetFullName();
 	EditPane *editor = this->NewEditor();
 	
 	if (editor->Load(filePath))

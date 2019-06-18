@@ -3,6 +3,13 @@
 
 extern wxConfigBase *Glob_config;
 
+// As much as I dislike this global reference
+// it seems to be the safest option for calling
+// a method from the Main frame. Even attempting
+// to get the Main frame from the GetParent() method
+// is more prone to segfaulting.
+extern MainFrame *Glob_main_frame;
+
 class GeneralPrefPanePage : public wxPanel {
 public:
 	explicit GeneralPrefPanePage(
@@ -15,8 +22,6 @@ public:
 	) : wxPanel(parent, winid, pos, size, style, name)
 	{
 		auto BASE_MARGIN = 30;
-
-		this->frame = (MainFrame *) parent;
 
 		wxFont globalFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
 		Glob_config->Read("global_font", &globalFont);
@@ -58,19 +63,19 @@ public:
 		{
 			this->showLineNumbers->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_line_numbers", event.IsChecked());
-				this->frame->OnPrefsChanged(event);
+				Glob_main_frame->OnPrefsChanged(event);
 				Glob_config->Flush();
 			}, myID_PREFS_LINE_NUMBERS);
 
 			this->showIndentGuides->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_indent_guides", event.IsChecked());
-				this->frame->OnPrefsChanged(event);
+				Glob_main_frame->OnPrefsChanged(event);
 				Glob_config->Flush();
 			}, myID_PREFS_IDENT_GUIDES);
 
 			this->showCodeFolding->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_code_folding", event.IsChecked());
-				this->frame->OnPrefsChanged(event);
+				Glob_main_frame->OnPrefsChanged(event);
 				Glob_config->Flush();
 			}, myID_PREFS_CODE_FOLDING);
 		}
@@ -117,8 +122,8 @@ public:
 		Glob_config->Write("show_code_folding", this->showCodeFolding->IsChecked());
 		Glob_config->Write("global_font", this->fontPicker->GetSelectedFont());
 
-		wxCommandEvent evt = wxCommandEvent();
-		this->frame->OnPrefsChanged(evt);
+		auto evt = wxCommandEvent();
+		Glob_main_frame->OnPrefsChanged(evt);
 
 		Glob_config->Flush();
 
@@ -126,7 +131,6 @@ public:
 	}
 
 private:
-	MainFrame *frame;
 	wxCheckBox *showLineNumbers = nullptr;
 	wxCheckBox *showIndentGuides = nullptr;
 	wxCheckBox *showCodeFolding = nullptr;

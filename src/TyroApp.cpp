@@ -17,7 +17,6 @@ TyroMenu *Glob_menu_bar = nullptr;
 wxStatusBar *Glob_status_bar = nullptr;
 MainFrame *Glob_main_frame = nullptr;
 StringConstMap Glob_lexer_map;
-PrefPane *Glob_pref_pane = nullptr;
 
 /**
  * Class with main method
@@ -43,7 +42,6 @@ public:
 		Glob_config = wxConfigBase::Get();
 		Glob_menu_bar = new TyroMenu();
 		Glob_main_frame = new MainFrame(nullptr, APP_NAME, CalculateWindowSize());
-		Glob_pref_pane = new PrefPane();
 
 		// Setup Main Window
 		Glob_main_frame->Layout();
@@ -100,12 +98,12 @@ public:
 	bool OnCmdLineParsed(wxCmdLineParser &parser) override
 	{
 		// Get un-named parameters
-		int i;
+		size_t i = 0;
 		this->param_count = parser.GetParamCount();
 
 		wxLogDebug("%i Parameters", this->param_count);
 
-		for (i = 0; i < this->param_count; i++)
+		for (; i < this->param_count; i++)
 		{
 			this->files.Add(parser.GetParam(i));
 		}
@@ -115,7 +113,7 @@ public:
 private:
 	// app loading variables
 	wxArrayString files;
-	int param_count = 0;
+	size_t param_count = 0;
 
 	/**
 	 * Set up mapping for lexers

@@ -3,6 +3,7 @@
  */
 
 #include "src/widgets/EditPane.h"
+#include "src/widgets/TabContainer.h"
 
 extern StringConstMap Glob_lexer_map;
 static wxConfig *Glob_config = nullptr;
@@ -198,7 +199,7 @@ bool EditPane::SaveFile(const wxString &filename)
 
 		if (saved)
 		{
-			auto parent = (wxAuiNotebook*) this->GetParent();
+			auto parent = (TabContainer*) this->GetParent();
 			auto currentPage = parent->GetCurrentPage();
 			auto idx = parent->GetPageIndex(currentPage);
 			wxString currentTitle = parent->GetPageText(idx);
@@ -285,7 +286,7 @@ void EditPane::BindEvents()
 
 	// On modification, update parent tab to show "dirtyness"
 	this->Bind(wxEVT_STC_MODIFIED, [=](wxStyledTextEvent& event) {
-		auto parent = (wxAuiNotebook*) this->GetParent();
+		auto parent = (TabContainer*) this->GetParent();
 		auto currentPage = parent->GetCurrentPage();
 		auto idx = parent->GetPageIndex(currentPage);
 		wxString currentTitle = parent->GetPageText(idx);
@@ -303,7 +304,7 @@ void EditPane::BindEvents()
 	}, wxID_ANY);
 
 	this->Bind(wxEVT_STC_SAVEPOINTREACHED, [=](wxStyledTextEvent& event) {
-		auto parent = (wxAuiNotebook*) this->GetParent();
+		auto parent = (TabContainer*) this->GetParent();
 		auto currentPage = parent->GetCurrentPage();
 		auto idx = parent->GetPageIndex(currentPage);
 		wxString currentTitle = parent->GetPageText(idx);
@@ -316,31 +317,6 @@ void EditPane::BindEvents()
 	}, wxID_ANY);
 
 	// this->Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
-}
-
-/**
- * Look at characters added to help with indentation
- * 
- * @param wxStyledTextEvent& event
- * @return void
- */
-void EditPane::OnCharAdded(wxStyledTextEvent& event)
-{
-	char chr = (char) event.GetKey();
-	int currentLine = this->GetCurrentLine();
-	
-	if (chr == '\n')
-	{
-		int lineInd = 0;
-		if (currentLine > 0)
-		{
-			lineInd = this->GetLineIndentation(currentLine - 1);
-		}
-		if (lineInd == 0) return;
-		
-		this->SetLineIndentation(currentLine, lineInd);
-		this->GotoPos(this->PositionFromLine(currentLine) + (lineInd / 4));
-	}
 }
 
 /**

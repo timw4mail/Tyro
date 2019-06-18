@@ -133,4 +133,4 @@ file(GLOB test_SRC
 )
 add_executable(test_runner ${test_SRC})
 
-target_link_libraries(test_runner ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES} JsonLib BaseLib WidgetLib)
+target_link_libraries(test_runner ${wxWidgets_LIBRARIES} ${Libssh2_LIBRARIES} JsonLib WidgetLib) #BaseLib

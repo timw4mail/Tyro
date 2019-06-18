@@ -6,11 +6,6 @@
 // Nasty globals
 extern TyroMenu *Glob_menu_bar;
 extern wxStatusBar *Glob_status_bar;
-static TabContainer *notebook = nullptr;
-static FilePane *filePane = nullptr;
-
-extern PrefPane *Glob_pref_pane;
-
 
 // Frame icon (const static char *tyro_icon[])
 #include "resources/xpm/tyro.xpm"
@@ -22,9 +17,11 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title, const wxSize &size)
 	: wxFrame(frame, -1, title, wxDefaultPosition, size)
 {
 	// Create the tab container
-	notebook = new TabContainer(this);
+	this->notebook = new TabContainer(this);
 
-	filePane = new FilePane(this);
+	// Initialize other widgets
+	this->filePane = new FilePane(this);
+	this->prefPane = new PrefPane();
 
 	// Set the frame icon
 	wxIcon app_icon(tyro_icon);
@@ -37,7 +34,7 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title, const wxSize &size)
 	Glob_status_bar = new wxStatusBar(this, wxID_ANY);
 	Glob_status_bar->SetFieldsCount(6);
 
-	this->DoLayout();
+	this->MainLayout();
 
 	this->BindEvents();
 }
@@ -54,11 +51,13 @@ MainFrame::~MainFrame()
 	wxDELETE(this->replaceDlg);
 	wxDELETE(this->findReplaceData);
 	wxDELETE(this->toolBar);
+	wxDELETE(this->prefPane);
+	wxDELETE(this->filePane);
+	this->manager->UnInit();
+
+	wxDELETE(this->notebook);
 
 	Glob_status_bar->Destroy();
-
-
-	this->manager->UnInit();
 }
 
 /**
@@ -66,7 +65,7 @@ MainFrame::~MainFrame()
  *
  * @return void
  */
-void MainFrame::DoLayout()
+void MainFrame::MainLayout()
 {
 	this->manager = new wxAuiManager(this);
 	this->toolBar = this->SetupToolbar();
@@ -79,7 +78,7 @@ void MainFrame::DoLayout()
 		.Gripper(false)
 		.DockFixed(true)
 		.Resizable(true);
-	this->manager->AddPane(toolBar, toolBarPaneInfo);
+	this->manager->AddPane(this->toolBar, toolBarPaneInfo);
 
 	wxAuiPaneInfo filePaneInfo;
 	filePaneInfo.Left()
@@ -87,11 +86,11 @@ void MainFrame::DoLayout()
 		.RightDockable(true)
 		.LeftDockable(true)
 		.Resizable(true);
-	this->manager->AddPane(filePane, filePaneInfo);
+	this->manager->AddPane(this->filePane, filePaneInfo);
 
 	wxAuiPaneInfo notebookPaneInfo;
 	notebookPaneInfo.CenterPane();
-	this->manager->AddPane(notebook, notebookPaneInfo);
+	this->manager->AddPane(this->notebook, notebookPaneInfo);
 
 	wxAuiPaneInfo statusPaneInfo;
 	statusPaneInfo.Bottom()
@@ -103,16 +102,6 @@ void MainFrame::DoLayout()
 
 	// Update everything
 	this->EnableEditControls(false);
-}
-
-/**
- * Create the status bar
- *
- * @return void
- */
-void MainFrame::SetupStatusBar()
-{
-	CreateStatusBar(3);
 }
 
 /**
@@ -183,13 +172,13 @@ void MainFrame::BindEvents()
 	this->Bind(wxEVT_MENU, &MainFrame::OnSave, this, wxID_SAVE);
 	this->Bind(wxEVT_MENU, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
 	this->Bind(wxEVT_MENU, &MainFrame::OnCloseTab, this, wxID_CLOSE);
-	this->Bind(wxEVT_MENU, &TabContainer::OnCloseAllButThis, notebook, myID_CLOSE_ALL_BUT_THIS);
-	this->Bind(wxEVT_MENU, &TabContainer::OnCloseAll, notebook, myID_CLOSE_ALL);
+	this->Bind(wxEVT_MENU, &TabContainer::OnCloseAllButThis, this->notebook, myID_CLOSE_ALL_BUT_THIS);
+	this->Bind(wxEVT_MENU, &TabContainer::OnCloseAll, this->notebook, myID_CLOSE_ALL);
 	this->Bind(wxEVT_MENU, &MainFrame::OnQuit, this, wxID_EXIT);
 
 	// Edit Menu Events
 	this->Bind(wxEVT_MENU, [=](wxCommandEvent& event) {
-		EditPane *editor = notebook->GetCurrentEditor();
+		EditPane *editor = this->notebook->GetCurrentEditor();
 
 		switch(event.GetId())
 		{
@@ -218,7 +207,7 @@ void MainFrame::BindEvents()
 			break;
 
 			case wxID_PREFERENCES:
-				Glob_pref_pane->Show(this);
+				this->prefPane->Show(this);
 			break;
 
 			case wxID_FIND:
@@ -265,7 +254,7 @@ void MainFrame::BindEvents()
 void MainFrame::OnNew(wxCommandEvent &WXUNUSED(event))
 {
 	this->EnableEditControls();
-	notebook->AddTab();
+	this->notebook->AddTab();
 
 	// Make sure the layout is updated immediately
 	this->manager->Update();
@@ -298,7 +287,7 @@ void MainFrame::OnOpenFolder(wxCommandEvent &event)
 
 	auto path = dlg.GetPath();
 
-	filePane->CreateTree(path);
+	this->filePane->CreateTree(path);
 }
 
 /**
@@ -315,12 +304,12 @@ void MainFrame::OpenFiles(wxArrayString filelist)
 	if (listcount < 1) return;
 
 	// Open a new tab for each file
-	notebook->Freeze();
+	this->notebook->Freeze();
 	for (int i = 0; i < listcount; i++)
 	{
-		notebook->AddTab(filelist[i]);
+		this->notebook->AddTab(filelist[i]);
 	}
-	notebook->Thaw();
+	this->notebook->Thaw();
 
 	this->EnableEditControls(true);
 }
@@ -332,17 +321,17 @@ void MainFrame::OpenFiles(wxArrayString filelist)
  */
 void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
 {
-	int current_tab = notebook->GetSelection();
+	int current_tab = this->notebook->GetSelection();
 
-	notebook->Freeze();
-	notebook->DeletePage(current_tab);
+	this->notebook->Freeze();
+	this->notebook->DeletePage(current_tab);
 
-	if (notebook->GetPageCount() == 0)
+	if (this->notebook->GetPageCount() == 0)
 	{
 		this->EnableEditControls(false);
 	}
 
-	notebook->Thaw();
+	this->notebook->Thaw();
 	this->manager->Update();
 }
 
@@ -353,10 +342,10 @@ void MainFrame::OnCloseTab(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
 {
-	notebook->Freeze();
-	notebook->DeleteAllPages();
+	this->notebook->Freeze();
+	this->notebook->DeleteAllPages();
 	this->EnableEditControls(false);
-	notebook->Thaw();
+	this->notebook->Thaw();
 }
 
 /**
@@ -367,7 +356,7 @@ void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnSave(wxCommandEvent &event)
 {
-	EditPane *editor = notebook->GetCurrentEditor();
+	EditPane *editor = this->notebook->GetCurrentEditor();
 
 	// Check if the filename is set for the current file
 	if ( ! editor->fileName.IsOk())
@@ -386,7 +375,7 @@ void MainFrame::OnSave(wxCommandEvent &event)
  */
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
-	EditPane *editor = notebook->GetCurrentEditor();
+	EditPane *editor = this->notebook->GetCurrentEditor();
 
 	// If the file hasn't been changed, just return
 	if ( ! editor->IsModified()) return;
@@ -412,8 +401,8 @@ void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 		const wxString caption = fileName.GetFullName();
 
 		// Update the name of the tab
-		notebook->SetPageToolTip(notebook->GetSelection(), filePath);
-		notebook->SetPageText(notebook->GetSelection(), caption);
+		this->notebook->SetPageToolTip(this->notebook->GetSelection(), filePath);
+		this->notebook->SetPageText(this->notebook->GetSelection(), caption);
 
 		// Update the editor highlighting
 		editor->Highlight(filePath);
@@ -506,7 +495,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 {
-	EditPane *editor = notebook->GetCurrentEditor();
+	EditPane *editor = this->notebook->GetCurrentEditor();
 	int flag = (event.IsChecked())
 		? wxSTC_WS_VISIBLEALWAYS
 		: wxSTC_WS_INVISIBLE;
@@ -556,7 +545,7 @@ void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event))
 void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 {
 	wxEventType type = event.GetEventType();
-	EditPane *editor = notebook->GetCurrentEditor();
+	EditPane *editor = this->notebook->GetCurrentEditor();
 
 	// Parse flags
 	uint stc_flags = 0;
@@ -655,7 +644,7 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
  */
 void MainFrame::OnToggleLineWrap(wxCommandEvent &event)
 {
-	EditPane *editor = notebook->GetCurrentEditor();
+	EditPane *editor = this->notebook->GetCurrentEditor();
 	int flag = (event.IsChecked())
 		? wxSTC_WRAP_WORD
 		: wxSTC_WRAP_NONE;
@@ -671,7 +660,7 @@ void MainFrame::OnToggleLineWrap(wxCommandEvent &event)
  */
 void MainFrame::OnToggleLineEndings(wxCommandEvent &event)
 {
-	notebook->GetCurrentEditor()->SetViewEOL(event.IsChecked());
+	this->notebook->GetCurrentEditor()->SetViewEOL(event.IsChecked());
 }
 
 /**
@@ -720,7 +709,7 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
 		wxMenuItem *sel_item = langMenu->FindChildItem(event.GetId());
 		wxString itemLabel = sel_item->GetItemLabelText();
 
-		notebook->GetCurrentEditor()->SetCurrentLang(itemLabel.ToStdString());
+		this->notebook->GetCurrentEditor()->SetCurrentLang(itemLabel.ToStdString());
 	}
 	else
 	{
@@ -736,13 +725,10 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
  */
 void MainFrame::OnPrefsChanged(wxCommandEvent &WXUNUSED(event))
 {
-	EditPane *editor;
-
-	notebook->Freeze();
-	for(size_t i = 0; i < notebook->GetPageCount(); i++)
+	this->notebook->Freeze();
+	for(size_t i = 0; i < this->notebook->GetPageCount(); i++)
 	{
-		editor = notebook->GetEditor(i);
-		editor->ReApplyTheme();
+		this->notebook->GetEditor(i)->ReApplyTheme();
 	}
-	notebook->Thaw();
+	this->notebook->Thaw();
 }

@@ -30,7 +30,5 @@ protected:
 	bool FileReadable();
 	bool FileWritable();
 	void BindEvents();
-	void OnCharAdded(wxStyledTextEvent &event);
-	// void SetTheme(const string &theme_name);
 	void _ApplyTheme(JsonValue &lexer_map);
 };

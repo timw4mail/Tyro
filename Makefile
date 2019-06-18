@@ -12,9 +12,12 @@ all:
 	./cmake.sh Tyro
 
 
-dev: all
+dev:
+	mkdir -p build
+	cmake -DCMAKE_BUILD_TYPE=Debug -B./build -H.
+	make -C ./build
 
-run: all
+run:
 ifneq ($(OS),Darwin)
 	./$(PROGRAM)
 else
@@ -36,12 +39,10 @@ release: all
 endif
 ifeq ($(OS),Windows_NT)
 release: exe
-release:
 	strip -SXx $(PROGRAM).exe
 endif
 ifeq ($(OS),Linux)
 release: all
-release:
 	strip -SXx $(PROGRAM)
 endif
 

@@ -6,20 +6,21 @@
 #include "src/widgets/TyroMenu.h"
 #include "src/widgets/EditPane.h"
 #include "src/widgets/TabContainer.h"
-#ifndef TRAVIS
 #include "src/widgets/PrefPane.h"
-#endif
 #include "src/widgets/FilePane.h"
 
 class MainFrame: public wxFrame
 {
 	public:
 		MainFrame(wxFrame *frame, const wxString &title, const wxSize &size);
-		~MainFrame();
+		~MainFrame() override;
 		void EnableEditControls(bool enable=true);
 		void OpenFiles(wxArrayString filelist);
 		void OnPrefsChanged(wxCommandEvent &event);
 	private:
+		PrefPane *prefPane = nullptr;
+		FilePane *filePane = nullptr;
+		TabContainer *notebook = nullptr;
 		wxAuiManager *manager = nullptr;
 		wxAuiToolBar *toolBar = nullptr;
 		wxFindReplaceData *findReplaceData = nullptr;
@@ -27,16 +28,14 @@ class MainFrame: public wxFrame
 		wxFindReplaceDialog *findDlg = nullptr;
 		wxFindReplaceDialog *replaceDlg = nullptr;
 		wxAuiToolBar* SetupToolbar();
-		void SetupStatusBar();
 		void BindEvents();
-		void DoLayout();
+		void MainLayout();
 		
 		// Main Menu Event handlers
 		void OnNew(wxCommandEvent &event);
 		void OnOpen(wxCommandEvent &event);
 		void OnOpenFolder(wxCommandEvent &event);
 		void OnCloseAll(wxCommandEvent &event);
-		void OnFileClose(wxCommandEvent &event);
 		void OnSave(wxCommandEvent &event);
 		void OnSaveAs(wxCommandEvent &event);
 		
