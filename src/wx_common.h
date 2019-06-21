@@ -52,7 +52,7 @@ wxSize static CalculateWindowSize()
     return base;
 }
 
-wxString static BaseName(wxString path)
+wxString static BaseName(const wxString &path)
 {
 	auto fullPath = path.char_str();
 	auto base = basename(fullPath);

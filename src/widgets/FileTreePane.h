@@ -3,9 +3,9 @@
 #include <unordered_set>
 #include "src/widgets/widget.h"
 
-class FilePane : public wxTreeListCtrl {
+class FileTreePane : public wxTreeListCtrl {
 public:
-	explicit FilePane(
+	explicit FileTreePane(
 		wxWindow *parent, 
 		wxWindowID id=wxID_ANY, 
 		const wxPoint &pos=wxDefaultPosition, 
@@ -13,7 +13,7 @@ public:
 		long style=wxTL_DEFAULT_STYLE, 
 		const wxString &name=wxTreeListCtrlNameStr
 	);
-	~FilePane() override;
+	~FileTreePane() override;
 	void CreateTree(const wxString &path);
 private:
 	wxString base_path = "";

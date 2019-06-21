@@ -1,4 +1,4 @@
-#include "src/widgets/PrefPane.h"
+#include "src/widgets/PrefFrame.h"
 #include "src/widgets/MainFrame.h"
 
 extern wxConfigBase *Glob_config;
@@ -150,22 +150,22 @@ public:
 };
 
 // -----------------------------------------------------------------------------
-// ! Implementation of PrefPane Class
+// ! Implementation of PrefFrame Class
 // -----------------------------------------------------------------------------
 
-PrefPane::PrefPane()
+PrefFrame::PrefFrame()
 {
 	this->pref_window = new wxPreferencesEditor();
 	this->pref_window->AddPage(new GeneralPrefPane());
 }
 
-PrefPane::~PrefPane()
+PrefFrame::~PrefFrame()
 {
-	wxLogDebug("PrefPane Destructor Called.");
+	wxLogDebug("PrefFrame Destructor Called.");
 	delete this->pref_window;
 }
 
-void PrefPane::Show(wxWindow *parent)
+void PrefFrame::Show(wxWindow *parent)
 {
 	this->pref_window->Show(parent);
 }

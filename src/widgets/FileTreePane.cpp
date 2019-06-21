@@ -1,6 +1,6 @@
 #include <unordered_set>
 
-#include "src/widgets/FilePane.h"
+#include "src/widgets/FileTreePane.h"
 #include "src/widgets/MainFrame.h"
 
 auto DIR_SEP = wxFileName::GetPathSeparator();
@@ -12,7 +12,7 @@ enum
 	Icon_FolderOpened
 };
 
-FilePane::FilePane(
+FileTreePane::FileTreePane(
 	wxWindow* parent, 
 	wxWindowID id, 
 	const wxPoint& pos, 
@@ -39,19 +39,19 @@ FilePane::FilePane(
 	this->SetSortColumn(0);
 }
 
-FilePane::~FilePane()
+FileTreePane::~FileTreePane()
 {
-	wxLogDebug("FilePane Destructor Called.");
+	wxLogDebug("FileTreePane Destructor Called.");
 	delete this->img_list;
 }
 
-void FilePane::BindEvents()
+void FileTreePane::BindEvents()
 {
-	this->Bind(wxEVT_TREELIST_ITEM_EXPANDING, &FilePane::OpenFolder, this, wxID_ANY);
-	this->Bind(wxEVT_TREELIST_ITEM_ACTIVATED, &FilePane::OpenFileInEditor, this, wxID_ANY);
+	this->Bind(wxEVT_TREELIST_ITEM_EXPANDING, &FileTreePane::OpenFolder, this, wxID_ANY);
+	this->Bind(wxEVT_TREELIST_ITEM_ACTIVATED, &FileTreePane::OpenFileInEditor, this, wxID_ANY);
 }
 
-void FilePane::OpenFolder(wxTreeListEvent& event)
+void FileTreePane::OpenFolder(wxTreeListEvent& event)
 {
 	
 	wxTreeListItem item = event.GetItem();
@@ -63,7 +63,7 @@ void FilePane::OpenFolder(wxTreeListEvent& event)
 /**
  * Iterates through the specified folder and creates the tree view
  */
-void FilePane::CreateTree(const wxString &path)
+void FileTreePane::CreateTree(const wxString &path)
 {
 	// Clear the tree!
 	this->DeleteAllItems();
@@ -112,7 +112,7 @@ void FilePane::CreateTree(const wxString &path)
  * 
  * @access private
  */
-void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent, bool recurse)
+void FileTreePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wxString &parent, bool recurse)
 {
 	wxLogInfo("AddDirToTree path: %s, parent: %s", path, parent);
 	auto fullPath = this->base_path;
@@ -211,7 +211,7 @@ void FilePane::AddDirToTree(wxTreeListItem &root, const wxString &path, const wx
  * @param wxString &path - The filesystem path
  * @param wxArrayString *files - The list of files
  */
-void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path, wxArrayString *files)
+void FileTreePane::AddDirFiles(wxTreeListItem &root, const wxString &path, wxArrayString *files)
 {
 	wxLogInfo("Adding files for dir: %s", path);
 
@@ -242,7 +242,7 @@ void FilePane::AddDirFiles(wxTreeListItem &root, const wxString &path, wxArraySt
 /**
  * Open a file you double-click on the file list
  */
-void FilePane::OpenFileInEditor(wxTreeListEvent& event)
+void FileTreePane::OpenFileInEditor(wxTreeListEvent& event)
 {
 	wxTreeListItem item = event.GetItem();
 	auto data = (wxStringClientData*)this->GetItemData(item);
@@ -261,7 +261,7 @@ void FilePane::OpenFileInEditor(wxTreeListEvent& event)
 /**
  * Create the image list object for the file pane widget
  */
-void FilePane::InitImageList()
+void FileTreePane::InitImageList()
 {
 	wxSize iconSize = wxArtProvider::GetSizeHint(wxART_LIST);
 	

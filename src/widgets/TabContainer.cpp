@@ -44,9 +44,9 @@ TabContainer::~TabContainer()
  * 
  * @return EditPane*
  */
-EditPane* TabContainer::NewEditor()
+EditorPane* TabContainer::NewEditor()
 {
-	return new EditPane(this);
+	return new EditorPane(this);
 }
 
 /**
@@ -82,7 +82,7 @@ void TabContainer::AddTab(const wxString &filePath)
 	}
 	
 	wxString caption = fileName.GetFullName();
-	EditPane *editor = this->NewEditor();
+	EditorPane *editor = this->NewEditor();
 	
 	if (editor->Load(filePath))
 	{
@@ -104,9 +104,9 @@ void TabContainer::AddTab(const wxString &filePath)
  * 
  * @return *EditPane 
  */
-EditPane* TabContainer::GetCurrentEditor()
+EditorPane* TabContainer::GetCurrentEditor()
 {
-	return (EditPane *) this->GetCurrentPage();
+	return (EditorPane *) this->GetCurrentPage();
 }
 
 /**
@@ -115,9 +115,9 @@ EditPane* TabContainer::GetCurrentEditor()
  * @param size_t page_idx
  * @return *EditPane
  */
-EditPane* TabContainer::GetEditor(size_t page_idx)
+EditorPane* TabContainer::GetEditor(size_t page_idx)
 {
-	return (EditPane *) this->GetPage(page_idx);
+	return (EditorPane *) this->GetPage(page_idx);
 }
 
 /**
@@ -129,7 +129,7 @@ EditPane* TabContainer::GetEditor(size_t page_idx)
 void TabContainer::OnClose(wxAuiNotebookEvent &event)
 {
 	int current_tab = this->GetSelection();
-	EditPane *editor = this->GetCurrentEditor();
+	EditorPane *editor = this->GetCurrentEditor();
 	
 	// Sanity check
 	if (current_tab == -1) return;
@@ -246,7 +246,7 @@ void TabContainer::OnCloseAllButThis(wxCommandEvent &WXUNUSED(event))
  */
 void TabContainer::OnTabSwitch(wxAuiNotebookEvent &event)
 {
-	EditPane *editor = this->GetEditor(event.GetSelection());
+	EditorPane *editor = this->GetEditor(event.GetSelection());
 	
 	// Update view menu options
 	Glob_menu_bar->SetIdChecked(myID_VIEW_WHITESPACE, (editor->GetViewWhiteSpace() == wxSTC_WS_VISIBLEALWAYS));

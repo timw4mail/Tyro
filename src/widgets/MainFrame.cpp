@@ -20,8 +20,8 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title, const wxSize &size)
 	this->notebook = new TabContainer(this);
 
 	// Initialize other widgets
-	this->filePane = new FilePane(this);
-	this->prefPane = new PrefPane();
+	this->fileTreePane = new FileTreePane(this);
+	this->prefFrame = new PrefFrame();
 
 	// Set the frame icon
 	wxIcon app_icon(tyro_icon);
@@ -51,8 +51,8 @@ MainFrame::~MainFrame()
 	wxDELETE(this->replaceDlg);
 	wxDELETE(this->findReplaceData);
 	wxDELETE(this->toolBar);
-	wxDELETE(this->prefPane);
-	wxDELETE(this->filePane);
+	wxDELETE(this->prefFrame);
+	wxDELETE(this->fileTreePane);
 	this->manager->UnInit();
 
 	wxDELETE(this->notebook);
@@ -86,7 +86,7 @@ void MainFrame::MainLayout()
 		.RightDockable(true)
 		.LeftDockable(true)
 		.Resizable(true);
-	this->manager->AddPane(this->filePane, filePaneInfo);
+	this->manager->AddPane(this->fileTreePane, filePaneInfo);
 
 	wxAuiPaneInfo notebookPaneInfo;
 	notebookPaneInfo.CenterPane();
@@ -178,7 +178,7 @@ void MainFrame::BindEvents()
 
 	// Edit Menu Events
 	this->Bind(wxEVT_MENU, [=](wxCommandEvent& event) {
-		EditPane *editor = this->notebook->GetCurrentEditor();
+		EditorPane *editor = this->notebook->GetCurrentEditor();
 
 		switch(event.GetId())
 		{
@@ -207,7 +207,7 @@ void MainFrame::BindEvents()
 			break;
 
 			case wxID_PREFERENCES:
-				this->prefPane->Show(this);
+				this->prefFrame->Show(this);
 			break;
 
 			case wxID_FIND:
@@ -287,7 +287,7 @@ void MainFrame::OnOpenFolder(wxCommandEvent &event)
 
 	auto path = dlg.GetPath();
 
-	this->filePane->CreateTree(path);
+	this->fileTreePane->CreateTree(path);
 }
 
 /**
@@ -356,7 +356,7 @@ void MainFrame::OnCloseAll(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnSave(wxCommandEvent &event)
 {
-	EditPane *editor = this->notebook->GetCurrentEditor();
+	EditorPane *editor = this->notebook->GetCurrentEditor();
 
 	// Check if the filename is set for the current file
 	if ( ! editor->fileName.IsOk())
@@ -375,7 +375,7 @@ void MainFrame::OnSave(wxCommandEvent &event)
  */
 void MainFrame::OnSaveAs(wxCommandEvent &WXUNUSED(event))
 {
-	EditPane *editor = this->notebook->GetCurrentEditor();
+	EditorPane *editor = this->notebook->GetCurrentEditor();
 
 	// If the file hasn't been changed, just return
 	if ( ! editor->IsModified()) return;
@@ -495,7 +495,7 @@ void MainFrame::OnAbout(wxCommandEvent &WXUNUSED(event))
  */
 void MainFrame::OnToggleWhitespace(wxCommandEvent& event)
 {
-	EditPane *editor = this->notebook->GetCurrentEditor();
+	EditorPane *editor = this->notebook->GetCurrentEditor();
 	int flag = (event.IsChecked())
 		? wxSTC_WS_VISIBLEALWAYS
 		: wxSTC_WS_INVISIBLE;
@@ -545,7 +545,7 @@ void MainFrame::OnEditReplace(wxCommandEvent &WXUNUSED(event))
 void MainFrame::OnFindDialog(wxFindDialogEvent &event)
 {
 	wxEventType type = event.GetEventType();
-	EditPane *editor = this->notebook->GetCurrentEditor();
+	EditorPane *editor = this->notebook->GetCurrentEditor();
 
 	// Parse flags
 	uint stc_flags = 0;
@@ -644,7 +644,7 @@ void MainFrame::OnFindDialog(wxFindDialogEvent &event)
  */
 void MainFrame::OnToggleLineWrap(wxCommandEvent &event)
 {
-	EditPane *editor = this->notebook->GetCurrentEditor();
+	EditorPane *editor = this->notebook->GetCurrentEditor();
 	int flag = (event.IsChecked())
 		? wxSTC_WRAP_WORD
 		: wxSTC_WRAP_NONE;

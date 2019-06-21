@@ -4,16 +4,16 @@
 #include "src/settings/ThemeConfig.h"
 
 
-class EditPane: public wxStyledTextCtrl
+class EditorPane: public wxStyledTextCtrl
 {
 public:
-	explicit EditPane(
+	explicit EditorPane(
 		wxWindow *parent,
 		wxWindowID id = wxID_ANY,
 		const wxPoint &post = wxDefaultPosition,
 		const wxSize &size = wxDefaultSize
 	);
-	~EditPane();
+	~EditorPane();
 	wxFileName fileName;
 	bool Load(const wxString &filePath);
 	void Highlight(const wxString &filePath);
@@ -25,8 +25,6 @@ public:
 	void SetCurrentLang(const string &name);
 protected:
 	StringConstMap::iterator lexerMapIt;
-	LangConfig *lang_config = nullptr;
-	ThemeConfig *theme_config = nullptr;
 	bool FileReadable();
 	bool FileWritable();
 	void BindEvents();

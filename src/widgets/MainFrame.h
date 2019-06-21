@@ -4,10 +4,10 @@
 #pragma once
 
 #include "src/widgets/TyroMenu.h"
-#include "src/widgets/EditPane.h"
+#include "src/widgets/EditorPane.h"
 #include "src/widgets/TabContainer.h"
-#include "src/widgets/PrefPane.h"
-#include "src/widgets/FilePane.h"
+#include "src/widgets/PrefFrame.h"
+#include "src/widgets/FileTreePane.h"
 
 class MainFrame: public wxFrame
 {
@@ -18,8 +18,8 @@ class MainFrame: public wxFrame
 		void OpenFiles(wxArrayString filelist);
 		void OnPrefsChanged(wxCommandEvent &event);
 	private:
-		PrefPane *prefPane = nullptr;
-		FilePane *filePane = nullptr;
+		PrefFrame *prefFrame = nullptr;
+		FileTreePane *fileTreePane = nullptr;
 		TabContainer *notebook = nullptr;
 		wxAuiManager *manager = nullptr;
 		wxAuiToolBar *toolBar = nullptr;

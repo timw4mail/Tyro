@@ -2,11 +2,13 @@
  * The editor widget
  */
 
-#include "src/widgets/EditPane.h"
+#include "src/widgets/EditorPane.h"
 #include "src/widgets/TabContainer.h"
 
 extern StringConstMap Glob_lexer_map;
-static wxConfig *Glob_config = nullptr;
+extern LangConfig *Glob_lang_config;
+extern ThemeConfig *Glob_theme_config;
+extern wxConfigBase *Glob_config;
 
 /**
  * Constructor
@@ -16,14 +18,10 @@ static wxConfig *Glob_config = nullptr;
  * @param const wxPoint& pos
  * @param const wxSize& size
  */
-EditPane::EditPane(
+EditorPane::EditorPane(
 	wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size
 ) : wxStyledTextCtrl (parent, id, pos, size, wxBORDER_NONE)
 {
-	Glob_config = (wxConfig *) wxConfigBase::Get();
-	this->lang_config = new LangConfig();
-	this->theme_config = new ThemeConfig();
-
 	this->BindEvents();
 	
 	// Some basic properties to set
@@ -35,7 +33,7 @@ EditPane::EditPane(
 	this->SetProperty("lexer.cpp.track.preprocessor", "1");
 	this->SetProperty("font.quality", "3"); // LCD Optimized
 		
-	//this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
+	// this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
 
 	// set spaces and indention
 	this->SetTabWidth(4);
@@ -47,11 +45,9 @@ EditPane::EditPane(
 /**
  * Destructor
  */
-EditPane::~EditPane()
+EditorPane::~EditorPane()
 {
-	wxLogDebug("EditPane Destructor Called.");
-	delete this->lang_config;
-	delete this->theme_config;
+	wxLogDebug("EditorPane Destructor Called.");
 }
 
 /**
@@ -61,12 +57,12 @@ EditPane::~EditPane()
  * @param wxString filePath
  * @return void
  */
-void EditPane::Highlight(const wxString &filePath)
+void EditorPane::Highlight(const wxString &filePath)
 {
 	this->fileName.Assign(filePath);
 
 	// Get the configuration name for the selected language
-	string lang = this->lang_config->GetLangByFile(this->fileName);
+	string lang = Glob_lang_config->GetLangByFile(this->fileName);
 
 	// Apply the theme
 	this->ApplyTheme(lang);
@@ -85,7 +81,7 @@ void EditPane::Highlight(const wxString &filePath)
  * @param string theme
  * @return void
  */
-void EditPane::ApplyTheme(const string &lang, const string &theme)
+void EditorPane::ApplyTheme(const string &lang, const string &theme)
 {
 	this->StyleClearAll();
 
@@ -100,12 +96,12 @@ void EditPane::ApplyTheme(const string &lang, const string &theme)
 	
 	if ( ! theme.empty())
 	{
-		this->theme_config->SetTheme(theme);
+		Glob_theme_config->SetTheme(theme);
 	}
 
 	// Get the keywords and mapping for the selected language
-	JsonValue lexer_map = this->lang_config->GetLexerMap(lang);
-	JsonValue keywords_array = this->lang_config->GetKeywordList(lang);
+	JsonValue lexer_map = Glob_lang_config->GetLexerMap(lang);
+	JsonValue keywords_array = Glob_lang_config->GetKeywordList(lang);
 	
 	if (keywords_array.isArray())
 	{
@@ -139,9 +135,9 @@ void EditPane::ApplyTheme(const string &lang, const string &theme)
  * @param string [theme]
  * @return void
  */
-void EditPane::ReApplyTheme(const string &theme)
+void EditorPane::ReApplyTheme(const string &theme)
 {
-	this->ApplyTheme(this->lang_config->GetLangByName(this->GetCurrentLang()), theme);
+	this->ApplyTheme(Glob_lang_config->GetLangByName(this->GetCurrentLang()), theme);
 }
 
 /**
@@ -150,7 +146,7 @@ void EditPane::ReApplyTheme(const string &theme)
  * @param wxString filePath
  * @return bool
  */
-bool EditPane::Load(const wxString &filePath)
+bool EditorPane::Load(const wxString &filePath)
 {
 	this->fileName.Assign(filePath);
 
@@ -172,7 +168,7 @@ bool EditPane::Load(const wxString &filePath)
  * 
  * @return bool
  */
-bool EditPane::SaveFile()
+bool EditorPane::SaveFile()
 {
 	wxString fname = this->fileName.GetFullPath();
 
@@ -185,7 +181,7 @@ bool EditPane::SaveFile()
  * @param const wxString filename
  * @return bool
  */
-bool EditPane::SaveFile(const wxString &filename)
+bool EditorPane::SaveFile(const wxString &filename)
 {
 	if ( ! this->IsModified()) return true;
 
@@ -219,7 +215,7 @@ bool EditPane::SaveFile(const wxString &filename)
  *
  * @return bool
  */
-bool EditPane::FileReadable()
+bool EditorPane::FileReadable()
 {
 	if (
 		this->fileName.IsOk() &&
@@ -244,7 +240,7 @@ bool EditPane::FileReadable()
  *
  * @return bool
  */
-bool EditPane::FileWritable()
+bool EditorPane::FileWritable()
 {
 	// Lets see...can we write somewhere?
 	if (
@@ -270,7 +266,7 @@ bool EditPane::FileWritable()
  * 
  * @return void
  */
-void EditPane::BindEvents()
+void EditorPane::BindEvents()
 {
 	// Code folding event handler
 	this->Bind(wxEVT_STC_MARGINCLICK, [=](wxStyledTextEvent& event) {
@@ -316,7 +312,7 @@ void EditPane::BindEvents()
 		}
 	}, wxID_ANY);
 
-	// this->Bind(wxEVT_STC_CHARADDED, &EditPane::OnCharAdded, this, wxID_ANY);
+	// this->Bind(wxEVT_STC_CHARADDED, &EditorPane::OnCharAdded, this, wxID_ANY);
 }
 
 /**
@@ -325,19 +321,19 @@ void EditPane::BindEvents()
  * @param JsonValue lexer_map - Maps token types to theme colors
  * @return void
  */
-void EditPane::_ApplyTheme(JsonValue &lexer_map)
+void EditorPane::_ApplyTheme(JsonValue &lexer_map)
 {
 	// Make sure to have a default font, especially for Linux
 	wxFont globalFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
 
-	static const wxColor default_background = this->theme_config->GetThemeColor("background", "default");
-	static const wxColor default_foreground = this->theme_config->GetThemeColor("foreground", "default");
-	wxColor line_number_background = ( ! this->theme_config->GetThemeValue("line_numbers", "background").isNull())
-		? (this->theme_config->GetThemeColor("line_numbers", "background"))
+	static const wxColor default_background = Glob_theme_config->GetThemeColor("background", "default");
+	static const wxColor default_foreground = Glob_theme_config->GetThemeColor("foreground", "default");
+	wxColor line_number_background = ( ! Glob_theme_config->GetThemeValue("line_numbers", "background").isNull())
+		? (Glob_theme_config->GetThemeColor("line_numbers", "background"))
 		: default_background;
 
-	wxColor line_number_foreground = ( ! this->theme_config->GetThemeValue("line_numbers", "foreground").isNull())
-		? (this->theme_config->GetThemeColor("line_numbers", "foreground"))
+	wxColor line_number_foreground = ( ! Glob_theme_config->GetThemeValue("line_numbers", "foreground").isNull())
+		? (Glob_theme_config->GetThemeColor("line_numbers", "foreground"))
 		: default_foreground;
 
 	// Attempt to set the font according to config
@@ -414,33 +410,33 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
 		string key = lexer_map[i].asString();
 
 		// Set the foreground color, if it exists
-		if ( ! this->theme_config->GetThemeValue("foreground", key).isNull())
+		if ( ! Glob_theme_config->GetThemeValue("foreground", key).isNull())
 		{
-			this->StyleSetForeground(i, this->theme_config->GetThemeColor("foreground", key));
+			this->StyleSetForeground(i, Glob_theme_config->GetThemeColor("foreground", key));
 		}
 
 		// Set the background color, if it exists
-		if ( ! this->theme_config->GetThemeValue("background", key).isNull())
+		if ( ! Glob_theme_config->GetThemeValue("background", key).isNull())
 		{
-			this->StyleSetBackground(i, this->theme_config->GetThemeColor("background", key));
+			this->StyleSetBackground(i, Glob_theme_config->GetThemeColor("background", key));
 		}
 
 		// Set bold, if it applies
-		if (this->theme_config->GetThemeValue("bold", key).isBool())
+		if (Glob_theme_config->GetThemeValue("bold", key).isBool())
 		{
-			this->StyleSetBold(i, this->theme_config->GetThemeValue("bold", key).asBool());
+			this->StyleSetBold(i, Glob_theme_config->GetThemeValue("bold", key).asBool());
 		}
 		
 		// Italic
-		if (this->theme_config->GetThemeValue("italic", key).isBool())
+		if (Glob_theme_config->GetThemeValue("italic", key).isBool())
 		{
-			this->StyleSetItalic(i, this->theme_config->GetThemeValue("italic", key).asBool());
+			this->StyleSetItalic(i, Glob_theme_config->GetThemeValue("italic", key).asBool());
 		}
 		
 		// Underline
-		if (this->theme_config->GetThemeValue("underline", key).isBool())
+		if (Glob_theme_config->GetThemeValue("underline", key).isBool())
 		{
-			this->StyleSetUnderline(i, this->theme_config->GetThemeValue("underline", key).asBool());
+			this->StyleSetUnderline(i, Glob_theme_config->GetThemeValue("underline", key).asBool());
 		}
 	}
 }
@@ -451,9 +447,9 @@ void EditPane::_ApplyTheme(JsonValue &lexer_map)
  * 
  * @return string
  */
-string EditPane::GetCurrentLang()
+string EditorPane::GetCurrentLang()
 {
-	return this->lang_config->GetCurrentLangName();
+	return Glob_lang_config->GetCurrentLangName();
 }
 
 /**
@@ -462,11 +458,11 @@ string EditPane::GetCurrentLang()
  * @param string name
  * @return void
  */
-void EditPane::SetCurrentLang(const string &name)
+void EditorPane::SetCurrentLang(const string &name)
 {
 	// Update the current lang in the config
-	string langKey = this->lang_config->GetLangByName(name);
-	this->lang_config->SetLang(langKey);
+	string langKey = Glob_lang_config->GetLangByName(name);
+	Glob_lang_config->SetLang(langKey);
 	
 	// Re-highlight the page with the new langauge
 	this->ApplyTheme(langKey);

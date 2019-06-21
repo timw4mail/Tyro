@@ -5,10 +5,10 @@
 
 #include "src/widgets/widget.h"
 
-class PrefPane {
+class PrefFrame {
 public:
-	PrefPane();
-	~PrefPane();
+	PrefFrame();
+	~PrefFrame();
 	void Show(wxWindow *parent);
 	
 protected:

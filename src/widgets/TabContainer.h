@@ -4,7 +4,7 @@
 #pragma once
 
 #include "src/widgets/TyroMenu.h"
-#include "src/widgets/EditPane.h"
+#include "src/widgets/EditorPane.h"
 
 static long tab_style = wxBORDER_NONE | wxAUI_NB_TAB_SPLIT |wxAUI_NB_TAB_MOVE
 	| wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_WINDOWLIST_BUTTON
@@ -23,13 +23,13 @@ public:
 	~TabContainer() override;
 	void AddTab();
 	void AddTab(const wxString &filePath);
-	EditPane *GetCurrentEditor();
-	EditPane *GetEditor(size_t page_idx);
+	EditorPane *GetCurrentEditor();
+	EditorPane *GetEditor(size_t page_idx);
 	void OnCloseAll(wxCommandEvent &event);
 	void OnCloseAllButThis(wxCommandEvent &event);
 private:
 	unsigned long untitled_document_count = 0;
-	EditPane *NewEditor();
+	EditorPane *NewEditor();
 	void OnTabSwitch(wxAuiNotebookEvent &event);
 	void OnClose(wxAuiNotebookEvent &event);
 	void OnClosed(wxAuiNotebookEvent &event);
