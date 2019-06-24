@@ -1,5 +1,7 @@
 #include "src/widgets/TyroMenu.h"
 
+extern LangConfig *Glob_lang_config;
+
 /**
  * Constructor
  */ 
@@ -10,8 +12,6 @@ TyroMenu::TyroMenu()
 	this->viewMenu = new wxMenu();
 	this->langMenu = new wxMenu();
 	this->helpMenu = new wxMenu();
-
-	this->lang_config = new LangConfig();
 
 	this->SetupMainMenus();
 	this->SetupLangMenu();
@@ -30,7 +30,6 @@ TyroMenu::TyroMenu()
 TyroMenu::~TyroMenu()
 {
 	wxLogDebug("TyroMenu Destructor Called.");
-	delete this->lang_config;
 }
 
 /**
@@ -82,7 +81,7 @@ void TyroMenu::SetupMainMenus()
  */ 
 void TyroMenu::SetupLangMenu()
 {
-	StringMap languages = lang_config->GetLangList();
+	StringMap languages = Glob_lang_config->GetLangList();
 	
 	for (const auto lang: languages)
 	{

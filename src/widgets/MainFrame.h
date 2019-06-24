@@ -16,7 +16,7 @@ class MainFrame: public wxFrame
 		~MainFrame() override;
 		void EnableEditControls(bool enable=true);
 		void OpenFiles(wxArrayString filelist);
-		void OnPrefsChanged(wxCommandEvent &event);
+		void OnPrefsChanged();
 	private:
 		PrefFrame *prefFrame = nullptr;
 		FileTreePane *fileTreePane = nullptr;

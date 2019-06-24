@@ -723,7 +723,7 @@ void MainFrame::OnLangSelect(wxCommandEvent &event)
  *
  * @return void
  */
-void MainFrame::OnPrefsChanged(wxCommandEvent &WXUNUSED(event))
+void MainFrame::OnPrefsChanged()
 {
 	this->notebook->Freeze();
 	for(size_t i = 0; i < this->notebook->GetPageCount(); i++)

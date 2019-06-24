@@ -14,7 +14,6 @@ public:
 	void SetIdChecked(int id, bool checked);
 	void SetCurrentLanguage(string lang);
 private:
-	LangConfig *lang_config = nullptr;
 	wxMenu *fileMenu = nullptr;
 	wxMenu *editMenu = nullptr;
 	wxMenu *viewMenu = nullptr;

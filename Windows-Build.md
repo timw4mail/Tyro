@@ -1,7 +1,5 @@
 # Building on Windows
 
-In order to keep a consistent build system, Tyro is built with MinGW and Msys. This allows for a *nix-style build environment on Windows.
-
 ## Build Environment Setup:
 
 1. Install [Visual Studio 2015](https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx) (Community or Express should work)
@@ -14,4 +12,4 @@ In order to keep a consistent build system, Tyro is built with MinGW and Msys. T
 
 
 ## Build Tyro
-
+TODO

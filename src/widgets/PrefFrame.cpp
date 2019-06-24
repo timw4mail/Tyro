@@ -63,21 +63,28 @@ public:
 		{
 			this->showLineNumbers->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_line_numbers", event.IsChecked());
-				Glob_main_frame->OnPrefsChanged(event);
+				Glob_main_frame->OnPrefsChanged();
 				Glob_config->Flush();
 			}, myID_PREFS_LINE_NUMBERS);
 
 			this->showIndentGuides->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_indent_guides", event.IsChecked());
-				Glob_main_frame->OnPrefsChanged(event);
+				Glob_main_frame->OnPrefsChanged();
 				Glob_config->Flush();
 			}, myID_PREFS_IDENT_GUIDES);
 
 			this->showCodeFolding->Bind(wxEVT_CHECKBOX, [=] (wxCommandEvent &event) {
 				Glob_config->Write("show_code_folding", event.IsChecked());
-				Glob_main_frame->OnPrefsChanged(event);
+				Glob_main_frame->OnPrefsChanged();
 				Glob_config->Flush();
 			}, myID_PREFS_CODE_FOLDING);
+
+			this->fontPicker->Bind(wxEVT_FONTPICKER_CHANGED, [=] (wxFontPickerEvent &event) {
+				auto font = event.GetFont();
+				Glob_config->Write("global_font", font);
+				Glob_main_frame->OnPrefsChanged();
+				Glob_config->Flush();
+			}, myID_PREFS_FONT);
 		}
 	}
 
@@ -123,7 +130,7 @@ public:
 		Glob_config->Write("global_font", this->fontPicker->GetSelectedFont());
 
 		auto evt = wxCommandEvent();
-		Glob_main_frame->OnPrefsChanged(evt);
+		Glob_main_frame->OnPrefsChanged();
 
 		Glob_config->Flush();
 

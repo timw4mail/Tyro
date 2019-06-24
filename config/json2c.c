@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     fprintf(fo, "\n};\n\n");
     fprintf(fo, "#endif\n");
 
-    printf("converted %s\n", argv[1]);
+    printf("converted %s to .h file\n", argv[1]);
 
     return 0;
 }

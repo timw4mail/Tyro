@@ -11,13 +11,14 @@
 
 #include "src/widgets/MainFrame.h"
 
-// Some global stuff
+// All the ugly globals
 wxConfigBase *Glob_config = nullptr;
+LangConfig *Glob_lang_config = nullptr;
+ThemeConfig *Glob_theme_config = nullptr;
+MainFrame *Glob_main_frame = nullptr;
 TyroMenu *Glob_menu_bar = nullptr;
 wxStatusBar *Glob_status_bar = nullptr;
-MainFrame *Glob_main_frame = nullptr;
-ThemeConfig *Glob_theme_config = nullptr;
-LangConfig *Glob_lang_config = nullptr;
+
 StringConstMap Glob_lexer_map;
 
 /**
@@ -33,8 +34,6 @@ public:
 	 */
 	bool OnInit() final
 	{
-		// if ( ! wxApp::OnInit()) return false;
-
 		TyroApp::SetSystemOptions();
 		this->SetAppName(APP_NAME);
 		this->SetVendorName(APP_VENDOR);
