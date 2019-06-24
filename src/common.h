@@ -12,12 +12,10 @@
 #include <vector>
 #include <map>
 
-using namespace std;
-
 // JSON 
 #include <json/json.h>
 
-typedef Json::Value JsonValue;
+using namespace std;
 
 // Typedef some common templates
 typedef map<string, int> StringConstMap;

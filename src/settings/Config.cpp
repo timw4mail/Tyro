@@ -17,7 +17,7 @@ void TyroConfig::LoadJson(const char json[])
 	}
 }
 
-JsonValue TyroConfig::GetRoot()
+Json::Value TyroConfig::GetRoot()
 {
 	return default_root;
 }

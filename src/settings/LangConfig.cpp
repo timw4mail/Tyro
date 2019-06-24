@@ -10,16 +10,16 @@ LangConfig::LangConfig()
 	this->language = "";
 	
 	// "cache" reverse map of languages to their keys
-	JsonValue langList = this->GetRoot();
-	JsonValue::iterator it;
+	Json::Value langList = this->GetRoot();
+	Json::Value::iterator it;
 	
 	// Special case for non-recognized language
 	reverseMap["Plain Text"] = "";
 	
 	for (it = langList.begin(); it != langList.end(); ++it)
 	{
-		JsonValue langObj = *it;
-		reverseMap[langObj.get("name", JsonValue()).asString()] = it.key().asString();
+		Json::Value langObj = *it;
+		reverseMap[langObj.get("name", Json::Value()).asString()] = it.key().asString();
 	}
 }
 
@@ -40,8 +40,8 @@ LangConfig::~LangConfig()
  */
 string LangConfig::GetLangByFile(wxFileName &fileName)
 {
-	JsonValue langList = this->GetRoot();
-	JsonValue::iterator it;
+	Json::Value langList = this->GetRoot();
+	Json::Value::iterator it;
 
 	wxString curr_file = fileName.GetFullName();
 
@@ -81,30 +81,30 @@ string LangConfig::GetLangByFile(wxFileName &fileName)
  * Get the list of keywords for the selected language
  * 
  * @param string lang
- * @return JsonValue
+ * @return Json::Value
  */
-JsonValue LangConfig::GetKeywordList(string lang)
+Json::Value LangConfig::GetKeywordList(string lang)
 {
 	if (lang == "none") lang = this->language;
 	
 	return this->GetRoot()
-		.get(lang, JsonValue())
-		.get("keywords", JsonValue());
+		.get(lang, Json::Value())
+		.get("keywords", Json::Value());
 }
 
 /**
  * Get the lexer theme map for the current language
  * 
  * @param string lang
- * @return JsonValue
+ * @return Json::Value
  */
-JsonValue LangConfig::GetLexerMap(string lang)
+Json::Value LangConfig::GetLexerMap(string lang)
 {
 	if (lang == "none") lang = this->language;
 	
 	return this->GetRoot()
-		.get(lang, JsonValue())
-		.get("lexer_map", JsonValue());
+		.get(lang, Json::Value())
+		.get("lexer_map", Json::Value());
 }
 
 /**
@@ -134,8 +134,8 @@ string LangConfig::GetLang()
 string LangConfig::GetCurrentLangName()
 {
 	return this->GetRoot()
-		.get(this->language, JsonValue())
-		.get("name", JsonValue())
+		.get(this->language, Json::Value())
+		.get("name", Json::Value())
 		.asString();
 }
 

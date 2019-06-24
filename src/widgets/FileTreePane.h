@@ -18,8 +18,8 @@ public:
 private:
 	wxString base_path = "";
 	wxImageList *img_list = nullptr;
-	unordered_set<std::string> file_set;
-	unordered_set<std::string> dir_set;
+	unordered_set<string> file_set;
+	unordered_set<string> dir_set;
 	void BindEvents();
 	void OpenFolder(wxTreeListEvent& event);
 	void OpenFileInEditor(wxTreeListEvent& event);

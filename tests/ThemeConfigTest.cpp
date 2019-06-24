@@ -7,7 +7,7 @@ TEST_CASE("Theme Config Library")
 	
 	SECTION("GetTheme()")
 	{
-		JsonValue theme = config->GetTheme();
+		Json::Value theme = config->GetTheme();
 		REQUIRE(theme.isObject());
 	}
 	

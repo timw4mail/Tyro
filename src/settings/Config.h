@@ -6,9 +6,9 @@ class TyroConfig {
 public:
     TyroConfig();
     ~TyroConfig();
-    JsonValue GetRoot();
+    Json::Value GetRoot();
 	void LoadJson(const char json[]);
 private:
-    JsonValue default_root;
+    Json::Value default_root;
     Json::Reader reader;
 };

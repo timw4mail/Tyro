@@ -89,7 +89,7 @@ void FileTreePane::CreateTree(const wxString &path)
 		// Make the dir relative to the base path,
 		// then only use the first dir segment
 		fileName.MakeRelativeTo(this->base_path);
-		auto dir = std::string(fileName.GetPath());
+		auto dir = string(fileName.GetPath());
 
 		if (dir.empty())
 		{
@@ -136,7 +136,7 @@ void FileTreePane::AddDirToTree(wxTreeListItem &root, const wxString &path, cons
 	wxString wFullPath(fullPath);
 
 	// Stop early if folder exists
-	auto it = this->dir_set.find(std::string(fullPath));
+	auto it = this->dir_set.find(string(fullPath));
 	if (it != this->dir_set.end())
 	{
 		wxLogInfo("Redundant call to AddDirToTree for: %s, %s", path, parent);
@@ -172,7 +172,7 @@ void FileTreePane::AddDirToTree(wxTreeListItem &root, const wxString &path, cons
 		// Make the dir relative to the search path,
 		// then only use the first dir segment
 		fileName.MakeRelativeTo(fullPath);
-		auto dir = std::string(fileName.GetPath());
+		auto dir = string(fileName.GetPath());
 
 		if (dir.empty())
 		{
@@ -223,7 +223,7 @@ void FileTreePane::AddDirFiles(wxTreeListItem &root, const wxString &path, wxArr
 		wxFileName fileName(item);
 		fileName.MakeAbsolute();
 
-		auto it = this->file_set.find(std::string(fileName.GetFullPath()));
+		auto it = this->file_set.find(string(fileName.GetFullPath()));
 		if (it != this->file_set.end())
 		{
 			continue;
@@ -235,7 +235,7 @@ void FileTreePane::AddDirFiles(wxTreeListItem &root, const wxString &path, wxArr
 		auto fileLabel = BaseName(fileName.GetFullName());
 
 		this->AppendItem(root, fileLabel, Icon_File, Icon_File, fileData);
-		this->file_set.insert(std::string(fileName.GetFullPath()));
+		this->file_set.insert(string(fileName.GetFullPath()));
 	}
 }
 

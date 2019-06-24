@@ -10,8 +10,8 @@ public:
 	void SetLang(const string &lang);
 	string GetLang();
 	string GetLangByFile(wxFileName &fileName);
-	JsonValue GetKeywordList(string lang="none");
-	JsonValue GetLexerMap(string lang="none");
+	Json::Value GetKeywordList(string lang="none");
+	Json::Value GetLexerMap(string lang="none");
 	StringMap GetLangList();
 	string GetCurrentLangName();
 	string GetLangByName(const string &name);

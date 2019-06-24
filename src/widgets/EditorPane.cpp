@@ -100,8 +100,8 @@ void EditorPane::ApplyTheme(const string &lang, const string &theme)
 	}
 
 	// Get the keywords and mapping for the selected language
-	JsonValue lexer_map = Glob_lang_config->GetLexerMap(lang);
-	JsonValue keywords_array = Glob_lang_config->GetKeywordList(lang);
+	Json::Value lexer_map = Glob_lang_config->GetLexerMap(lang);
+	Json::Value keywords_array = Glob_lang_config->GetKeywordList(lang);
 	
 	if (keywords_array.isArray())
 	{
@@ -318,10 +318,10 @@ void EditorPane::BindEvents()
 /**
  * Iterate through the theme settings and apply them
  *
- * @param JsonValue lexer_map - Maps token types to theme colors
+ * @param Json::Value lexer_map - Maps token types to theme colors
  * @return void
  */
-void EditorPane::_ApplyTheme(JsonValue &lexer_map)
+void EditorPane::_ApplyTheme(Json::Value &lexer_map)
 {
 	// Make sure to have a default font, especially for Linux
 	wxFont globalFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);

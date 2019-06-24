@@ -47,7 +47,7 @@ TEST_CASE("Language Config Library")
 	
 	SECTION("GetLexerMap()")
 	{
-		JsonValue lexer_map = config->GetLexerMap("none");
+		Json::Value lexer_map = config->GetLexerMap("none");
 		REQUIRE(lexer_map.isNull());
 		
 		lexer_map = config->GetLexerMap("cpp");
@@ -56,7 +56,7 @@ TEST_CASE("Language Config Library")
 	
 	SECTION("GetKeywordList()")
 	{
-		JsonValue keyword_list = config->GetKeywordList("none");
+		Json::Value keyword_list = config->GetKeywordList("none");
 		REQUIRE(keyword_list.isNull());
 		
 		keyword_list = config->GetKeywordList("cpp");

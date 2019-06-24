@@ -28,5 +28,5 @@ protected:
 	bool FileReadable();
 	bool FileWritable();
 	void BindEvents();
-	void _ApplyTheme(JsonValue &lexer_map);
+	void _ApplyTheme(Json::Value &lexer_map);
 };

@@ -30,8 +30,8 @@ ThemeConfig::~ThemeConfig()
  */ 
 bool ThemeConfig::SetTheme(const string &theme_name)
 {
-	JsonValue theme_list = this->GetRoot();
-	JsonValue selected_theme = theme_list.get(theme_name, JsonValue());
+	Json::Value theme_list = this->GetRoot();
+	Json::Value selected_theme = theme_list.get(theme_name, Json::Value());
 	
 	if (selected_theme.isNull()) return FALSE;
 	
@@ -49,7 +49,7 @@ bool ThemeConfig::SetTheme(const string &theme_name)
  *
  * @return string
  */ 
-JsonValue ThemeConfig::GetTheme()
+Json::Value ThemeConfig::GetTheme()
 {
 	return this->current_theme;
 }
@@ -59,13 +59,13 @@ JsonValue ThemeConfig::GetTheme()
  * 
  * @param string type
  * @param string key
- * @return JsonValue
+ * @return Json::Value
  */
-JsonValue ThemeConfig::GetThemeValue(const string &type, const string &key)
+Json::Value ThemeConfig::GetThemeValue(const string &type, const string &key)
 {
-	JsonValue value = this->current_theme
-		.get(type, JsonValue())
-		.get(key, JsonValue());
+	Json::Value value = this->current_theme
+		.get(type, Json::Value())
+		.get(key, Json::Value());
 
 	return value;
 }
@@ -78,7 +78,7 @@ JsonValue ThemeConfig::GetThemeValue(const string &type, const string &key)
  */
 wxColor ThemeConfig::GetThemeColor(const string &type, const string &key)
 {
-	JsonValue color_value = this->GetThemeValue(type, key);
+	Json::Value color_value = this->GetThemeValue(type, key);
 
 	if (color_value.isArray())
 	{
