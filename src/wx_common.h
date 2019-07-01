@@ -3,15 +3,10 @@
  */
 #pragma once
 
+// Import the basename c function
 #include <libgen.h>
 
 #include "common.h"
-
-// Disable annoying warning
-#ifndef __WXMAC__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpotentially-evaluated-expression"
-#endif
 
 #ifdef WX_PRECOMP
 	#include "wx_pch.h"
@@ -33,10 +28,6 @@
 #include <wx/filename.h>
 #include <wx/artprov.h>
 
-#ifndef __WXMAC__
-#pragma clang diagnostic pop
-#endif
-
 /**
  * Calculate original window size based on size of the current monitor
  */
@@ -47,7 +38,10 @@ wxSize static CalculateWindowSize()
 
     wxLogDebug("Current display: %ix%i", mode.w, mode.h);
 
-    wxSize base((int)((float)mode.w * 0.9), (int)((float)mode.h * 0.9));
+    auto width = (int)((float)mode.w * 0.9);
+    auto height = (int)((float)mode.h * 0.9);
+
+    wxSize base(width, height);
 
     return base;
 }

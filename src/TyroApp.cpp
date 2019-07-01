@@ -67,7 +67,7 @@ public:
 	 *
 	 * @return int 
 	 */
-	int OnExit() override
+	int OnExit() final
 	{
 		wxLogDebug("Closing App...");
 
@@ -84,7 +84,7 @@ public:
 	 * @param wxCmdLineParser& parser
 	 * @return void
 	 */
-	void OnInitCmdLine(wxCmdLineParser &parser) override
+	void OnInitCmdLine(wxCmdLineParser &parser) final
 	{
 		parser.SetDesc(Glob_cmdLineDesc);
 
@@ -98,7 +98,7 @@ public:
 	 * @param wxCmdLineParser& parser
 	 * @return bool
 	 */
-	bool OnCmdLineParsed(wxCmdLineParser &parser) override
+	bool OnCmdLineParsed(wxCmdLineParser &parser) final
 	{
 		// Get un-named parameters
 		this->param_count = parser.GetParamCount();

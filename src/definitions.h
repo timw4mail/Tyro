@@ -27,10 +27,6 @@ const wxString APP_LICENSE = "Copyright 2019 Timothy J. Warren\n"
 							 "IN THE SOFTWARE.";
 
 // Command-line arguments
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-field-initializers"
-#endif
 const wxCmdLineEntryDesc Glob_cmdLineDesc[] = {
 	{
 		wxCMD_LINE_PARAM,
@@ -42,9 +38,6 @@ const wxCmdLineEntryDesc Glob_cmdLineDesc[] = {
 	},
 	{wxCMD_LINE_NONE}
 };
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
 
 // Some boilerplate text
 const wxString TYRO_SAVE_ERROR = "Failed to save the file. Maybe you lack the permissions.";
@@ -53,7 +46,6 @@ const wxString TYRO_OPEN_ERROR = "Failed to open the file. Check that it exists,
 const wxString TYRO_OPEN_ERROR_CAPTION = "Open Failed";
 
 // Font defaults
-const int TYRO_DEFAULT_FONT_FAMILY = (int) wxFONTFAMILY_MODERN;
 #ifdef __WXMAC__
 const int TYRO_DEFAULT_FONT_SIZE = 14;
 #else
