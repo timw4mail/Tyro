@@ -25,7 +25,6 @@ EditorPane::EditorPane(
 	this->BindEvents();
 	
 	// Some basic properties to set
-	this->SetStyleBits(8);
 	this->SetScrollWidthTracking(true);// Set scroll width by longest line
 	this->SetProperty("technology", "2");
 	this->SetProperty("error.inline", "0");
@@ -34,6 +33,7 @@ EditorPane::EditorPane(
 	this->SetProperty("font.quality", "3"); // LCD Optimized
 		
 	// this->SetLayoutCache (wxSTC_CACHE_DOCUMENT);
+	this->SetUseAntiAliasing(true);
 
 	// set spaces and indention
 	this->SetTabWidth(4);
@@ -126,6 +126,7 @@ void EditorPane::ApplyTheme(const string &lang, const string &theme)
 	}
 
 	// Do the appropriate mappings to load the selected theme
+	this->_ApplyConfig();
 	this->_ApplyTheme(lexer_map);
 }
 
@@ -316,7 +317,81 @@ void EditorPane::BindEvents()
 }
 
 /**
- * Iterate through the theme settings and apply them
+ * Set editor settings from config
+ *
+ * @return void
+ */
+void EditorPane::_ApplyConfig()
+{
+	static const wxColor default_background = Glob_theme_config->GetThemeColor("background", "default");
+	static const wxColor default_foreground = Glob_theme_config->GetThemeColor("foreground", "default");
+	wxColor line_number_background = ( ! Glob_theme_config->GetThemeValue("line_numbers", "background").isNull())
+									 ? (Glob_theme_config->GetThemeColor("line_numbers", "background"))
+									 : default_background;
+
+	wxColor line_number_foreground = ( ! Glob_theme_config->GetThemeValue("line_numbers", "foreground").isNull())
+									 ? (Glob_theme_config->GetThemeColor("line_numbers", "foreground"))
+									 : default_foreground;
+
+	// Set up Code folding
+	if (Glob_config->ReadBool("show_code_folding", false))
+	{
+		this->SetProperty("fold", "1");
+		this->SetProperty("fold.comment", "1");
+		this->SetProperty("fold.compact", "1");
+		this->SetProperty("fold.html", "1");
+		this->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
+
+		this->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
+		this->SetMarginWidth(MARGIN_FOLD, 16);
+		this->SetMarginSensitive(MARGIN_FOLD, true);
+		this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
+
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,	 "BLACK", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,	 "BLACK", "BLACK");
+		this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,	 "BLACK", "BLACK");
+	}
+	else
+	{
+		this->SetProperty("fold", "0");
+		this->SetProperty("fold.comment", "0");
+		this->SetProperty("fold.compact", "0");
+		this->SetProperty("fold.html", "0");
+		this->SetMarginWidth(MARGIN_FOLD, 0);
+	}
+
+	// Setup indent guides
+	if (Glob_config->ReadBool("show_indent_guides", false))
+	{
+		this->StyleSetForeground(wxSTC_STYLE_DEFAULT, default_foreground);
+		this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, default_foreground);
+		this->SetIndentationGuides(1);
+	}
+	else
+	{
+		this->SetIndentationGuides(0);
+	}
+
+	// Setup line numbers
+	if (Glob_config->ReadBool("show_line_numbers", true))
+	{
+		this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, "_999"));
+		this->StyleSetForeground (wxSTC_STYLE_LINENUMBER, line_number_foreground);
+		this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
+		this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
+	}
+	else
+	{
+		this->SetMarginWidth (MARGIN_LINE_NUMBERS, 0);
+	}
+}
+
+/**
+ * Iterate through the theme colors and apply them
  *
  * @param Json::Value lexer_map - Maps token types to theme colors
  * @return void
@@ -348,62 +423,6 @@ void EditorPane::_ApplyTheme(Json::Value &lexer_map)
 		this->StyleSetFont(i, globalFont);
 	}
 
-	// Set up Code folding
-	if (Glob_config->ReadBool("show_code_folding", false))
-	{
-		this->SetProperty("fold", "1");
-		this->SetProperty("fold.comment", "1");
-		this->SetProperty("fold.compact", "1");
-		this->SetProperty("fold.html", "1");
-		this->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
-		
-		this->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
-		this->SetMarginWidth(MARGIN_FOLD, 16);
-		this->SetMarginSensitive(MARGIN_FOLD, true);
-		this->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
-		
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUSCONNECTED, "WHITE", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUSCONNECTED, "WHITE", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,	 "BLACK", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_CIRCLEPLUSCONNECTED,  "WHITE", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_CIRCLEMINUSCONNECTED,  "WHITE", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,	 "BLACK", "BLACK");
-		this->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,	 "BLACK", "BLACK");
-	}
-	else
-	{
-		this->SetProperty("fold", "0");
-		this->SetProperty("fold.comment", "0");
-		this->SetProperty("fold.compact", "0");
-		this->SetProperty("fold.html", "0");
-		this->SetMarginWidth(MARGIN_FOLD, 0);
-	}
-	
-	// Setup indent guides
-	if (Glob_config->ReadBool("show_indent_guides", false))
-	{
-		this->StyleSetForeground(wxSTC_STYLE_DEFAULT, default_foreground);
-		this->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, default_foreground);
-		this->SetIndentationGuides(1);
-	}
-	else
-	{
-		this->SetIndentationGuides(0);
-	}
-
-	// Setup line numbers
-	if (Glob_config->ReadBool("show_line_numbers", true))
-	{
-		this->SetMarginWidth (MARGIN_LINE_NUMBERS, TextWidth(wxSTC_STYLE_LINENUMBER, "_999"));
-		this->StyleSetForeground (wxSTC_STYLE_LINENUMBER, line_number_foreground);
-		this->StyleSetBackground (wxSTC_STYLE_LINENUMBER, line_number_background);
-		this->SetMarginType (MARGIN_LINE_NUMBERS, wxSTC_MARGIN_NUMBER);
-	}
-	else
-	{
-		this->SetMarginWidth (MARGIN_LINE_NUMBERS, 0);
-	}
-	
 	int max = lexer_map.size();
 	for (int i = 0; i < max; i++)
 	{

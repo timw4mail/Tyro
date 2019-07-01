@@ -28,5 +28,6 @@ protected:
 	bool FileReadable();
 	bool FileWritable();
 	void BindEvents();
+	void _ApplyConfig();
 	void _ApplyTheme(Json::Value &lexer_map);
 };
