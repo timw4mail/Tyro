@@ -61,7 +61,7 @@ include_directories(${INCLUDE_DIRS})
 
 # set some platform-specific flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	#set(MACOSX_DEPLOYMENT_TARGET 10.9)
+	#set(MACOSX_DEPLOYMENT_TARGET 10.4)
 	#set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS} -stdlib=libc++")
 	add_definitions(-D__WXMAC__)
 else()

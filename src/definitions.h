@@ -34,7 +34,7 @@ const wxCmdLineEntryDesc Glob_cmdLineDesc[] = {
 		nullptr,
 		"input file(s)",
 		wxCMD_LINE_VAL_STRING,
-		wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE 
+		wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE
 	},
 	{wxCMD_LINE_NONE}
 };
@@ -56,7 +56,7 @@ const int TYRO_DEFAULT_FONT_SIZE = 10;
 enum myMargins
 {
 	MARGIN_FOLD,
-	MARGIN_LINE_NUMBERS
+	MARGIN_LINE_NUMBERS,
 };
 
 // Status bar sections
@@ -66,7 +66,7 @@ enum myStatusBarSections {
 	STATUS_CURRENT_LANGUAGE,
 	STATUS_LINE_ENDINGS,
 	STATUS_CODE_PAGE,
-	STATUS_INDENT
+	STATUS_INDENT,
 };
 
 // Top level menus
@@ -75,7 +75,7 @@ enum myMenuIds {
 	myEDIT_MENU,
 	myVIEW_MENU,
 	myLANG_MENU,
-	myHELP_MENU
+	myHELP_MENU,
 };
 
 // General Menu ids
@@ -89,12 +89,12 @@ enum myMenuItemIds {
 	myID_CLOSE_ALL,
 	myID_CLOSE_ALL_BUT_THIS,
 	myID_LINE_WRAP,
-	
+
 	// Preferences, to apply to all files
 	myID_PREFS_LINE_NUMBERS,
 	myID_PREFS_CODE_FOLDING,
 	myID_PREFS_IDENT_GUIDES,
-	myID_PREFS_FONT
+	myID_PREFS_FONT,
 };
 
 const wxString TYRO_FILE_OPEN_WILDCARDS =

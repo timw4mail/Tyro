@@ -3,7 +3,6 @@
 #include "src/settings/LangConfig.h"
 #include "src/settings/ThemeConfig.h"
 
-
 class EditorPane: public wxStyledTextCtrl
 {
 public:

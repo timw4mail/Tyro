@@ -20,7 +20,9 @@ MainFrame::MainFrame(wxFrame *frame, const wxString &title, const wxSize &size)
 	this->notebook = new TabContainer(this);
 
 	// Initialize other widgets
+#ifdef TYRO_FILETREE
 	this->fileTreePane = new FileTreePane(this);
+#endif
 	this->prefFrame = new PrefFrame();
 
 	// Set the frame icon
@@ -52,7 +54,9 @@ MainFrame::~MainFrame()
 	wxDELETE(this->findReplaceData);
 	wxDELETE(this->toolBar);
 	wxDELETE(this->prefFrame);
+#ifdef TYRO_FILETREE
 	wxDELETE(this->fileTreePane);
+#endif
 	this->manager->UnInit();
 
 	wxDELETE(this->notebook);
@@ -80,6 +84,7 @@ void MainFrame::MainLayout()
 		.Resizable(true);
 	this->manager->AddPane(this->toolBar, toolBarPaneInfo);
 
+#ifdef TYRO_FILETREE
 	wxAuiPaneInfo filePaneInfo;
 	filePaneInfo.Left()
 		.MinSize(225, 550)
@@ -87,6 +92,7 @@ void MainFrame::MainLayout()
 		.LeftDockable(true)
 		.Resizable(true);
 	this->manager->AddPane(this->fileTreePane, filePaneInfo);
+#endif
 
 	wxAuiPaneInfo notebookPaneInfo;
 	notebookPaneInfo.CenterPane();
@@ -142,7 +148,9 @@ wxAuiToolBar* MainFrame::SetupToolbar()
 	toolBar->AddTool(wxID_NEW, "New", new_file_icon, "New file");
 	toolBar->AddTool(wxID_OPEN, "Open", open_file_icon, "Open file");
 #ifdef __WXGTK__
+#ifdef TYRO_FILETREE
 	toolBar->AddTool(myID_OPEN_DIR, "Open Dir", open_folder_icon, "Open folder");
+#endif
 #endif
 	toolBar->AddTool(wxID_SAVE, "Save", save_file_icon, "Save file");
 
@@ -168,7 +176,9 @@ void MainFrame::BindEvents()
 	// File Menu Events
 	this->Bind(wxEVT_MENU, &MainFrame::OnNew, this, wxID_NEW);
 	this->Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
+#ifdef TYRO_FILETREE
 	this->Bind(wxEVT_MENU, &MainFrame::OnOpenFolder, this, myID_OPEN_DIR);
+#endif
 	this->Bind(wxEVT_MENU, &MainFrame::OnSave, this, wxID_SAVE);
 	this->Bind(wxEVT_MENU, &MainFrame::OnSaveAs, this, wxID_SAVEAS);
 	this->Bind(wxEVT_MENU, &MainFrame::OnCloseTab, this, wxID_CLOSE);
@@ -279,6 +289,7 @@ void MainFrame::OnOpen(wxCommandEvent &WXUNUSED(event))
 	this->OpenFiles(filelist);
 }
 
+#ifdef TYRO_FILETREE
 void MainFrame::OnOpenFolder(wxCommandEvent &event)
 {
 	wxDirDialog dlg(this, "Select Project Dir", wxEmptyString, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST | wxDD_CHANGE_DIR);
@@ -289,6 +300,7 @@ void MainFrame::OnOpenFolder(wxCommandEvent &event)
 
 	this->fileTreePane->CreateTree(path);
 }
+#endif
 
 /**
  * Open tabs containing the files passed

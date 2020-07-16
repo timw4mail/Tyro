@@ -5,10 +5,44 @@
 #include "src/widgets/EditorPane.h"
 #include "src/widgets/TabContainer.h"
 
-extern StringConstMap Glob_lexer_map;
 extern LangConfig *Glob_lang_config;
 extern ThemeConfig *Glob_theme_config;
 extern wxConfigBase *Glob_config;
+
+/**
+ * Map language names to their appropriate lexers
+ */
+static StringConstMap LexerMap = {
+	{"", wxSTC_LEX_NULL},
+	{"batch", wxSTC_LEX_BATCH},
+	{"caml", wxSTC_LEX_CAML},
+	{"cmake", wxSTC_LEX_CMAKE},
+	{"cpp", wxSTC_LEX_CPP},
+	{"css", wxSTC_LEX_CSS},
+	{"fortran", wxSTC_LEX_FORTRAN},
+	{"haskell", wxSTC_LEX_HASKELL},
+	{"java", wxSTC_LEX_CPP},
+	{"js", wxSTC_LEX_CPP},
+	{"lisp", wxSTC_LEX_LISP},
+	{"lua", wxSTC_LEX_LUA},
+	{"makefile", wxSTC_LEX_MAKEFILE},
+	{"markdown", wxSTC_LEX_MARKDOWN},
+	{"php", wxSTC_LEX_HTML},
+	{"perl", wxSTC_LEX_PERL},
+	{"properties", wxSTC_LEX_PROPERTIES},
+	{"python", wxSTC_LEX_PYTHON},
+	{"ruby", wxSTC_LEX_RUBY},
+#ifdef wxSTC_LEX_RUST
+	{"rust", wxSTC_LEX_RUST},
+#else
+	{"rust", wxSTC_LEX_CPP},
+#endif
+	{"scheme", wxSTC_LEX_LISP},
+	{"shell", wxSTC_LEX_BASH},
+	{"sql", wxSTC_LEX_SQL},
+	{"xml", wxSTC_LEX_XML},
+	{"yaml", wxSTC_LEX_YAML},
+};
 
 /**
  * Constructor
@@ -85,9 +119,9 @@ void EditorPane::ApplyTheme(const string &lang, const string &theme)
 {
 	this->StyleClearAll();
 
-	if (Glob_lexer_map.count(lang) > 0)
+	if (LexerMap.count(lang) > 0)
 	{
-		this->SetLexer(Glob_lexer_map[lang]);
+		this->SetLexer(LexerMap[lang]);
 	}
 	else
 	{
